@@ -1,0 +1,444 @@
+<?php
+include_once("head.php"); 
+//include_once("logincheck.php");
+?>
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.0/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.0/js/bootstrap-toggle.min.js"></script>
+  
+<div class="container">
+ 
+  <center><h2>VOIP Interconnect Form</h2></center>
+
+       <form method="post"  role="form">
+ 
+  <div class="panel-group">
+ 
+    <div class="panel panel-primary">
+      <div class="panel-heading">Company Contact information </div>
+      <div class="panel-body">
+
+		<div class="row">
+                     <div class="col-md-6 col-sm-12 col-ls-6">
+			     <label>      Name of company  </label>   
+  
+			    <input name="nameofcompany"  class="form-control"   type="text"   placeholder="Enter company name"  required> 
+	    	    </div>
+			
+
+			  <div class="col-md-6 col-sm-12 col-ls-6">
+  			 <label> 	  Country   </label>   
+
+			    <input name="country"  type="text"   class="form-control"   placeholder="Enter country "  required> 
+	    		</div>
+			
+		</div>
+
+	<div class="row">
+
+ 			  <div class="col-md-6 col-sm-12 col-ls-6">
+ 			    <label>      Primary contact    </label>   
+			    <input name="primarycontact"  type="text"  class="form-control" required  placeholder="Enter primary contact" >  
+	    	 	</div>
+
+
+ 			  <div class="col-md-6 col-sm-12 col-ls-6">
+ 			    <label>   Telephone    </label>   
+			    <input name="telephone"  type="text"  class="form-control" required  placeholder="Enter telephone" />  
+	    	 	</div>
+
+	</div>
+
+	<div class="row">
+ 			  <div class="col-md-6 col-sm-12 col-ls-6">
+ 			    <label>     Mobile Number  </label>   
+			    <input name="mobile"  type="text"  class="form-control" required  placeholder="Enter mobile number" >  
+	    	 	</div>
+  			  <div class="col-md-6 col-sm-12 col-ls-6">
+ 			    <label>     Email    </label>   
+			    <input name="email"  type="text"  class="form-control" required  placeholder="Enter email" >  
+	    	 	</div>
+	</div>
+
+	<div class="row">
+
+ 			  <div class="col-md-6 col-sm-12 col-ls-6">
+ 			    <label>     Office Hours    </label>   
+			    <input name="office_hours"  type="text"  class="form-control" required  placeholder="Enter Office hours" >  
+	    	 	</div>
+
+
+ 			  <div class="col-md-6 col-sm-12 col-ls-6">
+ 			    <label>    Skype    </label>   
+		   <input name="skype"  type="text"  class="form-control" required  placeholder="Enter skype details" >  
+	    	 	</div>
+
+	</div>
+
+	<div class="row">
+ 			  <div class="col-md-6 col-sm-12 col-ls-6">
+ 			    <label>     Website    </label>   
+			    <input name="website"  type="text"  class="form-control" required  placeholder="Enter Website" >  
+	    	 	</div>
+
+
+ 			  <div class="col-md-6 col-sm-12 col-ls-6">
+ 			    <label>      Fax    </label>   
+			    <input name="fax"  type="text"  class="form-control" required  placeholder="Enter Fax"/>  
+	    	 	</div>
+	
+	</div>
+
+	<div class="row">
+
+			 <div class="col-md-6 col-sm-12 col-ls-6">
+ 			    <label>     Alternative email    </label>   
+			    <input name="emailcc"  type="text"  class="form-control" required  placeholder="Enter email cc contact" >  
+	    	 	</div>
+
+	 </div>
+
+
+	</div>  </div> <!-- panelclose -->
+   
+
+    <div class="panel panel-success">
+      <div class="panel-heading">Equiment information</div>
+      <div class="panel-body">
+
+		<div class="row">
+
+		 <div class="col-md-6 col-sm-12 col-ls-6">
+		    <label>     Manufaturere/Model   </label>   
+ 	    <input name="Manufaturere_Model" type="text" class="form-control" required placeholder="Enter Manufaturere/Model" >       	 
+		</div>
+
+		 <div class="col-md-6 col-sm-12 col-ls-6">
+		    <label>      IP address    </label>   
+		    <input name="ip_address"  type="text"  class="form-control" required  placeholder="Enter IP address" />  
+    	 	</div>
+	</div>
+
+ <div class="row">
+			<div class="col-md-6 col-sm-12 col-ls-6">
+			    <label>    Protocols/ports </label>   
+		    <input name="protocols_ports"  type="text"  class="form-control" required  placeholder="Enter protocols/ports" >  
+	    	 	</div>
+
+
+ 			<div class="col-md-6 col-sm-12 col-ls-6">
+
+ 			    <label>     Codecs supported  </label>   
+			    <input name="codecs_supported"  type="text"  class="form-control" required  placeholder="Codecs supported" >  
+	    	 	</div>
+
+</div>
+
+<div class="row">
+
+ 			<div class="col-md-6 col-sm-12 col-ls-6">
+ 			    <label>     Tech prefix   </label>   
+			    <input name="tech_prefix"  type="text"  class="form-control" required  placeholder="Enter tech prefix" >  
+	    	 	</div>
+
+
+			 <div class="col-md-6 col-sm-12 col-ls-6">
+ 			    <label>     Called Number Format    </label>   
+			    <input name="Called_Number_Format"  type="text"  class="form-control" required  placeholder="Enter      Called Number Format">  
+	    	 	</div>
+
+
+</div>
+
+<div class="row">
+
+			 <div class="col-md-6 col-sm-12 col-ls-6">
+ 			    <label>      Calling Number Format    </label>   
+			    <input name="Calling_Number_Format"  type="text"  class="form-control" required  placeholder="Enter  Calling Number Format" >  
+	    	 	</div>
+
+
+</div>
+
+		
+   </div>  </div> <!-- panelclose -->
+
+    <div class="panel panel-info">
+      <div class="panel-heading">Payment Information</div>
+      <div class="panel-body">  
+
+		
+	<div class="row">
+			
+		<p>Click on Yes/No to change </p>
+			<script>
+			  $(function() {
+			    $('#paypal').bootstrapToggle({
+			      on: 'Yes',
+			      off: 'No'
+			    });
+			  })
+
+			$(function() {
+			    $('#Skrill').bootstrapToggle({
+			      on: 'Yes',
+			      off: 'No'
+			    });
+			  })
+
+
+		$(function() {
+			    $('#Western_union').bootstrapToggle({
+			      on: 'Yes',
+			      off: 'No'
+			    });
+			  })
+
+		$(function() {
+			    $('#wire_transform').bootstrapToggle({
+			      on: 'Yes',
+			      off: 'No'
+			    });
+			  })
+
+
+		$(function() {
+			    $('#Local_Bank_Deposit').bootstrapToggle({
+			      on: 'Yes',
+			      off: 'No'
+			    });
+			  })
+
+
+
+
+
+			</script>
+
+
+			<div class="col-md-4 col-sm-12 col-ls-4">
+  			   
+			<input id="paypal" name="paypal" type="checkbox">
+			 <label>     Paypal  </label>   
+ 	    	 	</div>
+
+
+ 			<div class="col-md-4 col-sm-12 col-ls-4">
+ 			    	<input id="Skrill" name="Skrill" type="checkbox">
+				<label>   Skrill  </label>   
+ 			</div>
+
+			 <div class="col-md-4 col-sm-12 col-ls-4">
+ 			     <input id="Western_union" name="Western_union" type="checkbox">
+			    <label>      Western union    </label>   
+ 			</div>
+	</div>
+	
+	<div class="row">
+
+			 <div class="col-md-4 col-sm-12 col-ls-4">
+ 			    <input id="wire_transform" name="wire_transform" type="checkbox">
+			  <label>      Wire transform    </label>   
+  	    	 	</div>
+
+			 <div class="col-md-4 col-sm-12 col-ls-4">
+ 			     <input id="Local_Bank_Deposit" name="Local_Bank_ Deposit" type="checkbox">
+			    <label>      Local Bank Deposit    </label>    
+	    	 	</div>
+	</div>
+	
+
+	
+      
+
+	 </div> </div> <!-- panel close -->
+
+    <div class="panel panel-warning">
+      <div class="panel-heading">Payment Terms</div>
+      <div class="panel-body"> 
+<div class="row">
+ 			  
+			 <div class="col-md-6 col-sm-12 col-ls-6">
+ 			    <label> prepayment/Credit facility</label>   
+		    <input name="Credit_facility"  type="text"  class="form-control" required  placeholder="Enter primary contact" >  
+	    	 	</div>
+
+ <div class="col-md-6 col-sm-12 col-ls-6">
+ 			    <label>   Prepayment only   </label>   
+			    <input name="prepayment_only"  type="text"  class="form-control" required  placeholder="Enter primary contact" >  
+    	 	</div>
+
+	</div>
+	
+	  </div>   </div> <!-- panel close -->
+   </div>
+
+ 
+<div class="row" style="text-align:center">
+
+                          <input id="task" name="task" type="submit"  class="btn btn-info"  value="Submit	" />
+</div>
+                  
+
+ </form>
+
+
+<?php
+ 
+
+ function rechargeVoucher() {
+ 	$secret = $_POST['secret'];
+	$sql = "SELECT * FROM sippyreseller where phonenumber=$secret";
+	$oldrec = mysql_query($sql);
+	$rowold = mysql_fetch_object($oldrec);
+	
+	$rowold->api_password = base64_decode($rowold->api_password);
+	
+ 		 if(!isset($rowold->email)){
+			$rowold->email = "";
+			$rowold->batchtag="";
+			$rowold->i_billing_plan = 0;
+			$rowold->api_access ="";
+			$rowold->api_password = ""; 
+  
+  		}
+
+	    $_SESSION['rowold'] = $rowold;
+
+		$_POST['email'] = $rowold->email;
+		$_POST['reseller_id'] = $rowold->id;
+ 		
+	    $params = array(new xmlrpcval(array("username" => new xmlrpcval($_POST['username'], "string"),
+                                    "voucher_id"     	=> new xmlrpcval($_POST['voucher_id'], "string"),
+
+                                     ), 'struct'));
+    $msg = new xmlrpcmsg('rechargeVoucher', $params);
+// echo "<pre>"; print_r($msg); echo "</pre>";
+    /* replace here URL  and credentials to access to the API */
+    $cli = new xmlrpc_client('https://38.130.112.22/xmlapi/xmlapi');
+    $cli->setSSLVerifyPeer(false);
+    $cli->setSSLVerifyHost(false);
+    $cli->setCredentials($rowold->api_access,$rowold->api_password, CURLAUTH_DIGEST);
+ 
+
+   $r = $cli->send($msg, 20);       /* 20 seconds timeout */
+   return $r;
+
+}
+ 
+ $showform = 1;
+$cp = 0;
+if(isset($_POST['task']) && $_POST['captchorg'] != $_POST['captcha'])
+	echo " <font  color='red'> invalid captch</font>";
+else
+	$cp=1;
+
+ 
+
+function sendEMail($a) {
+
+  $rowold = $_SESSION['rowold'];
+
+    $body = " 
+<table>
+<tr><td> Welcome to Mob-Voip </td></tr>
+<tr><td> Please keep this email for your records. Your recharge information is as follows:</td> </tr>
+<tr><td> &nbsp; </td></tr>
+<tr><td>      username : ${a['username']}   </td> </tr>	
+<tr><td>      Vocher id : ${a['voucher_id']}   </td> </tr>
+<tr><td>         Amount : ${a['payer_amount']}  ${a['voucher_currency']}  </td> </tr>
+         
+<tr><td> <tr><td> &nbsp; </td> </tr>
+<tr><td> &nbsp; </td> </tr>
+<tr><td> Mobile App #1 </td> </tr>
+<tr><td> Operator code 654321 </td></tr>
+<tr><td> Android: <a href='https://play.google.com/store/apps/details?id=com.telepacket.TpSmart&hl=en'> Click Here </a>   </td> </tr>
+<tr><td> Apple IOS: <a href='https://itunes.apple.com/us/app/tp-smart/id1039627255?ls=1&mt=8'> Click Here </a>    </td> </tr>
+<tr><td> &nbsp; </td> </tr>
+<tr><td> Mobile App #2 </td> </tr>
+<tr><td> Operator code 70085 </td></tr>
+<tr><td> Android: <a href='https://play.google.com/store/apps/details?id=com.freedialer.dialer&hl=en'> Click Here </a> </td> </tr>
+<tr><td> &nbsp; </td> </tr>
+<tr><td> Please feel free to contact us in case of any assiatnce, we are available on skype id 'mob-voip' </td> </tr>
+<tr><td> Whatsapp # +16473602360  </td> </tr>
+<tr><td> &nbsp;  </td> </tr>
+<tr><td> Thank you for Business! </td> </tr>
+<tr><td> &nbsp; </td> </tr>
+<tr><td>   Mob-Voip  Team. </td> </tr>
+</table>";
+ 
+#$bcc = "mail@mob-voip.net";
+$to = $_POST['email'];
+$subject = 'Top Up Voucher Confirmation -'.$rowold->api_access;
+		$from ='info@mob-voip.net'; 
+        $headers  = "From: " . $from . "\r\n";
+		$headers .= "Reply-To: ". $from . "\r\n";
+		$headers .= "MIME-Version: 1.0\r\n";
+		$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+
+ 
+	externalmail($to,$subject,$body);
+
+
+
+	 
+
+
+
+}
+
+
+function saveMail($frm)
+{
+
+ 
+	$text = "--------------------------- \n";
+	foreach ($frm as $key=>$value) 
+	{
+		$text .= "$key=$value, \n";
+	}
+	$log_file = 'sms_log.txt';
+	$fp=fopen($log_file,'a');
+	fwrite($fp, $text . "\n\n");
+	fwrite($fp, $sql . "\n\n");
+	fclose($fp);  // close fil
+
+
+}
+
+function savedb($data){
+
+	$nameofcompany = $_POST['nameofcompany']; 
+	$country = $_POST['country'];
+	$primarycontact = $_POST['primarycontact'];
+	$telephone  = $_POST['telephone'];
+	$mobile = $_POST['mobile'];
+	$email = $_POST['email'];
+	$office_hours = $_POST['office_hours'];
+	$Called_Number_Format  = $_POST['Called_Number_Format'];
+	$Calling_Number_Format  = $_POST['Calling_Number_Format'];
+	$paypal  = $_POST['paypal'];
+	$Skrill  = $_POST['Skrill'];
+	$Western_union  = $_POST['Western_union'];
+	$wire_transform  = $_POST['wire_transform'];
+	$Local_Bank_Deposit = $_POST['Local_Bank_ Deposit'];
+	$Credit_facility = $_POST['Credit_facility'];
+	$prepayment_only  = $_POST['prepayment_only'];
+	$visitor_ip = $_SERVER['REMOTE_ADDR'];
+		 
+	echo	$sqlupdt =  "INSERT INTO company` (`nameofcompany`, `country`, `primarycontact`, `telephone`, `mobile`, `email`, `office_hours`, `skype`, `website`, `fax`, `emailcc`, `Manufaturere_Model`, `ip_address`, `protocols_ports`, `codecs_supported`, `tech_prefix`, `Called_Number_Format`, `Calling_Number_Format`, `paypal`, `Skrill`, `Western_union`, `wire_transform`, `Local_Bank_ Deposit`, `Credit_facility`, `prepayment_only`, `createddate`, `visitor_ip`)
+		 VALUES ('$nameofcompany', '$country', '$primarycontact', '$telephone', '$mobile', '$email', '$office_hours',
+ 		'$skype','$website','$fax','$emailcc','$Manufaturere_Model','$ip_address','$protocols_ports','$codecs_supported',
+		'$tech_prefix','$Called_Number_Format', '$Calling_Number_Format', $paypal, $Skrill, $Western_union, $wire_transform, $Local_Bank_Deposit, '$Credit_facility', '$prepayment_only','$visitor_ip')";
+
+		mysql_query($sqlupdt);
+
+}
+
+
+?>
+
+
+</div>
+
+<body>
+<html>
