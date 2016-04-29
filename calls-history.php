@@ -12,8 +12,7 @@
       dateFormat: "yy-m-d"
 
     });
-	
-	
+		
     $( "#to_date" ).datepicker({
       showOn: "button",
       buttonImage: "images/calendar.gif",
@@ -27,7 +26,6 @@
 <?php
 require_once('xmlrpc.inc');
 //require_once('packages.php');
-
 session_start();
 
 function getAccountCDRs($limit, $offset) {
