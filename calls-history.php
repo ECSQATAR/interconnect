@@ -1,21 +1,51 @@
-<? 
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script>
+   $(function() {
+    $( "#from_date").datepicker({
+      showOn: "button",
+      buttonImage: "images/calendar.gif",
+      buttonImageOnly: true,
+      buttonText: "Select assign date",
+      dateFormat: "yy-m-d"
+
+    });
+	
+	
+    $( "#to_date" ).datepicker({
+      showOn: "button",
+      buttonImage: "images/calendar.gif",
+      buttonImageOnly: true,
+      buttonText: "Select assign date",
+      dateFormat: "yy-m-d"
+
+    });
+
+</script> 
+<?php
 require_once('xmlrpc.inc');
-require_once('packages.php');
+//require_once('packages.php');
 
 session_start();
 
 function getAccountCDRs($limit, $offset) {
 	
-	$fromDate = '2016-4-1';
-	$todate  = '2016-4-30';
+	$wholeseller_id = $_GET['wholeseller_id'];
+	$fromDate = $_GET['from_date'];
+	$todate  = $_GET['to_date'];
 	
+	
+
+
 	 $fromSalesDate = date("D M j Y",strtotime($fromDate));
-	 $todayDate = date("D M j Y",strtotime($todate));
+	 $toSalesDate = date("D M j Y",strtotime($todate));
   
-	$params = array(new xmlrpcval(array("i_account"   => new xmlrpcval('844', "int"),
+	$params = array(new xmlrpcval(array("i_account"   => new xmlrpcval($wholeseller_id, "int"),
 										"limit" 	=> new xmlrpcval(100, "int"),
 										"start_date" => new xmlrpcval("00:00:00.000 GMT $fromSalesDate","string"),                 
-										"end_date" 	 => new xmlrpcval("23:59:59.000 GMT $todayDate","string"),
+										"end_date" 	 => new xmlrpcval("23:59:59.000 GMT $toSalesDate","string"),
 										"offset"  => new xmlrpcval(0, "int"),
 										),'struct'));
 										
@@ -102,16 +132,16 @@ $title = "Call History";
 
  <div class="col-md-2">
 
-  <label>Reseller</label>
+  <label>Wholeseller</label>
  
-<select class="form-control" name="reseller_id" >
-<option value="">Select reseller</option>
+<select class="form-control" name="wholeseller_id" required >
+<option value="">Select Wholeseller</option>
 <?php
- $sql = "SELECT id,api_access FROM sippyreseller  ";
+ $sql = "SELECT id,username FROM accountsales Where accountgroup_id=35 ";
  $result = mysql_query($sql);
 while($row = mysql_fetch_object($result)){
 ?>
-<option value="<?php echo $row->id;?>" <?php if(isset($_GET['reseller_id']) && $_GET['reseller_id'] == $row->id) echo 'selected=selected';?> ><?php echo $row->api_access;?></option>
+<option value="<?php echo $row->id;?>" <?php if(isset($_GET['wholeseller_id']) && $_GET['wholeseller_id'] == $row->id) echo 'selected=selected';?> ><?php echo $row->username;?></option>
 <?php  
 } 
 
@@ -122,12 +152,12 @@ while($row = mysql_fetch_object($result)){
   
 <div class="col-md-4">
 <label>From Date</label> 
-<input type="text" id="from_date"   name="from_date"  value="<?php echo $_GET['from_date'];?>" placeholder="Please select  date"> 
+<input type="text" id="from_date"   name="from_date"  value="<?php echo $_GET['from_date'];?>" placeholder="Please select from  date" required /> 
 </div>
 
 <div class="col-md-4">
 <label>To Date</label> 
-<input type="text" id="to_date" name="to_date"  value="<?php echo $_GET['to_date'];?>" placeholder="Please select  date"> 
+<input type="text" id="to_date" name="to_date"  value="<?php echo $_GET['to_date'];?>" placeholder="Please select to  date" required /> 
 </div>
 
 
@@ -158,12 +188,12 @@ while($row = mysql_fetch_object($result)){
             <td width="200">Date </td>
             <td width="100">Amount</td>
         </tr>
-<?
+<?php
 if($cdr_count>0) {
 
 	foreach($cdrs as $cdr) {
 	?>	
-	<tr class=\"border_bottom_payments\">
+	<tr class="border_bottom_payments">
  
 	<td> <?php echo $cdr['prefix'];?></td>			
 	<td> <?php echo $cdr['cld'];?></td>			
@@ -175,16 +205,11 @@ if($cdr_count>0) {
 <?php
 	}
 } else {
-	echo "<td colspan=5>No calls found</td>";
+	echo "<td colspan=6>No calls found</td>";
 }
 
 ?>
 
-                </table>
-
-	
-			 
- 
-
+ </table>
 </div>
 </div>

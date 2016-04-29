@@ -2,4 +2,4 @@
 $dbhost = 'localhost';
 $dbuser = 'root';
 $dbpass = '5510331';
-$dbName = "interconnect";
+$dbName = "sippydatabase";
