@@ -183,12 +183,7 @@ while($row = mysql_fetch_object($result)){
 </div>
 
 <div class="row">
-	 
-
-	  
-             	
-	 
-  <table  class="table"  border="0" bgcolor="#dbeefc" cellpadding="5">
+ <table  class="table"  border="0" bgcolor="#dbeefc" cellpadding="5">
 		  <tr align="center" class="bg_head_payments white font_18">
 		   <td width="160">Prefix </td>
 		    <td width="160">CLD </td>
@@ -213,6 +208,9 @@ if($cdr_count>0) {
 </tr>
 <?php
 	}
+?>
+ <tr> <td colspan='6'> <input type="submit" value="Generate Payment request" name="generatepaymentrequest" /> </td> </tr>
+<?php
 } else {
 	echo "<td colspan='6'>No calls found</td>";
 }
