@@ -5,8 +5,9 @@ require_once('packages.php');
 session_start();
 
 function getAccountCDRs($limit, $offset) {
-	$fromDate = $_POST['fromDate'];
-	$todate  = $_POST['todate'];
+	
+	$fromDate = '2016-4-1';
+	$todate  = '2016-4-30';
 	
 	 $fromSalesDate = date("D M j Y",strtotime($fromDate));
 	 $todayDate = date("D M j Y",strtotime($todate));
