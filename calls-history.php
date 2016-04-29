@@ -1,10 +1,17 @@
+<?php
+require_once('xmlrpc.inc');
+require_once('head.php');
+session_start();
+?>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
   <script src="//code.jquery.com/jquery-1.10.2.js"></script>
   <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
   <link rel="stylesheet" href="/resources/demos/style.css">
   <script>
-   $(function() {
-    $( "#from_date").datepicker({
+    jQuery(document).ready(function () {
+ 
+
+     $( "#from_date").datepicker({
       showOn: "button",
       buttonImage: "images/calendar.gif",
       buttonImageOnly: true,
@@ -22,10 +29,12 @@
 
     });
 
+});
+
 </script> 
 <?php
 require_once('xmlrpc.inc');
-//require_once('packages.php');
+require_once('head.php');
 session_start();
 
 function getAccountCDRs($limit, $offset) {
@@ -128,18 +137,18 @@ $title = "Call History";
 
 <div class="row">
 
- <div class="col-md-2">
+ <div class="col-md-3">
 
   <label>Wholeseller</label>
  
-<select class="form-control" name="wholeseller_id" required >
+<select  name="wholeseller_id" required >
 <option value="">Select Wholeseller</option>
 <?php
- $sql = "SELECT id,username FROM accountsales Where accountgroup_id=35 ";
+  $sql = "SELECT id,accountname FROM accountusers Where accountgroup_id=62";
  $result = mysql_query($sql);
 while($row = mysql_fetch_object($result)){
 ?>
-<option value="<?php echo $row->id;?>" <?php if(isset($_GET['wholeseller_id']) && $_GET['wholeseller_id'] == $row->id) echo 'selected=selected';?> ><?php echo $row->username;?></option>
+<option value="<?php echo $row->id;?>" <?php if(isset($_GET['wholeseller_id']) && $_GET['wholeseller_id'] == $row->id) echo 'selected=selected';?> ><?php echo $row->accountname;?></option>
 <?php  
 } 
 
@@ -153,9 +162,11 @@ while($row = mysql_fetch_object($result)){
 <input type="text" id="from_date"   name="from_date"  value="<?php echo $_GET['from_date'];?>" placeholder="Please select from  date" required /> 
 </div>
 
-<div class="col-md-4">
+<div class="col-md-5">
 <label>To Date</label> 
 <input type="text" id="to_date" name="to_date"  value="<?php echo $_GET['to_date'];?>" placeholder="Please select to  date" required /> 
+
+<input type="submit" name="Go" value="submit" />
 </div>
 
 
@@ -163,7 +174,7 @@ while($row = mysql_fetch_object($result)){
  
 </div>
 
-<input type="submit" name="Go" value="submit" />
+
 
 </form>
 
@@ -203,7 +214,7 @@ if($cdr_count>0) {
 <?php
 	}
 } else {
-	echo "<td colspan=6>No calls found</td>";
+	echo "<td colspan='6'>No calls found</td>";
 }
 
 ?>
