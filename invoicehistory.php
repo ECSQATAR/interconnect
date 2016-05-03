@@ -111,12 +111,17 @@ while($row = mysql_fetch_object($result)){
             <td width="100">to Date</td>
         </tr>
 <?php
-	$wholeseller_id = $_GET['wholeseller_id'];
-	$fromDate = $_GET['from_date'];
-	$todate  = $_GET['to_date'];
- 	
- $sql = "SELECT * from wholesaleinvoicebasedata
- Where fromdate = '$fromDate' and todate = '$toDate' ";
+	
+	if( isset($_GET['wholeseller_id']) && isset($_GET['from_date'])  && isset($_GET['to_date'])  ){
+			$wholeseller_id = $_GET['wholeseller_id'];
+			$fromDate = $_GET['from_date'];
+			$todate = $_GET['to_date'];
+			$sql = "SELECT * from wholesaleinvoicebasedata where account_id = $wholeseller_id AND  date(fromdate) = $fromDate adn date(todate) = $todate  ";
+	} else {
+			$sql = "SELECT * from wholesaleinvoicebasedata ";
+	}
+		
+	
  $result = mysql_query($sql);
 while($row = mysql_fetch_object($result)){
 	//print_r($row);
