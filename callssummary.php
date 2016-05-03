@@ -37,27 +37,38 @@ require_once('xmlrpc.inc');
 require_once('head.php');
 session_start();
 
+ function addDurationAsSeconds( $timeStamp ) {
+        $timeSections = explode( ':', $timeStamp );
+        $seconds =  
+                   ( $timeSections[0] * 60 )        //Minutes to Seconds
+                 +  ( $timeSections[1]  );           //Seconds to Seconds
+ 
+        return $seconds;
+    }
+ 
+
 function getAccountCDRs($limit, $offset) {
 	
 	$wholeseller_id = $_GET['wholeseller_id'];
 	$fromDate = $_GET['from_date'];
 	$todate  = $_GET['to_date'];
 	
+
+ 	$fromSalesDate = date("D M j Y",strtotime($fromDate));
+	$toSalesDate = date("D M j Y",strtotime($todate));
+	$endOfData = false;
 	
-
-
-	 $fromSalesDate = date("D M j Y",strtotime($fromDate));
-	 $toSalesDate = date("D M j Y",strtotime($todate));
-  
 	$params = array(new xmlrpcval(array("i_account"   => new xmlrpcval($wholeseller_id, "int"),
-										"limit" 	=> new xmlrpcval(100, "int"),
+										"limit" 	=> new xmlrpcval('1', "int"),
 										"start_date" => new xmlrpcval("00:00:00.000 GMT $fromSalesDate","string"),                 
 										"end_date" 	 => new xmlrpcval("23:59:59.000 GMT $toSalesDate","string"),
-										"offset"  => new xmlrpcval(0, "int"),
+
+	
+"offset" 	=> new xmlrpcval($offset, "int"),									 
 										),'struct'));
-										
-//"start_date" => new xmlrpcval("09:00:29.000 GMT Wed Apr 21 2016","string"),                 
-//"end_date"	=> new xmlrpcval("22:50:50.000 GMT Thu Apr 28 2016","string"),
+	//echo "<pre>"; print_r($params); echo "</pre>";									
+	//"start_date" => new xmlrpcval("09:00:29.000 GMT Wed Apr 21 2016","string"),                 
+	//"end_date"	=> new xmlrpcval("22:50:50.000 GMT Thu Apr 28 2016","string"),
 																				
 	$msg = new xmlrpcmsg('getAccountCDRs', $params);
 	$cli = new xmlrpc_client('https://38.130.112.22/xmlapi/xmlapi');
@@ -72,7 +83,7 @@ function getAccountCDRs($limit, $offset) {
 		$error = $r->faultString();
 		return array();
 	}
-	
+	echo "<pre>"; print_r($r); echo "</pre>";
 	$res = $r->value()->structMem('cdrs');
 	$res = $res->scalarVal();
 	$cdrs= array();
@@ -83,11 +94,9 @@ function getAccountCDRs($limit, $offset) {
 		$prefix = $obj->structMem('prefix');
 		$prefix = $prefix->scalarVal();
 		
+		/*
 		$cli = $obj->structMem('cli');
 		$cli = $cli->scalarVal();
-
-		$billed_duration = $obj->structMem('billed_duration');
-		$billed_duration = $billed_duration->scalarVal();
 
 		$cld = $obj->structMem('cld');
 		$cld = $cld->scalarVal();
@@ -100,29 +109,54 @@ function getAccountCDRs($limit, $offset) {
 
 		$cost = $obj->structMem('cost');
 		$cost = $cost->scalarVal();
+		*/
+
+		$billed_duration = $obj->structMem('billed_duration');
+		$billed_duration = $billed_duration->scalarVal();
+
 		
 		$duration = sprintf("%02d:%02d",ceil($billed_duration/60)-1, fmod($billed_duration,60));
 		
 		$cdrs[$i]['prefix'] = $prefix ;
-		$cdrs[$i]['cli'] = $cli ;
+		//$cdrs[$i]['cli'] = $cli ;
 		$cdrs[$i]['duration'] = $duration;
+		/*
 		$cdrs[$i]['cld'] = $cld;
 		$cdrs[$i]['country'] = $country;
 		$cdrs[$i]['connect_time'] = $connect_time;
 		$cdrs[$i]['cost'] = sprintf("%01.2f USD",$cost);
+		*/
+
 		$i++;
 	}
-
-	//echo "<pre>"; print_r($cdrs); echo "</pre>";
+	$_SESION['largeData'][] = $cdrs;	
+echo "<pre>"; print_r($cdrs); echo "</pre>";
+sleep(5);
 	return $cdrs;
 
 }
 
 
-$cdrs_per_page = 5;
+$cdrs_per_page = 200;
 $page = 1;
-$cdrs = getAccountCDRs(1,100);
-$cdr_count = count($cdrs);
+print_r($_GET);
+if(isset($_GET['Go'])){
+	$endofData=1;
+	$offset=0;
+	while($endofData<=2){
+	   $cdrs = getAccountCDRs(200,$offset);
+	echo 'countg'.	count($cdrs);
+	if(count($cdrs) == 0)
+	{
+		break;
+	$endofData = 11;
+		echo "<pre>"; print_r($_SESSION); echo "</pre>";
+	}
+	   $offset = $offset + 1;
+	$endofData = $endofData + 1;
+	 }
+	$cdr_count = count($cdrs);
+ }
 
 $title = "Call History";
 
@@ -195,6 +229,8 @@ while($row = mysql_fetch_object($result)){
 <?php
 if($cdr_count>0) {
 
+      $getTotalTime = 0;
+
 	foreach($cdrs as $cdr) {
 	?>	
 	<tr class="border_bottom_payments">
@@ -207,8 +243,38 @@ if($cdr_count>0) {
 	<td> <?php echo $cdr['cost'];?></td>
 </tr>
 <?php
+  $getTotalTime +=  addDurationAsSeconds($cdr['duration']);
 	}
 ?>
+<tr>
+<td> <?php  $seconds  = gmdate( $getTotalTime );
+echo $seconds;
+
+echo "<br/>";
+
+$getHours = floor($seconds / 3600);
+$getMins = floor(($seconds - ($getHours*3600)) / 60);
+$getSecs = floor($seconds % 60);
+echo $getHours.':'.$getMins.':'.$getSecs;
+
+
+function sec2hms($secs) {
+    $secs = round($secs);
+    $secs = abs($secs);
+    $hours = floor($secs / 3600) . ':';
+    if ($hours == '0:') $hours = '';
+    $minutes = substr('00' . floor(($secs / 60) % 60), -2) . ':';
+    $seconds = substr('00' . $secs % 60, -2);
+return ltrim($hours . $minutes . $seconds, '0');
+}
+
+echo '<br/>';
+echo sec2hms($seconds);
+
+
+ ?> </td>
+
+</tr>
  <tr> <td colspan='6'> <input type="submit" value="Generate Payment request" name="generatepaymentrequest" /> </td> </tr>
 <?php
 } else {
