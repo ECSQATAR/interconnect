@@ -111,7 +111,7 @@ while($row = mysql_fetch_object($result)){
             <td width="100">to Date</td>
         </tr>
 <?php
-<<<<<<< HEAD
+
 	
 	if( isset($_GET['wholeseller_id']) && isset($_GET['from_date'])  && isset($_GET['to_date'])  ){
 			$wholeseller_id = $_GET['wholeseller_id'];
@@ -121,16 +121,8 @@ while($row = mysql_fetch_object($result)){
 	} else {
 			$sql = "SELECT * from wholesaleinvoicebasedata ";
 	}
-		
-	
-=======
-	$wholeseller_id = $_GET['wholeseller_id'];
-	$fromDate = $_GET['from_date'];
-	$todate  = $_GET['to_date'];
- 	
- $sql = "SELECT * from wholesaleinvoicebasedata
- Where 1=1 ";
->>>>>>> 7c4be84f81695a11b250a1254a43d65630a8a15b
+	 
+ 
  $result = mysql_query($sql);
 while($row = mysql_fetch_object($result)){
 	//print_r($row);
