@@ -116,7 +116,7 @@ while($row = mysql_fetch_object($result)){
 	$todate  = $_GET['to_date'];
  	
  $sql = "SELECT * from wholesaleinvoicebasedata
- Where fromdate = '$fromDate' and todate = '$toDate' ";
+ Where 1=1 ";
  $result = mysql_query($sql);
 while($row = mysql_fetch_object($result)){
 	//print_r($row);
