@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once('head.php');
 ?>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
   <script src="//code.jquery.com/jquery-1.10.2.js"></script>
@@ -32,15 +33,12 @@ session_start();
 </script> 
 <?php
 //require_once('xmlrpc.inc');
-require_once('head.php');
-session_start();
- 
-
 
   
  
 
-//require_once('header_logged_in.php'); ?>
+//require_once('header_logged_in.php');
+ ?>
   
  <div class="container">
 
