@@ -73,7 +73,7 @@ for($i=1;$i<=$numRows;$i++){
 
 //print_r($data->sheets[0]['cells'][$i]);
 	 
-echo		$sql = "INSERT INTO wholesaleinvoicebasedata(customerName ,`account_id`, `prefix`, `country`, `Description`, `price_per_1_min`, `price_per_n_min`, `numberofCalls`, `Duration_min`, `BilledDuration_min`, `Charged_Amount`,fromDate,toDate) 
+		$sql = "INSERT INTO wholesaleinvoicebasedata(customerName ,`account_id`, `prefix`, `country`, `Description`, `price_per_1_min`, `price_per_n_min`, `numberofCalls`, `Duration_min`, `BilledDuration_min`, `Charged_Amount`,fromDate,toDate) 
 		  VALUES ('$customerName',$account_id, '$prefix', '$country', '$Description', '$price_per_1_min','$price_per_n_min','$numberofCalls', '$Duration_min', '$BilledDuration_min', '$Charged_Amount','$fromDate','$toDate')";
 	 
 	
