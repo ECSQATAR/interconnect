@@ -86,8 +86,8 @@ for($i=1;$i<=$numRows;$i++){
 
  if ( $uploaded == 1){
 	$_SESSION['SuccessMsg'] =  "Your records inserted successfully";
-	// unlink('uploads/invoices.xls');
-	// header("Location: voucherslist.php");	exit(0);
+	  unlink('uploads/invoices.xls');
+	 header("Location: invoicehistory.php");	exit(0);
  }
 
  
