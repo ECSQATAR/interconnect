@@ -148,9 +148,47 @@ $rowold = mysql_fetch_object($oldrec);
 
 
   $html = '
+  
+ 
+<table>
+<tr>
+<td>
+From: <br>
+ECS-NET FZE<br>
+Ajman Free Zone <br>
+United Arab Emirates<br>
+Tel #: +971506466878<br>
+ceo@ecs-net.net<br>
+</td>
+ 
+<td  style="font-size:200%;"> INVOICE </td>
+<td width="150px"> <img alt="CompanyLogo" src="logouploads/ECS-Logo.png" width="100" heigth="100"/> </td>
+</tr>
+
+<tr>
+<td>To.</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td>Sync Sound </td>
+<td>&nbsp;</td>
+<td> Inv. # 2016040701 </td>
+</tr>
+
+
+<tr> <td> &nbsp; </td> <td>&nbsp;</td> <td> Create Date 07/04/2016 </td> </tr>
+<tr> <td> &nbsp; </td> <td>&nbsp;</td> <td> Due Date 07/04/2016 </td> </tr>
+
+
+
+</table>
+
+<p> <br> </p>
+<p> <br> </p>
  
 
- 
 
 <table border="1">
 
@@ -193,8 +231,16 @@ $html = $html.$htmlsub;
 $html = $html. '
  <tr> <td colspan="5">  Billed Duration mm:ss '.$totalbiledduration.' &nbsp; charged Amount :'.$totalchargedamount.'</td> </tr>
 
+ <hr>
  
  </table>
+ 
+<p> <br> </p>
+ 
+ <p style="text-align:right">  Total 397.31 USD </p>
+ <p style="text-align:right"> Outstanding 0.00 USD </p>
+ <p style="text-align:right"> Subtotal 397.31 USD </p>
+ 
  <hr>
  
 <p> This invoice is for the period of 28-03-2016 00:00:00 to 03-04-2016 23:59:59. </p>
@@ -230,7 +276,7 @@ ob_start();
 //Close and output PDF document
 $pdfpath = $_SERVER['DOCUMENT_ROOT']."interconnect/pdfs/output-$lastInserId.pdf";
 $toEmail='snmurty99@gmail.com'; 
-sendEMail($toEmail,$pdfpath);
+//sendEMail($toEmail,$pdfpath);
 $pdf->Output($pdfpath, 'F');
 $pdf->Output('output.pdf', 'I');
 //============================================================+
