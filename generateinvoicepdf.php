@@ -161,7 +161,7 @@ Tel #: +971506466878<br>
 ceo@ecs-net.net<br>
 </td>
  
-<td  style="font-size:200%;"> INVOICE </td>
+<td  style="font-size:200%;color:#ff0000;"> INVOICE </td>
 <td width="150px"> <img alt="CompanyLogo" src="logouploads/ECS-Logo.png" width="100" heigth="100"/> </td>
 </tr>
 
@@ -237,7 +237,7 @@ $html = $html. '
  
 <p> <br> </p>
  
- <p style="text-align:right">  Total 397.31 USD </p>
+ <p style="text-align:right"> Total 397.31 USD </p>
  <p style="text-align:right"> Outstanding 0.00 USD </p>
  <p style="text-align:right"> Subtotal 397.31 USD </p>
  
