@@ -1,4 +1,4 @@
-<?php
+		<?php
 include_once("head.php"); 
 //include_once("logincheck.php");
 include_once("dbconfig.php");

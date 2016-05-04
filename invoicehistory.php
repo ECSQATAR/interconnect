@@ -56,11 +56,14 @@ require_once('head.php');
 <select  name="wholeseller_id" required >
 <option value="">Select Wholeseller</option>
 <?php
-  $sql = "SELECT id,accountname FROM accountusers Where accountgroup_id=62";
+
+//  $sql = "SELECT id,accountname FROM accountusers Where accountgroup_id=62";
+
+  $sql = "SELECT distinct account_id from  wholesaleinvoicebasedata";
  $result = mysql_query($sql);
 while($row = mysql_fetch_object($result)){
 ?>
-<option value="<?php echo $row->id;?>" <?php if(isset($_GET['wholeseller_id']) && $_GET['wholeseller_id'] == $row->id) echo 'selected=selected';?> ><?php echo $row->accountname;?></option>
+<option value="<?php echo $row->account_id;?>" <?php if(isset($_GET['wholeseller_id']) && $_GET['wholeseller_id'] == $row->account_id) echo 'selected=selected';?> ><?php echo $row->account_id;?></option>
 <?php  
 } 
 
@@ -71,12 +74,12 @@ while($row = mysql_fetch_object($result)){
   
 <div class="col-md-4">
 <label>From Date</label> 
-<input type="text" id="from_date"   name="from_date"  value="<?php echo $_GET['from_date'];?>" placeholder="Please select from  date" required /> 
+<input type="text" id="from_date"   name="from_date"  value="<?php echo $_GET['from_date'];?>" placeholder="Please select from  date"   /> 
 </div>
 
 <div class="col-md-5">
 <label>To Date</label> 
-<input type="text" id="to_date" name="to_date"  value="<?php echo $_GET['to_date'];?>" placeholder="Please select to  date" required /> 
+<input type="text" id="to_date" name="to_date"  value="<?php echo $_GET['to_date'];?>" placeholder="Please select to  date"   /> 
 
 <input type="submit" name="Go" value="submit" />
 </div>
@@ -99,27 +102,37 @@ while($row = mysql_fetch_object($result)){
 		  <tr align="center" class="bg_head_payments white font_18">
 		   <td width="160">customerName </td>
 		    <td width="160">Prefix </td>
-		   <td width="160">customerName </td>
 		    <td width="160">country </td>
 		    <td width="160">Description </td>
-		    <td width="100">price_per_1_min</td
-			<td width="100">price_per_n_min</td>
-			<td width="100">Charged Amount</td>
+		    <td width="100">price_per_1_min</td>
+  		    <td width="100">Duration min</td>
+		   <td width="100">Charged Amount</td>
             <td width="200">from Date </td>
             <td width="100">to Date</td>
         </tr>
 <?php
 
-	
-	if( isset($_GET['wholeseller_id']) && isset($_GET['from_date'])  && isset($_GET['to_date'])  ){
-			$wholeseller_id = $_GET['wholeseller_id'];
-			$fromDate = $_GET['from_date'];
-			$todate = $_GET['to_date'];
-			$sql = "SELECT * from wholesaleinvoicebasedata where account_id = $wholeseller_id AND  date(fromdate) = $fromDate adn date(todate) = $todate  ";
-	} else {
-			$sql = "SELECT * from wholesaleinvoicebasedata ";
+ 	$Condition='';
+	if( isset($_GET['wholeseller_id']) )
+	{	
+		$wholeseller_id = $_GET['wholeseller_id'];
+		$Condition = " AND account_id like '$wholeseller_id' ";
 	}
-	 
+
+	if( isset($_GET['from_date']) && strlen($_GET['from_date'])>0 )
+	{	
+		$fromDate = $_GET['from_date'];
+		$Condition  = $Condition." AND date(fromdate) = '$fromDate' ";
+	}
+
+	if( isset($_GET['to_date']) && strlen($_GET['to_date'])>0 )
+	{	
+		$todate = $_GET['to_date'];
+		$Condition  = $Condition." AND date(todate) = '$todate' ";
+	}
+
+ 		 	$sql = "SELECT * from wholesaleinvoicebasedata WHERE 1= 1 $Condition";
+ 	 
  
  $result = mysql_query($sql);
 while($row = mysql_fetch_object($result)){
@@ -128,11 +141,10 @@ while($row = mysql_fetch_object($result)){
 	<tr class="border_bottom_payments">
   	<td> <?php echo $row->CustomerName;?></td>		
 	<td> <?php echo $row->prefix;?></td>			
-	<td> <?php echo $row->CustomerName;?></td>			
 	<td> <?php echo $row->country;?></td>
 	<td> <?php echo $row->Description;?></td>
 	<td> <?php echo $row->price_per_1_min;?></td>
-	<td> <?php echo $row->price_per_n_min;?></td>
+	<td> <?php echo $row->Duration_min;?></td>
 	<td> <?php echo $row->Charged_Amount;?></td>
 	<td> <?php echo $row->fromdate;?></td>
 	<td> <?php echo $row->todate;?></td>

@@ -48,7 +48,7 @@ $numRows = $data->sheets[0]['numRows'];
 $uploaded = 0;
 
 $upfilenameData = explode('_',$_SESSION['filename']);
-print_r($upfilenameData);
+//print_r($upfilenameData);
 $fromDate = $upfilenameData[3];
 $toDate = $upfilenameData[8];
 
@@ -59,8 +59,11 @@ for($i=1;$i<=$numRows;$i++){
 	$row =  $data->sheets[0]['cells'][$i];
 //echo "<pre>"; print_r($row); echo "</pre>";
 	$id = $row[2];
-	 $account_id = 0;
+	 
 	 $customerName = $row[1];
+	 $accountData = explode('.',$customerName);
+	//print_r($accountData);		
+	 $account_id = 	$accountData[1];
 	 $prefix  = $row[2];
 	 $country = $row[3];
 	 $Description = $row[4];
@@ -73,8 +76,8 @@ for($i=1;$i<=$numRows;$i++){
 
 //print_r($data->sheets[0]['cells'][$i]);
 	 
-		$sql = "INSERT INTO wholesaleinvoicebasedata(customerName ,`account_id`, `prefix`, `country`, `Description`, `price_per_1_min`, `price_per_n_min`, `numberofCalls`, `Duration_min`, `BilledDuration_min`, `Charged_Amount`,fromDate,toDate) 
-		  VALUES ('$customerName',$account_id, '$prefix', '$country', '$Description', '$price_per_1_min','$price_per_n_min','$numberofCalls', '$Duration_min', '$BilledDuration_min', '$Charged_Amount','$fromDate','$toDate')";
+	  	$sql = "INSERT INTO wholesaleinvoicebasedata(customerName ,`account_id`, `prefix`, `country`, `Description`, `price_per_1_min`, `price_per_n_min`, `numberofCalls`, `Duration_min`, `BilledDuration_min`, `Charged_Amount`,fromDate,toDate) 
+		  VALUES ('$customerName','$account_id', '$prefix', '$country', '$Description', '$price_per_1_min','$price_per_n_min','$numberofCalls', '$Duration_min', '$BilledDuration_min', '$Charged_Amount','$fromDate','$toDate')";
 	 
 	
 	//echo "<br>".$sql;
@@ -87,7 +90,7 @@ for($i=1;$i<=$numRows;$i++){
  if ( $uploaded == 1){
 	$_SESSION['SuccessMsg'] =  "Your records inserted successfully";
 	  unlink('uploads/invoices.xls');
-	 header("Location: invoicehistory.php");	exit(0);
+	  header("Location: invoicehistory.php");	exit(0);
  }
 
  
