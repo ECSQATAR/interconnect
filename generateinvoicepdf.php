@@ -65,6 +65,16 @@ function addDurationAsSeconds( $timeStamp ) {
         return $seconds;
 }
 
+
+
+$prefixmasterList = array();
+$sqlp = "SELECT * FROM prefixmaster  ";
+$resultp = mysql_query($sqlp);
+while($rowp = mysql_fetch_object($resultp)){
+ $prefixmasterList[$rowp->prefix] = $rowp->description;
+}
+
+
 $sql = "SELECT * FROM company where id=1";
 $oldrec = mysql_query($sql);
 $rowold = mysql_fetch_object($oldrec);
@@ -139,7 +149,7 @@ $oldrec = mysql_query($sqlold);
 $rowold = mysql_fetch_object($oldrec);
 
  $Condition='';
- $sql = "SELECT * from tempwsaleinvoicedata WHERE 1= 1  ";
+ $sql = "SELECT * from tempwsaleinvoicedata WHERE 1 = 1  ";
  	 
  $getTotalTime = 0; 
  $totalchargedamount=0;
@@ -147,6 +157,8 @@ $rowold = mysql_fetch_object($oldrec);
  $resultinvoice = mysql_query($sql);
  
 $currentDate = date("Ymd");
+$createdDate = date("d/m/Y");
+$dueDate =  date('d/m/Y', strtotime($createdDate. ' + 3 day'));
 $invNo = $currentDate;
 
 $totalchargedamount = 0;
@@ -183,8 +195,8 @@ ceo@ecs-net.net<br>
 </tr>
 
 
-<tr> <td> &nbsp; </td> <td>&nbsp;</td> <td> Create Date 07/04/2016 </td> </tr>
-<tr> <td> &nbsp; </td> <td>&nbsp;</td> <td> Due Date 07/04/2016 </td> </tr>
+<tr> <td> &nbsp; </td> <td>&nbsp;</td> <td> Create Date '.$createdDate.' </td> </tr>
+<tr> <td> &nbsp; </td> <td>&nbsp;</td> <td> Due Date '.$dueDate.' </td> </tr>
 
 
 
@@ -215,7 +227,7 @@ while($row = mysql_fetch_object($resultinvoice)){
  $htmlsubtxt = '	 
 	<tr>
 	<td>'.$row->prefix.'</td>			
-	<td>'.$row->Description.'</td>
+	<td>'.$prefixmasterList[$row->prefix].'</td>
 	<td>'.$row->price_per_1_min.'</td>
 	<td>'.$row->Duration_min.'.</td>
 	<td>'.$row->Charged_Amount.'</td>
@@ -246,6 +258,8 @@ $html = $html. '
  <p style="text-align:right"> Total '.$totalchargedamount.' USD </p>
  <p style="text-align:right"> Outstanding 0.00 USD </p>
  <p style="text-align:right"> Subtotal '.$totalchargedamount.' USD </p>
+ 
+ <p style="color:#ff0000;">Note: No dispute will be entertained after 72 hours of the invoice date. </p>
  
  <hr>
  
