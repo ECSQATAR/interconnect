@@ -10,6 +10,7 @@ mysql_select_db($dbName);
 function sendEMail($toEmail,$pdfpath) {
 
     $body = " 
+
 <table>
 <tr><td> Welcome to ESC-NET FZE </td></tr>
 <tr><td> Please keep this email for your records. Your information is as follows:</td> </tr>
@@ -145,11 +146,15 @@ $rowold = mysql_fetch_object($oldrec);
  $totalbiledduration =0;
  $resultinvoice = mysql_query($sql);
  
+$currentDate = date("Ymd");
+$invNo = $currentDate;
 
-
+$totalchargedamount = 0;
+$totalbiledduration=0;
+	  
   $html = '
   
- 
+   
 <table>
 <tr>
 <td>
@@ -174,7 +179,7 @@ ceo@ecs-net.net<br>
 <tr>
 <td>Sync Sound </td>
 <td>&nbsp;</td>
-<td> Inv. # 2016040701 </td>
+<td> Inv. #'.$invNo.' </td>
 </tr>
 
 
@@ -203,6 +208,7 @@ ceo@ecs-net.net<br>
  </tr>';
 
  	 $htmlsub='';
+	
 while($row = mysql_fetch_object($resultinvoice)){
 	//print_r($row);
 	 
@@ -237,9 +243,9 @@ $html = $html. '
  
 <p> <br> </p>
  
- <p style="text-align:right"> Total 397.31 USD </p>
+ <p style="text-align:right"> Total '.$totalchargedamount.' USD </p>
  <p style="text-align:right"> Outstanding 0.00 USD </p>
- <p style="text-align:right"> Subtotal 397.31 USD </p>
+ <p style="text-align:right"> Subtotal '.$totalchargedamount.' USD </p>
  
  <hr>
  
@@ -248,7 +254,7 @@ $html = $html. '
 <p> In case of any dispute please send email to accounts@ecs-net.net </p>
 <p> !!!!!!!!!!!!!Thank you for your business!!!!!!!!!!!!!! </p>
 
-
+<body> 
 ';
 
  //echo $html;
@@ -260,7 +266,9 @@ $html = $html. '
 // set default header data
 $pdf->SetHeaderData($Header_logo, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, PDF_HEADER_STRING);
 $pdf->setHeaderTemplateAutoreset(true);
-
+$pdf->SetAutoPageBreak(false, 0);
+$img_file = 'invbg.jpg';
+$pdf->Image($img_file, 0, 0, 1000, 1000, '', '', '', false, 1000, '', false, false, 0);
 
 // output the HTML content
 $pdf->writeHTML($html, true, false, true, false, '');
@@ -282,3 +290,4 @@ $pdf->Output('output.pdf', 'I');
 //============================================================+
 // END OF FILE
 //============================================================+
+?>
