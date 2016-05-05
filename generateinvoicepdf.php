@@ -79,6 +79,11 @@ $sql = "SELECT * FROM company where id=1";
 $oldrec = mysql_query($sql);
 $rowold = mysql_fetch_object($oldrec);
 
+
+$sqlnew = "SELECT * FROM company where id=62";
+$newrec = mysql_query($sqlnew);
+$rownewcompany = mysql_fetch_object($newrec);
+$invoiceName = trim($rownewcompany->nameofcompany.date("d-m-Y").'.pdf');
 //define ('PDF_HEADER_LOGO', 'logoVoip.png');
 define ('PDF_HEADER_LOGO', 'ECS-Logo.png');
 
@@ -236,7 +241,10 @@ while($row = mysql_fetch_object($resultinvoice)){
 
 	 $getTotalTime +=  addDurationAsSeconds($row->Duration_min);
 	 	 $totalchargedamount = $totalchargedamount + $row->Charged_Amount;
-		 
+	  
+	  $fromDate = date("d-m-Y",$row->fromdate);
+	   $toDate = date("d-m-Y",$row->todate);
+	  	 
 		 
 	}
 	
@@ -262,8 +270,8 @@ $html = $html. '
  <p style="color:#ff0000;">Note: No dispute will be entertained after 72 hours of the invoice date. </p>
  
  <hr>
- 
-<p> This invoice is for the period of 28-03-2016 00:00:00 to 03-04-2016 23:59:59. </p>
+
+<p> This invoice is for the period of '.$fromDate.' 00:00:00 to '.$toDate.'23:59:59. </p>
 <p> All invoices are billed at Dubai (UAE) local time GMT+4. </p>
 <p> In case of any dispute please send email to accounts@ecs-net.net </p>
 <p> !!!!!!!!!!!!!Thank you for your business!!!!!!!!!!!!!! </p>
@@ -296,7 +304,7 @@ $pdf->lastPage();
 ob_clean();
 ob_start();
 //Close and output PDF document
-$pdfpath = $_SERVER['DOCUMENT_ROOT']."interconnect/pdfs/output-$lastInserId.pdf";
+$pdfpath = $_SERVER['DOCUMENT_ROOT']."interconnect/invoicepdfs/$invoiceName";
 $toEmail='snmurty99@gmail.com'; 
 //sendEMail($toEmail,$pdfpath);
 $pdf->Output($pdfpath, 'F');
