@@ -274,7 +274,8 @@ $pdf->lastPage();
 ob_clean();
 ob_start();
 //Close and output PDF document
-$pdfpath = $_SERVER['DOCUMENT_ROOT']."interconnect/pdfs/output-$lastInserId.pdf";
+$lastInserId=1;
+$pdfpath = $_SERVER['DOCUMENT_ROOT']."interconnect/pdfs/output-1.pdf";
 $toEmail='snmurty99@gmail.com'; 
 //sendEMail($toEmail,$pdfpath);
 $pdf->Output($pdfpath, 'F');
