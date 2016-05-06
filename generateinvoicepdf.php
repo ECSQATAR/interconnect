@@ -137,8 +137,8 @@ if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
 // ---------------------------------------------------------
 
 // set font
-$pdf->SetFontSize(10);
-
+$pdf->SetFont('times', '', 14, '', 'false');
+$pdf->SetFontSize(14);
 $pdf->SetPrintHeader(false);
 $pdf->SetPrintFooter(false);
   
@@ -170,7 +170,7 @@ $totalchargedamount = 0;
 $totalbiledduration=0;
 	  
   $html = '
-  
+ 
    
 <table>
 <tr>
@@ -212,14 +212,14 @@ ceo@ecs-net.net<br>
  
 
 
-<table border="1">
+<table border="1" cellpadding="2" cellspacing="2">
 
-  <tr>
+  <tr style="background-color:#000000;color:#FFFFFF;">
 		    
-		    <td>Prefix </td>
+		    <td>Prefix</td>
 		    <td>Description </td>
-		    <td>price_per_1_min</td>
-  		    <td>Duration min</td>
+		    <td>Quantity</td>
+			<td>Price</td>
 		    <td>Charged Amount</td>
 
  </tr>';
@@ -233,9 +233,10 @@ while($row = mysql_fetch_object($resultinvoice)){
 	<tr>
 	<td>'.$row->prefix.'</td>			
 	<td>'.$prefixmasterList[$row->prefix].'</td>
-	<td>'.$row->price_per_1_min.'</td>
 	<td>'.$row->Duration_min.'.</td>
-	<td>'.$row->Charged_Amount.'</td>
+	<td>'.$row->price_per_1_min.'</td>
+	<td>'.$row->Charged_Amount.'  </td>  
+	<td><span style="color:red">USD </span> </td>  
 	</tr>';
 	 $htmlsub =  $htmlsub.$htmlsubtxt;  
 
@@ -255,7 +256,7 @@ while($row = mysql_fetch_object($resultinvoice)){
 $html = $html.$htmlsub;
 
 $html = $html. '
- <tr> <td colspan="5">  Billed Duration mm:ss '.$totalbiledduration.' &nbsp; charged Amount :'.$totalchargedamount.'</td> </tr>
+ <tr> <td colspan="5"> Total Minutes: '.$totalbiledduration.' &nbsp; charged Amount :'.$totalchargedamount.'</td> </tr>
 
  <hr>
  
@@ -263,9 +264,11 @@ $html = $html. '
  
 <p> <br> </p>
  
- <p style="text-align:right"> Total '.$totalchargedamount.' USD </p>
- <p style="text-align:right"> Outstanding 0.00 USD </p>
- <p style="text-align:right"> Subtotal '.$totalchargedamount.' USD </p>
+ <p style="">  &nbsp; &nbsp; &nbsp; &nbsp; Total Minutes: '.$totalbiledduration.'  </span>
+ <span style="text-align:right">Total : '.$totalchargedamount.' <span style="color:red">USD </span>  </span>
+ </p>
+ <p style="text-align:right"> Outstanding 0.00 <span style="color:red">USD </span>  </p>
+ <p style="text-align:right"> Subtotal '.$totalchargedamount.' <span style="color:red">USD </span>  </p>
  
  <p style="color:#ff0000;">Note: No dispute will be entertained after 72 hours of the invoice date. </p>
  
@@ -276,7 +279,7 @@ $html = $html. '
 <p> In case of any dispute please send email to accounts@ecs-net.net </p>
 <p> !!!!!!!!!!!!!Thank you for your business!!!!!!!!!!!!!! </p>
 
-<body> 
+ 
 ';
 
  //echo $html;
@@ -289,8 +292,8 @@ $html = $html. '
 $pdf->SetHeaderData($Header_logo, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, PDF_HEADER_STRING);
 $pdf->setHeaderTemplateAutoreset(true);
 $pdf->SetAutoPageBreak(false, 0);
-$img_file = 'invbg.jpg';
-$pdf->Image($img_file, 0, 0, 1000, 1000, '', '', '', false, 1000, '', false, false, 0);
+//$img_file = 'invbg.jpg';
+//$pdf->Image($img_file, 0, 0, 1000, 1000, '', '', '', false, 1000, '', false, false, 0);
 
 // output the HTML content
 $pdf->writeHTML($html, true, false, true, false, '');

@@ -91,7 +91,7 @@ while($row = mysql_fetch_object($result)){
 ?>	
  <tr> <td colspan='10'>  Billed Duration mm:ss <?php echo $totalbiledduration;?>  &nbsp; charged Amount : <?php echo $totalchargedamount; ?> </td> </tr>
 
- <tr> <td colspan='10'> <a href="generateinvoicepdf.php">Generate pdf </a> </td> </tr>
+ <tr> <td colspan='10'> <a href="generateinvoice.php">Generate Invoice </a> </td> </tr>
  
 
  </table>
