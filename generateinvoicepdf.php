@@ -10,6 +10,7 @@ mysql_select_db($dbName);
 function sendEMail($toEmail,$pdfpath) {
 
     $body = " 
+
 <table>
 <tr><td> Welcome to ESC-NET FZE </td></tr>
 <tr><td> Please keep this email for your records. Your information is as follows:</td> </tr>
@@ -64,10 +65,25 @@ function addDurationAsSeconds( $timeStamp ) {
         return $seconds;
 }
 
+
+
+$prefixmasterList = array();
+$sqlp = "SELECT * FROM prefixmaster  ";
+$resultp = mysql_query($sqlp);
+while($rowp = mysql_fetch_object($resultp)){
+ $prefixmasterList[$rowp->prefix] = $rowp->description;
+}
+
+
 $sql = "SELECT * FROM company where id=1";
 $oldrec = mysql_query($sql);
 $rowold = mysql_fetch_object($oldrec);
 
+
+$sqlnew = "SELECT * FROM company where id=62";
+$newrec = mysql_query($sqlnew);
+$rownewcompany = mysql_fetch_object($newrec);
+$invoiceName = trim($rownewcompany->nameofcompany.date("d-m-Y").'.pdf');
 //define ('PDF_HEADER_LOGO', 'logoVoip.png');
 define ('PDF_HEADER_LOGO', 'ECS-Logo.png');
 
@@ -121,8 +137,8 @@ if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
 // ---------------------------------------------------------
 
 // set font
-$pdf->SetFontSize(10);
-
+$pdf->SetFont('times', '', 12, '', 'false');
+$pdf->SetFontSize(12);
 $pdf->SetPrintHeader(false);
 $pdf->SetPrintFooter(false);
   
@@ -138,18 +154,24 @@ $oldrec = mysql_query($sqlold);
 $rowold = mysql_fetch_object($oldrec);
 
  $Condition='';
- $sql = "SELECT * from tempwsaleinvoicedata WHERE 1= 1  ";
+ $sql = "SELECT * from tempwsaleinvoicedata WHERE 1 = 1  ";
  	 
  $getTotalTime = 0; 
  $totalchargedamount=0;
  $totalbiledduration =0;
  $resultinvoice = mysql_query($sql);
  
+$currentDate = date("Ymd");
+$createdDate = date("d/m/Y");
+$dueDate =  date('d/m/Y', strtotime($createdDate. ' + 3 day'));
+$invNo = $currentDate;
 
-
+$totalchargedamount = 0;
+$totalbiledduration=0;
+	  
   $html = '
-  
  
+   
 <table>
 <tr>
 <td>
@@ -174,51 +196,52 @@ ceo@ecs-net.net<br>
 <tr>
 <td>Sync Sound </td>
 <td>&nbsp;</td>
-<td> Inv. # 2016040701 </td>
+<td> Inv. #'.$invNo.' </td>
 </tr>
 
 
-<tr> <td> &nbsp; </td> <td>&nbsp;</td> <td> Create Date 07/04/2016 </td> </tr>
-<tr> <td> &nbsp; </td> <td>&nbsp;</td> <td> Due Date 07/04/2016 </td> </tr>
+<tr> <td> &nbsp; </td> <td>&nbsp;</td> <td> Create Date '.$createdDate.' </td> </tr>
+<tr> <td> &nbsp; </td> <td>&nbsp;</td> <td> Due Date '.$dueDate.' </td> </tr>
 
 
 
 </table>
 
 <p> <br> </p>
-<p> <br> </p>
- 
+<table border="1" >
 
-
-<table border="1">
-
-  <tr>
+  <tr style="background-color:#000000;color:#FFFFFF;">
 		    
-		    <td>Prefix </td>
+		    <td>Prefix</td>
 		    <td>Description </td>
-		    <td>price_per_1_min</td>
-  		    <td>Duration min</td>
+		    <td>Quantity</td>
+			<td>Price</td>
 		    <td>Charged Amount</td>
 
  </tr>';
 
  	 $htmlsub='';
+	
 while($row = mysql_fetch_object($resultinvoice)){
 	//print_r($row);
 	 
  $htmlsubtxt = '	 
 	<tr>
 	<td>'.$row->prefix.'</td>			
-	<td>'.$row->Description.'</td>
-	<td>'.$row->price_per_1_min.'</td>
+	<td>'.$prefixmasterList[$row->prefix].'</td>
 	<td>'.$row->Duration_min.'.</td>
-	<td>'.$row->Charged_Amount.'</td>
+	<td>'.$row->price_per_1_min.'</td>
+	<td>'.$row->Charged_Amount.'  </td>  
+	<td><span style="color:red">USD </span> </td>  
 	</tr>';
 	 $htmlsub =  $htmlsub.$htmlsubtxt;  
 
 	 $getTotalTime +=  addDurationAsSeconds($row->Duration_min);
 	 	 $totalchargedamount = $totalchargedamount + $row->Charged_Amount;
-		 
+	  
+	  $fromDate = date("d-m-Y",$row->fromdate);
+	   $toDate = date("d-m-Y",$row->todate);
+	  	 
 		 
 	}
 	
@@ -229,7 +252,7 @@ while($row = mysql_fetch_object($resultinvoice)){
 $html = $html.$htmlsub;
 
 $html = $html. '
- <tr> <td colspan="5">  Billed Duration mm:ss '.$totalbiledduration.' &nbsp; charged Amount :'.$totalchargedamount.'</td> </tr>
+ <tr> <td colspan="5"> Total Minutes: '.$totalbiledduration.' &nbsp; charged Amount :'.$totalchargedamount.'</td> </tr>
 
  <hr>
  
@@ -237,18 +260,22 @@ $html = $html. '
  
 <p> <br> </p>
  
- <p style="text-align:right"> Total 397.31 USD </p>
- <p style="text-align:right"> Outstanding 0.00 USD </p>
- <p style="text-align:right"> Subtotal 397.31 USD </p>
+ <p style="">  &nbsp; &nbsp; &nbsp; &nbsp; Total Minutes: '.$totalbiledduration.'  </span>
+ <span style="text-align:right">Total : '.$totalchargedamount.' <span style="color:red">USD </span>  </span>
+ </p>
+ <p style="text-align:right"> Outstanding 0.00 <span style="color:red">USD </span>  </p>
+ <p style="text-align:right"> Subtotal '.$totalchargedamount.' <span style="color:red">USD </span>  </p>
+ 
+ <p style="color:#ff0000;">Note: No dispute will be entertained after 72 hours of the invoice date. </p>
  
  <hr>
- 
-<p> This invoice is for the period of 28-03-2016 00:00:00 to 03-04-2016 23:59:59. </p>
+
+<p> This invoice is for the period of '.$fromDate.' 00:00:00 to '.$toDate.'23:59:59. </p>
 <p> All invoices are billed at Dubai (UAE) local time GMT+4. </p>
 <p> In case of any dispute please send email to accounts@ecs-net.net </p>
 <p> !!!!!!!!!!!!!Thank you for your business!!!!!!!!!!!!!! </p>
 
-
+ 
 ';
 
  //echo $html;
@@ -260,7 +287,9 @@ $html = $html. '
 // set default header data
 $pdf->SetHeaderData($Header_logo, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, PDF_HEADER_STRING);
 $pdf->setHeaderTemplateAutoreset(true);
-
+$pdf->SetAutoPageBreak(false, 0);
+//$img_file = 'invbg.jpg';
+//$pdf->Image($img_file, 0, 0, 1000, 1000, '', '', '', false, 1000, '', false, false, 0);
 
 // output the HTML content
 $pdf->writeHTML($html, true, false, true, false, '');
@@ -274,8 +303,7 @@ $pdf->lastPage();
 ob_clean();
 ob_start();
 //Close and output PDF document
-$lastInserId=1;
-$pdfpath = $_SERVER['DOCUMENT_ROOT']."interconnect/pdfs/output-1.pdf";
+$pdfpath = $_SERVER['DOCUMENT_ROOT']."interconnect/invoicepdfs/$invoiceName";
 $toEmail='snmurty99@gmail.com'; 
 //sendEMail($toEmail,$pdfpath);
 $pdf->Output($pdfpath, 'F');
@@ -283,3 +311,4 @@ $pdf->Output('output.pdf', 'I');
 //============================================================+
 // END OF FILE
 //============================================================+
+?>
