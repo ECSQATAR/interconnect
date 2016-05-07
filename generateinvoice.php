@@ -284,7 +284,7 @@ if (isset($_POST['conform'])){
  	$sqlinv = "INSERT INTO wsalesinvoicesmaster (`company_id`, `companyname`, `invoicenumber`, `invoicecreateddate`, `invoiceduedate`, `invoiceTotalminutes`, `invoiceamount`, `invoiceoutstanding`, `invoicesubtotal`, `invoicefromdate`, `invoicetodate`, `paidinvoice`, `pdffilename`,invoicebilleddesc) 
 		 VALUES($company_id, '$companyname', '$invoicenumber', '$invoicecreateddate', '$invoiceduedate', '$totalbiledduration', $totalchargedamount, $invoiceoutstanding, $totalchargedamount, '$invoicefromdate', '$invoicetodate', 0, '$pdffilename','$invoicebilleddesc')";
     mysql_query($sqlinv);
-	
+	$invmasterid =	 mysql_insert_id();
 	$prefixData = $_POST['prefix'];
 	$descriptionData = $_POST['description'];
 	$Duration_minData = $_POST['Duration_min'];
@@ -306,8 +306,9 @@ if (isset($_POST['conform'])){
 	 $toDate  = date('Y-m-d',strtotime($toDate));
 	//print_r($data->sheets[0]['cells'][$i]);
 	$account_id='3';
-	$sqlchd = "INSERT INTO  wsalesinvoiceschild (customerName,`account_id`, `prefix`,  `Description`, `price_per_1_min`,  `numberofCalls`, `Duration_min`, `BilledDuration_min`, `Charged_Amount`,fromDate,toDate) 
-	  VALUES ('$customerName',$account_id, '$prefix', '$Description', '$price_per_1_min','$numberofCalls', '$Duration_min', '$BilledDuration_min', '$Charged_Amount','$fromDate','$todate')";
+	
+	$sqlchd = "INSERT INTO  wsalesinvoiceschild (invmasterid,customerName,`account_id`, `prefix`,  `Description`, `price_per_1_min`,  `numberofCalls`, `Duration_min`, `BilledDuration_min`, `Charged_Amount`,fromDate,toDate) 
+	  VALUES ($invmasterid,'$customerName',$account_id, '$prefix', '$Description', '$price_per_1_min','$numberofCalls', '$Duration_min', '$BilledDuration_min', '$Charged_Amount','$fromDate','$todate')";
 	mysql_query($sqlchd);
 	 
 	 }
