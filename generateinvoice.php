@@ -182,11 +182,12 @@ while($row = mysql_fetch_object($resultinvoice)){
  ?>
 	<tr>
 	<td><input type="hidden" name="prefix[]" value="<?php echo $row->prefix;?>" /> <?php echo $row->prefix;?></td>			
-	<td><input type="hidden" name="description[]" value="<?php echo  $prefixmasterList[$row->prefix];?>" />   </td>
+	<td><input type="hidden" name="description[]" value="<?php echo  $prefixmasterList[$row->prefix];?>" /> <?php echo $prefixmasterList[$row->prefix];?>  </td>
 	<td><input type="text" name="Duration_min[]" value="<?php echo $row->Duration_min;?>" />  </td>
-	<td><input type="text" name="price_per_1_min[]" value="<?php echo $row->price_per_1_min;?>" />  </td>
-	<td><input type="text" name="numberofCalls[]" value="<?php echo $row->numberofCalls;?>" />  </td>
-	 
+	<td>
+		<input type="text" name="price_per_1_min[]" value="<?php echo $row->price_per_1_min;?>" />
+		<input type="hidden" name="numberofCalls[]" value="<?php echo $row->numberofCalls;?>" />
+	</td>
 	<td style="text-align:right"><input type="text" name="Charged_Amount[]" value="<?php echo round($row->Charged_Amount,2);?>" /> </td>  
 	<td style="border-right:1px solid #FFFFFF;color:red;text-align:left;"> USD</td>  
 	</tr>
@@ -312,9 +313,6 @@ if (isset($_POST['conform'])){
 	mysql_query($sqlchd);
 	 
 	 }
-	
-	
-	
 	
 	
 sleep(5);
