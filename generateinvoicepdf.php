@@ -75,15 +75,13 @@ while($rowp = mysql_fetch_object($resultp)){
 }
 
 
-$sql = "SELECT * FROM company where id=1";
-$oldrec = mysql_query($sql);
-$rowold = mysql_fetch_object($oldrec);
+$sqlinv = "SELECT * FROM  wsalesinvoicesmaster where id=1";
+$recinv = mysql_query($sqlinv);
+$rowinv = mysql_fetch_object($recinv);
+$invmasterId = $rowinv->id;
 
 
-$sqlnew = "SELECT * FROM company where id=62";
-$newrec = mysql_query($sqlnew);
-$rownewcompany = mysql_fetch_object($newrec);
-$invoiceName = trim($rownewcompany->nameofcompany.date("d-m-Y").'.pdf');
+$invoiceName = $rowold->invoicenumber;
 //define ('PDF_HEADER_LOGO', 'logoVoip.png');
 define ('PDF_HEADER_LOGO', 'ECS-Logo.png');
 
@@ -149,17 +147,12 @@ $pdf->SetPrintFooter(false);
  // add a page
 $pdf->AddPage();
 
- $sqlold = "SELECT * FROM company where id=1";
+$sqlold = "SELECT * FROM company where id=1";
 $oldrec = mysql_query($sqlold);
 $rowold = mysql_fetch_object($oldrec);
 
  $Condition='';
- $sql = "SELECT * from tempwsaleinvoicedata WHERE 1 = 1  ";
- 	 
- $getTotalTime = 0; 
- $totalchargedamount=0;
- $totalbiledduration =0;
- $resultinvoice = mysql_query($sql);
+ 
  
 $currentDate = date("Ymd");
 $createdDate = date("d/m/Y");
@@ -189,19 +182,19 @@ ceo@ecs-net.net<br>
 
 <tr>
 <td>To.</td>
-<td>&nbsp;</td>
+<td>&nbs;</td>
 <td>&nbsp;</td>
 </tr>
 
 <tr>
-<td>Sync Sound </td>
+<td>'.$rowinv->companyname.' </td>
 <td>&nbsp;</td>
-<td> Inv. #'.$invNo.' </td>
+<td> Inv. #'.$rowinv->invoicenumber.' </td>
 </tr>
 
 
-<tr> <td> &nbsp; </td> <td>&nbsp;</td> <td> Create Date '.$createdDate.' </td> </tr>
-<tr> <td> &nbsp; </td> <td>&nbsp;</td> <td> Due Date '.$dueDate.' </td> </tr>
+<tr> <td> &nbsp; </td> <td>&nbsp;</td> <td> Create Date '.$rowinv->invoicecreateddate.' </td> </tr>
+<tr> <td> &nbsp; </td> <td>&nbsp;</td> <td> Due Date '.$rowinv->invoiceduedate.' </td> </tr>
 
 
 
@@ -226,25 +219,32 @@ ceo@ecs-net.net<br>
 
  	 $htmlsub='';
 	
-while($row = mysql_fetch_object($resultinvoice)){
+ $sqlchild = "SELECT * from wsalesinvoiceschild WHERE invmasterid = $invmasterId";
+ 	 
+ $getTotalTime = 0; 
+ $totalchargedamount=0;
+ $totalbiledduration =0;
+ $resultChild = mysql_query($sqlchild);
+ 
+while($rowChild = mysql_fetch_object($resultChild)){
 	//print_r($row);
 	 
  $htmlsubtxt = '	 
 	<tr>
-	<td>'.$row->prefix.'</td>			
-	<td>'.$prefixmasterList[$row->prefix].'</td>
-	<td>'.$row->Duration_min.'.</td>
-	<td>'.$row->price_per_1_min.'</td>
-	<td>'.$row->Charged_Amount.'  </td>  
+	<td>'.$rowChild->prefix.'</td>			
+	<td>'.$rowChild[$row->prefix].'</td>
+	<td>'.$rowChild->Duration_min.'.</td>
+	<td>'.$rowChild->price_per_1_min.'</td>
+	<td>'.$rowChild->Charged_Amount.'  </td>  
 	<td><span style="color:red">USD </span> </td>  
 	</tr>';
 	 $htmlsub =  $htmlsub.$htmlsubtxt;  
 
-	 $getTotalTime +=  addDurationAsSeconds($row->Duration_min);
-	 	 $totalchargedamount = $totalchargedamount + $row->Charged_Amount;
+	 $getTotalTime +=  addDurationAsSeconds($rowChild->Duration_min);
+	 	 $totalchargedamount = $totalchargedamount + $rowChild->Charged_Amount;
 	  
-	  $fromDate = date("d-m-Y",$row->fromdate);
-	   $toDate = date("d-m-Y",$row->todate);
+	  $fromDate = date("d-m-Y",$rowChild->fromdate);
+	   $toDate = date("d-m-Y",$rowChild->todate);
 	  	 
 		 
 	}
@@ -256,7 +256,7 @@ while($row = mysql_fetch_object($resultinvoice)){
 $html = $html.$htmlsub;
 
 $html = $html. '
- <tr> <td colspan="5"> Total Minutes: '.$totalbiledduration.' &nbsp; charged Amount :'.$totalchargedamount.'</td> </tr>
+ <tr> <td colspan="5"> Total Minutes: '.$rowinv->invoiceTotalminutes.' &nbsp; charged Amount :'.$rowinv->invoiceamount.'</td> </tr>
 
  <hr>
  
@@ -264,18 +264,18 @@ $html = $html. '
  
 <p> <br> </p>
  
- <p style="">  &nbsp; &nbsp; &nbsp; &nbsp; Total Minutes: '.$totalbiledduration.'  </span>
- <span style="text-align:right">Total : '.$totalchargedamount.' <span style="color:red">USD </span>  </span>
+ <p style="">  &nbsp; &nbsp; &nbsp; &nbsp; Total Minutes: '.$rowinv->invoiceTotalminutes.'  </span>
+ <span style="text-align:right">Total : '.$rowinv->invoiceamount.' <span style="color:red">USD </span>  </span>
  </p>
  <p style="text-align:right"> Outstanding 0.00 <span style="color:red">USD </span>  </p>
- <p style="text-align:right"> Subtotal '.$totalchargedamount.' <span style="color:red">USD </span>  </p>
+ <p style="text-align:right"> Subtotal '.$rowinv->invoicesubtotal.' <span style="color:red">USD </span>  </p>
  
  <p style="color:#ff0000;">Note: No dispute will be entertained after 72 hours of the invoice date. </p>
  
  <hr>
 
-<p> This invoice is for the period of '.$fromDate.' 00:00:00 to '.$toDate.'23:59:59. </p>
-<p> All invoices are billed at Dubai (UAE) local time GMT+4. </p>
+<p> This invoice is for the period of '.$rowinv->invoicefromdate.' 00:00:00 to '.$rowinv->invoicetodate.'23:59:59. </p>
+<p>'.$rowinv->invoicebilleddesc.'</p>
 <p> In case of any dispute please send email to accounts@ecs-net.net </p>
 <p> !!!!!!!!!!!!!Thank you for your business!!!!!!!!!!!!!! </p>
 
@@ -307,7 +307,7 @@ $pdf->lastPage();
 ob_clean();
 ob_start();
 //Close and output PDF document
-$pdfpath = $_SERVER['DOCUMENT_ROOT']."interconnect/invoicepdfs/$invoiceName";
+$pdfpath = $_SERVER['DOCUMENT_ROOT']."interconnect/invoicepdfs/".$rowinv->pdffilename;
 $toEmail='snmurty99@gmail.com'; 
 //sendEMail($toEmail,$pdfpath);
 $pdf->Output($pdfpath, 'F');
