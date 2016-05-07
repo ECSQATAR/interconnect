@@ -94,7 +94,7 @@ else
  	$lastInserId = 1;
 
 
-$sqlold = "SELECT * FROM company where id=1";
+$sqlold = "SELECT * FROM company where id=61";
 $oldrec = mysql_query($sqlold);
 $rowold = mysql_fetch_object($oldrec);
 
@@ -112,7 +112,7 @@ $dueDate =  date('d/m/Y', strtotime($createdDate. ' + 3 day'));
 $invNo = $currentDate;
 $invoicenumber = $invNo; 
 
-$companyname = $rownewcompany->nameofcompany;
+$companyname = $rowold->nameofcompany;
 
 $totalchargedamount = 0;
 $totalbiledduration=0;
@@ -247,7 +247,7 @@ while($row = mysql_fetch_object($resultinvoice)){
  
  <div style="border-top: solid; border-bottom:solid;">
 <p>This invoice is for the period of <?php echo $fromDate;?> 00:00:00 to <?php echo $toDate;?> 23:59:59. </p>
-<p><input type="text" name="invoicebilleddesc" value="All invoices are billed at Dubai (UAE) local time GMT+4" />. </p>
+<p><input type="text" class="form-control" name="invoicebilleddesc" value="All invoices are billed at Dubai (UAE) local time GMT+4" />. </p>
 <p>In case of any dispute please send email to accounts@ecs-net.net </p>
 <p> !!!!!!!!!!!!!Thank you for your business!!!!!!!!!!!!!! </p>
 </div>
@@ -281,11 +281,11 @@ if (isset($_POST['conform'])){
 	
 	$ftotamount = round($totalchargedamount,0);
 	$pdffilename = trim($rownewcompany->nameofcompany.date("d-m-Y").$ftotamount.'.pdf');
-
- 	$sqlinv = "INSERT INTO wsalesinvoicesmaster (`company_id`, `companyname`, `invoicenumber`, `invoicecreateddate`, `invoiceduedate`, `invoiceTotalminutes`, `invoiceamount`, `invoiceoutstanding`, `invoicesubtotal`, `invoicefromdate`, `invoicetodate`, `paidinvoice`, `pdffilename`,invoicebilleddesc) 
+$company_id = 3;
+ echo	$sqlinv = "INSERT INTO wsalesinvoicesmaster (`company_id`, `companyname`, `invoicenumber`, `invoicecreateddate`, `invoiceduedate`, `invoiceTotalminutes`, `invoiceamount`, `invoiceoutstanding`, `invoicesubtotal`, `invoicefromdate`, `invoicetodate`, `paidinvoice`, `pdffilename`,invoicebilleddesc) 
 		 VALUES($company_id, '$companyname', '$invoicenumber', '$invoicecreateddate', '$invoiceduedate', '$totalbiledduration', $totalchargedamount, $invoiceoutstanding, $totalchargedamount, '$invoicefromdate', '$invoicetodate', 0, '$pdffilename','$invoicebilleddesc')";
     mysql_query($sqlinv);
-	$invmasterid =	 mysql_insert_id();
+echo	$invmasterid =	 mysql_insert_id();
 	$prefixData = $_POST['prefix'];
 	$descriptionData = $_POST['description'];
 	$Duration_minData = $_POST['Duration_min'];
@@ -316,7 +316,7 @@ if (isset($_POST['conform'])){
 	
 	
 sleep(5);
-header('Location: wholesaleinvoiceslist.php');
+ header('Location: wholesaleinvoiceslist.php');
 exit(0);
 }
 ?>

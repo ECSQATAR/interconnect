@@ -110,7 +110,7 @@ while($row = mysql_fetch_object($result)){
 	<td> <?php echo $rowinv->paidinvoice;?></td>
 	<td>
 	<a href="#">Send Pdf</a> <br/>
-	 <a href="#">Generate pdf</a> <br/>
+	 <a href="<?php echo 'generateinvoicepdf.php?id='.$rowinv->id;?>">Generate pdf</a> <br/>
 	 <a href="#">Delete Invoice</a>
 	 </td>
 	

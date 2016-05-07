@@ -74,14 +74,15 @@ while($rowp = mysql_fetch_object($resultp)){
  $prefixmasterList[$rowp->prefix] = $rowp->description;
 }
 
+$currentid = $_GET['id'];
 
-$sqlinv = "SELECT * FROM  wsalesinvoicesmaster where id=1";
+$sqlinv = "SELECT * FROM  wsalesinvoicesmaster where id=$currentid";
 $recinv = mysql_query($sqlinv);
 $rowinv = mysql_fetch_object($recinv);
 $invmasterId = $rowinv->id;
 
 
-$invoiceName = $rowold->invoicenumber;
+$invoiceName = $rowinv->invoicenumber;
 //define ('PDF_HEADER_LOGO', 'logoVoip.png');
 define ('PDF_HEADER_LOGO', 'ECS-Logo.png');
 
@@ -232,7 +233,7 @@ while($rowChild = mysql_fetch_object($resultChild)){
  $htmlsubtxt = '	 
 	<tr>
 	<td>'.$rowChild->prefix.'</td>			
-	<td>'.$rowChild[$row->prefix].'</td>
+	<td>'.$rowChild->Description.'</td>
 	<td>'.$rowChild->Duration_min.'.</td>
 	<td>'.$rowChild->price_per_1_min.'</td>
 	<td>'.$rowChild->Charged_Amount.'  </td>  
@@ -249,8 +250,7 @@ while($rowChild = mysql_fetch_object($resultChild)){
 		 
 	}
 	
-	$seconds  = gmdate($getTotalTime);
-	$totalbiledduration = sec2hms($seconds);
+	 
 
 
 $html = $html.$htmlsub;
