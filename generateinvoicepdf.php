@@ -241,11 +241,11 @@ while($rowChild = mysql_fetch_object($resultChild)){
 	</tr>';
 	 $htmlsub =  $htmlsub.$htmlsubtxt;  
 
-	 $getTotalTime +=  addDurationAsSeconds($rowChild->Duration_min);
-	 	 $totalchargedamount = $totalchargedamount + $rowChild->Charged_Amount;
+	// $getTotalTime +=  addDurationAsSeconds($rowChild->Duration_min);
+	 //	 $totalchargedamount = $totalchargedamount + $rowChild->Charged_Amount;
 	  
-	  $fromDate = date("d-m-Y",$rowChild->fromdate);
-	   $toDate = date("d-m-Y",$rowChild->todate);
+	  $fromDate = date("d-m-Y",strtotime($rowChild->fromdate));
+	   $toDate = date("d-m-Y",strtotime($rowChild->todate));
 	  	 
 		 
 	}
