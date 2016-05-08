@@ -114,7 +114,11 @@ while($row = mysql_fetch_object($result)){
 	<td> <?php echo $rowinv->paidinvoice;?></td>
 	<td>
 	<a href="#">Send Pdf</a> <br/>
+<<<<<<< HEAD
 	 <a href="generateinvoicepdf.php">Generate pdf</a> <br/>
+=======
+	 <a href="<?php echo 'generateinvoicepdf.php?id='.$rowinv->id;?>">Generate pdf</a> <br/>
+>>>>>>> df0b9dddcbb9fe1958bd44293d225bea60f910f3
 	 <a href="#">Delete Invoice</a>
 	 </td>
 	
