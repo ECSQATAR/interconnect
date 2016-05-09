@@ -64,7 +64,18 @@ function addDurationAsSeconds( $timeStamp ) {
  
         return $seconds;
 }
+function converToMMHH($timeStamp){
 
+	    $timeSections = explode(':',$timeStamp);
+		$hours =  $timeSections[0];
+		$minutes = $timeSections[1];
+		$seconds = $timeSections[2];
+	
+		$totaLMinutes = ($hours * 60) + $minutes;
+	  	$resultTimestamp = $totaLMinutes.':'.$seconds;
+		return $resultTimestamp;
+	
+}
 
 
 $prefixmasterList = array();
@@ -199,8 +210,9 @@ while($row = mysql_fetch_object($resultinvoice)){
 	    $toDate = date("d-m-Y",strtotime($row->todate));
 	}
 	
-	$seconds  = gmdate($getTotalTime);
-	$totalbiledduration = sec2hms($seconds);
+ 	$seconds  = gmdate($getTotalTime);
+	$totalbiledduration = converToMMHH(sec2hms($seconds));
+	//$totalbiledduration  =  sec2hms($seconds);
 	$outstanding =0;
 
 ?>
@@ -246,9 +258,9 @@ while($row = mysql_fetch_object($resultinvoice)){
 <p style="color:#ff0000;">Note: No dispute will be entertained after 72 hours of the invoice date. </p>
  
  <div style="border-top: solid; border-bottom:solid;">
-<p>This invoice is for the period of <?php echo $fromDate;?> 00:00:00 to <?php echo $toDate;?> 23:59:59. </p>
+<p>This invoice is for the period of <input type="text" name="fromDate" value="<?php echo $fromDate;?>" /> 00:00:00 to <input type="text" name="toDate" value="<?php echo $toDate;?>" /> 23:59:59. </p>
 <p><input type="text" class="form-control" name="invoicebilleddesc" value="All invoices are billed at Dubai (UAE) local time GMT+4" />. </p>
-<p>In case of any dispute please send email to accounts@ecs-net.net </p>
+<p><input type="text" class="form-control" name="invoicedisputeemail" value="In case of any dispute please send email to accounts@ecs-net.net" /> </p>
 <p> !!!!!!!!!!!!!Thank you for your business!!!!!!!!!!!!!! </p>
 </div>
 
@@ -286,13 +298,13 @@ if (isset($_POST['conform'])){
 
 	$invoiceoutstanding = 0;
  
-		
+		 $invoicedisputeemail = $_POST['invoicedisputeemail'];
 		
 	$ftotamount = round($totalchargedamount,0);
 	$pdffilename = trim($rownewcompany->nameofcompany.date("d-m-Y").$ftotamount.'.pdf');
-$company_id = 3;
-	$sqlinv = "INSERT INTO wsalesinvoicesmaster (`company_id`, `companyname`, `invoicenumber`, `invoicecreateddate`, `invoiceduedate`, `invoiceTotalminutes`, `invoiceamount`, `invoiceoutstanding`, `invoicesubtotal`, `invoicefromdate`, `invoicetodate`, `paidinvoice`, `pdffilename`,invoicebilleddesc) 
-		 VALUES($company_id, '$companyname', '$invoicenumber', '$invoicecreateddate', '$invoiceduedate', '$totalbiledduration', $totalchargedamount, $invoiceoutstanding, $totalchargedamount, '$invoicefromdate', '$invoicetodate', 0, '$pdffilename','$invoicebilleddesc')";
+	$company_id = 3;
+	$sqlinv = "INSERT INTO wsalesinvoicesmaster (`company_id`, `companyname`, `invoicenumber`, `invoicecreateddate`, `invoiceduedate`, `invoiceTotalminutes`, `invoiceamount`, `invoiceoutstanding`, `invoicesubtotal`, `invoicefromdate`, `invoicetodate`, `paidinvoice`, `pdffilename`,invoicebilleddesc,invoicedisputeemail) 
+		 VALUES($company_id, '$companyname', '$invoicenumber', '$invoicecreateddate', '$invoiceduedate', '$totalbiledduration', $totalchargedamount, $invoiceoutstanding, $totalchargedamount, '$invoicefromdate', '$invoicetodate', 0, '$pdffilename','$invoicebilleddesc','$invoicedisputeemail')";
      mysql_query($sqlinv);
 	$invmasterid =	 mysql_insert_id();
 	$prefixData = $_POST['prefix'];
@@ -304,22 +316,23 @@ $company_id = 3;
  
 	 for($k=0;$k<=count($prefixData);$k++){
 	 
-	 $prefix  =  $prefixData[$k];
-	 $Description = $descriptionData[$k];
-	 $price_per_1_min =  $price_per_1_minData[$k];
-	 $Duration_min =  $Duration_minData[$k];
-	 $Charged_Amount =  $Charged_AmountData[$k];
-	 $BilledDuration_min =  $Duration_minData[$k];
-	 $customerName = '';
-	 $numberofCalls = $numberofCallsData[$k]; 
-	 $fromDate  = date('Y-m-d',strtotime($fromDate));
-	 $toDate  = date('Y-m-d',strtotime($toDate));
-	//print_r($data->sheets[0]['cells'][$i]);
-	$account_id='3';
+		 $prefix  =  $prefixData[$k];
+		 $Description = $descriptionData[$k];
+		 $price_per_1_min =  $price_per_1_minData[$k];
+		 $Duration_min =  $Duration_minData[$k];
+		 $Charged_Amount =  $Charged_AmountData[$k];
+		 $BilledDuration_min =  $Duration_minData[$k];
+		 $customerName = '';
+		 $numberofCalls = $numberofCallsData[$k]; 
+		 $fromDate  = date('Y-m-d',strtotime($fromDate));
+		 $toDate  = date('Y-m-d',strtotime($toDate));
+		 //print_r($data->sheets[0]['cells'][$i]);
+		 $account_id='3';
+		
 	
-	$sqlchd = "INSERT INTO  wsalesinvoiceschild (invmasterid,customerName,`account_id`, `prefix`,  `Description`, `price_per_1_min`,  `numberofCalls`, `Duration_min`, `BilledDuration_min`, `Charged_Amount`,fromDate,toDate) 
-	  VALUES ($invmasterid,'$customerName',$account_id, '$prefix', '$Description', '$price_per_1_min','$numberofCalls', '$Duration_min', '$BilledDuration_min', '$Charged_Amount','$fromDate','$todate')";
-	mysql_query($sqlchd);
+		$sqlchd = "INSERT INTO  wsalesinvoiceschild (invmasterid,customerName,`account_id`, `prefix`,  `Description`, `price_per_1_min`,  `numberofCalls`, `Duration_min`, `BilledDuration_min`, `Charged_Amount`,fromDate,toDate) 
+		  VALUES ($invmasterid,'$customerName',$account_id, '$prefix', '$Description', '$price_per_1_min','$numberofCalls', '$Duration_min', '$BilledDuration_min', '$Charged_Amount','$fromDate','$todate')";
+		mysql_query($sqlchd);
 	 
 	 }
 	
