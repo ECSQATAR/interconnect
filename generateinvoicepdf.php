@@ -232,16 +232,7 @@ ceo@ecs-net.net<br>
 			
 
  </tr> 
- <tr>
-	
-	<td style="border-bottom:2px solid #FF0000;" width="35%">&nbsp;</td>
-	<td style="border-bottom:2px solid #FF0000;"> &nbsp;</td>	 
-	<td style="border-bottom:2px solid #FF0000;">&nbsp;</td>	 
-	<td style="border-bottom:2px solid #FF0000;">&nbsp;</td>
-	<td>&nbsp; </td>
- </tr>
- 
-  ';
+   ';
 
 
  	 $htmlsub='';
