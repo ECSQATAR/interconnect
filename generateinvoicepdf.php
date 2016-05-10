@@ -328,7 +328,7 @@ $html = $html. '
  
  <table Style="background-color:#FFFFFF;border-top:1px solid; border-bottom:2px solid">
  <tr>
-  <td> This invoice is for the period of '.$rowinv->invoicefromdate.' 00:00:00 to '.$rowinv->invoicetodate.'23:59:59. </td>
+  <td> This invoice is for the period of '.$rowinv->invoicefromdate.' 00:00:00 to '.$rowinv->invoicetodate.' 23:59:59. </td>
  </tr>
  
  <tr>

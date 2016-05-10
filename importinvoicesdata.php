@@ -49,6 +49,25 @@ require_once('head.php');
 
 <div class="row">
 
+ 
+<div class="form-group">
+  <label>Company Name</label>
+ 
+<select  name="company_id" required >
+<option value="">Select Company</option>
+<?php
+  $sql = "SELECT id,nameofcompany FROM company";
+ $result = mysql_query($sql);
+while($row = mysql_fetch_object($result)){
+?>
+<option value="<?php echo $row->id;?>" <?php if(isset($_GET['company_id']) && $_GET['company_id'] == $row->id) echo 'selected=selected';?> > 
+<?php echo $row->nameofcompany;?></option>
+<?php  
+} 
+
+?> 
+</select> 
+</div>
   
   
 
@@ -61,7 +80,6 @@ require_once('head.php');
 <div class="form-group">
 <label>To Date</label> 
 <input type="text" id="to_date" name="to_date"  value="<?php echo $_POST['to_date'];?>" placeholder="Please select to  date" required  /> 
-<input type="submit" name="Go" value="submit" />
 </div>
 
  
@@ -103,7 +121,7 @@ if(isset($_POST['submit'])){
 	}
 
  		
-		
+	$company_id = $_POST['company_id'];	
 	$invData = ltrim($_POST['invdata']);
 	$invData = preg_replace("/\n/", "|", $invData);
 	//echo "<pre>";print_r($invData);echo "</pre>";
@@ -117,7 +135,7 @@ if(isset($_POST['submit'])){
 	
 //	echo "<pre>";print_r($explodeInvData); echo "</pre>"; 
 
-	
+
 		 $customerName = $explodeInvData[0] .  $explodeInvData[1];
 		 $prefix  =  $explodeInvData[2];
 		 $country = $explodeInvData[3]; 
@@ -130,9 +148,10 @@ if(isset($_POST['submit'])){
 		 $Charged_Amount =  $explodeInvData[10];
 
 //print_r($data->sheets[0]['cells'][$i]);
-	 $account_id='3';
-		$sql = "INSERT INTO  tempwsaleinvoicedata(customerName,`account_id`, `prefix`, `country`, `Description`, `price_per_1_min`, `price_per_n_min`, `numberofCalls`, `Duration_min`, `BilledDuration_min`, `Charged_Amount`,fromDate,toDate) 
-		  VALUES ('$customerName',$account_id, '$prefix', '$country', '$Description', '$price_per_1_min','$price_per_n_min','$numberofCalls', '$Duration_min', '$BilledDuration_min', '$Charged_Amount','$fromDate','$todate')";
+		 $account_id=$company_id;
+		$_SESSION['company_id'] = $company_id;
+		$sql = "INSERT INTO  tempwsaleinvoicedata(customerName,	company_id,`account_id`, `prefix`, `country`, `Description`, `price_per_1_min`, `price_per_n_min`, `numberofCalls`, `Duration_min`, `BilledDuration_min`, `Charged_Amount`,fromDate,toDate) 
+		  VALUES ('$customerName',$company_id,$account_id, '$prefix', '$country', '$Description', '$price_per_1_min','$price_per_n_min','$numberofCalls', '$Duration_min', '$BilledDuration_min', '$Charged_Amount','$fromDate','$todate')";
 	 
 	
 	//echo "<br>".$sql;
@@ -143,7 +162,7 @@ if(isset($_POST['submit'])){
 
 }
 
-	unlink('uploads/invoices.xls');
+	//unlink('uploads/invoices.xls');
 	header("Location: showimportinvoicesdata.php");	exit(0);
 }
 

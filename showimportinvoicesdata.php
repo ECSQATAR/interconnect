@@ -13,6 +13,20 @@ function sec2hms($secs) {
 return ltrim($hours . $minutes . $seconds, '0');
 }
 
+function converToMMHH($timeStamp){
+
+	    $timeSections = explode(':',$timeStamp);
+		$hours =  $timeSections[0];
+		$minutes = $timeSections[1];
+		$seconds = $timeSections[2];
+	
+		$totaLMinutes = ($hours * 60) + $minutes;
+	  	$resultTimestamp = $totaLMinutes.':'.$seconds;
+		return $resultTimestamp;
+	
+}
+
+
 function addDurationAsSeconds( $timeStamp ) {
         $timeSections = explode( ':', $timeStamp );
         $seconds =  
@@ -53,7 +67,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'delete'){
  	$Condition='';
 	if( isset($_POST['wholeseller_id']) )
 	{	
-		$wholeseller_id = $_POST['wholeseller_id'];
+		$wholeseller_id = $_POST['c'];
 		$Condition = " AND account_id like '$wholeseller_id' ";
 	}
 
@@ -81,11 +95,13 @@ while($row = mysql_fetch_object($result)){
 	</tr>
 <?php
 	$getTotalTime +=  addDurationAsSeconds($row->Duration_min);
-	 $totalchargedamount = $totalchargedamount + $row->Charged_Amount;
+	$totalchargedamount = $totalchargedamount + $row->Charged_Amount;
 	}
 	
 	  $seconds  = gmdate( $getTotalTime );
-	$totalbiledduration = sec2hms($seconds);
+	//$totalbiledduration = sec2hms($seconds);
+	$totalbiledduration = converToMMHH(sec2hms($seconds));
+
 
 
 ?>	

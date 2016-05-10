@@ -110,13 +110,14 @@ while($rowp = mysql_fetch_object($resultp)){
  $prefixmasterList[$rowp->prefix] = $rowp->description;
 }
 
+$company_id = $_SESSION['company_id'];
 
 $sql = "SELECT * FROM company where id=1";
 $oldrec = mysql_query($sql);
 $rowold = mysql_fetch_object($oldrec);
 
 $cdate = date("Y-m-d");
-$sqlcurntInvcount = "select count(id) as cnt From wsalesinvoicesmaster WHERE company_id=3 AND date(invoicecreateddate) = '$cdate' ";
+$sqlcurntInvcount = "select count(id) as cnt From wsalesinvoicesmaster WHERE company_id=$company_id AND date(invoicecreateddate) = '$cdate' ";
 $recCountData = mysql_query($sqlcurntInvcount);
 $rowrecCount = mysql_fetch_object($recCountData);
  $oldRecordsCount = $rowrecCount->cnt;
@@ -126,7 +127,7 @@ $rowrecCount = mysql_fetch_object($recCountData);
   else
 	  $oldRecordsCount = $oldRecordsCount + 1;
   
-$sqlnew = "SELECT * FROM company where id=61";
+$sqlnew = "SELECT * FROM company where id=$company_id";
 $newrec = mysql_query($sqlnew);
 $rownewcompany = mysql_fetch_object($newrec);
 $company_id = $rownewcompany->id;
@@ -218,7 +219,7 @@ ceo@ecs-net.net<br>
 		    <td>Description </td>
 		    <td>Quantity</td>
 		    <td>Price</td>
-		    <td>Charged Amount</td>
+		    <td>Amount</td>
 		<td border="0" cellpadding="2" cellspacing="2" style="border-right:1px solid #FFFFFF;background-color:#FFFFFF;">&nbsp;</td>
 
  </tr>
@@ -298,7 +299,7 @@ while($row = mysql_fetch_object($resultinvoice)){
 <p style="color:#ff0000;">Note: No dispute will be entertained after 72 hours of the invoice date. </p>
  
  <div style="border-top: solid; border-bottom:solid;">
-<p>This invoice is for the period of <input type="text" name="fromDate" value="<?php echo $fromDate;?>" /> 00:00:00 to <input type="text" name="toDate" value="<?php echo $toDate;?>" /> 23:59:59. </p>
+<p>This invoice is for the period of <input type="text" name="fromDate" value="<?php echo $fromDate.' 00:00:00';?>" />  to <input type="text" name="toDate" value="<?php echo $toDate.' 23:59:59';?>" />. </p>
 <p><input type="text" class="form-control" name="invoicebilleddesc" value="All invoices are billed at Dubai (UAE) local time GMT+4." /> </p>
 <p><input type="text" class="form-control" name="invoicedisputeemail" value="In case of any dispute please send email to accounts@ecs-net.net" /> </p>
 <p> !!!!!!!!!!!!!Thank you for your business!!!!!!!!!!!!!! </p>
@@ -318,6 +319,8 @@ while($row = mysql_fetch_object($resultinvoice)){
 //=======
 //print_r($_POST);
 
+	$company_id = $_SESSION['company_id'];
+
 
 if (isset($_POST['conform'])){
 
@@ -331,7 +334,7 @@ if (isset($_POST['conform'])){
 	$invoicetodate  = date('Y-m-d',strtotime($toDate));
 	$totalchargedamount = $_POST['totalchargedamount'];
 	$invoicebilleddesc = $_POST['invoicebilleddesc'];
-    $invoiceoutstanding = $_POST['outstanding'];
+    	$invoiceoutstanding = $_POST['outstanding'];
 
 
  
@@ -342,7 +345,7 @@ if (isset($_POST['conform'])){
 		
 	$ftotamount = round($totalchargedamount,0);
 	$pdffilename = trim($rownewcompany->nameofcompany.date("d-m-Y").$ftotamount.'.pdf');
-	$company_id = 3;
+	
 	$sqlinv = "INSERT INTO wsalesinvoicesmaster (`company_id`, `companyname`, `invoicenumber`, `invoicecreateddate`, `invoiceduedate`, `invoiceTotalminutes`, `invoiceamount`, `invoiceoutstanding`, `invoicesubtotal`, `invoicefromdate`, `invoicetodate`, `paidinvoice`, `pdffilename`,invoicebilleddesc,invoicedisputeemail) 
 		 VALUES($company_id, '$companyname', '$invoicenumber', '$invoicecreateddate', '$invoiceduedate', '$totalbiledduration', $totalchargedamount, $invoiceoutstanding, $totalchargedamount, '$invoicefromdate', '$invoicetodate', 0, '$pdffilename','$invoicebilleddesc','$invoicedisputeemail')";
      mysql_query($sqlinv);
@@ -354,7 +357,7 @@ if (isset($_POST['conform'])){
 	$Charged_AmountData = $_POST['Charged_Amount'];
 	$numberofCallsData =  $_POST['numberofCalls'];
  
-	 for($k=0;$k<=count($prefixData);$k++){
+	 for($k=0;$k<count($prefixData);$k++){
 	 
 		 $prefix  =  $prefixData[$k];
 		 $Description = $descriptionData[$k];
@@ -367,15 +370,19 @@ if (isset($_POST['conform'])){
 		 $fromDate  = date('Y-m-d',strtotime($fromDate));
 		 $toDate  = date('Y-m-d',strtotime($toDate));
 		 //print_r($data->sheets[0]['cells'][$i]);
-		 $account_id='3';
+		
+		$account_id = $company_id;
+
 		
 	
-		$sqlchd = "INSERT INTO  wsalesinvoiceschild (invmasterid,customerName,`account_id`, `prefix`,  `Description`, `price_per_1_min`,  `numberofCalls`, `Duration_min`, `BilledDuration_min`, `Charged_Amount`,fromDate,toDate) 
-		  VALUES ($invmasterid,'$customerName',$account_id, '$prefix', '$Description', '$price_per_1_min','$numberofCalls', '$Duration_min', '$BilledDuration_min', '$Charged_Amount','$fromDate','$todate')";
+		$sqlchd = "INSERT INTO  wsalesinvoiceschild (invmasterid,customerName,company_id,`account_id`, `prefix`,  `Description`, `price_per_1_min`,  `numberofCalls`, `Duration_min`, `BilledDuration_min`, `Charged_Amount`,fromDate,toDate) 
+		  VALUES ($invmasterid,'$customerName',$company_id,$account_id, '$prefix', '$Description', '$price_per_1_min','$numberofCalls', '$Duration_min', '$BilledDuration_min', '$Charged_Amount','$fromDate','$todate')";
 		mysql_query($sqlchd);
 	 
 	 }
-	
+
+	$mydelsql = "TRUNCATE TABLE tempwsaleinvoicedata";
+	mysql_query($mydelsql);
 	
 sleep(5);
 header('Location: wholesaleinvoiceslist.php');
