@@ -115,7 +115,17 @@ $sql = "SELECT * FROM company where id=1";
 $oldrec = mysql_query($sql);
 $rowold = mysql_fetch_object($oldrec);
 
-
+$cdate = date("Y-m-d");
+$sqlcurntInvcount = "select count(id) as cnt From wsalesinvoicesmaster WHERE company_id=3 AND date(invoicecreateddate) = '$cdate' ";
+$recCountData = mysql_query($sqlcurntInvcount);
+$rowrecCount = mysql_fetch_object($recCountData);
+ $oldRecordsCount = $rowrecCount->cnt;
+ //print_r($rowrecCount);
+ if( $oldRecordsCount == 0 )
+	  $oldRecordsCount = 1;
+  else
+	  $oldRecordsCount = $oldRecordsCount + 1;
+  
 $sqlnew = "SELECT * FROM company where id=61";
 $newrec = mysql_query($sqlnew);
 $rownewcompany = mysql_fetch_object($newrec);
@@ -145,7 +155,7 @@ $rowold = mysql_fetch_object($oldrec);
 $currentDate = date("Ymd");
 $createdDate = date("d/m/Y");
 $dueDate =  date('d/m/Y', strtotime($createdDate. ' + 3 day'));
-$invNo = $currentDate;
+$invNo = $currentDate.$oldRecordsCount;
 $invoicenumber = $invNo; 
 
 $companyname = $rowold->nameofcompany;
