@@ -37,12 +37,7 @@ $subject = 'Inter Connect Form Confirmation PDF';
  
 	externalmail($to,$subject,$body,$pdfpath);
 
-
-
-	 
-
-
-
+ 
 }
 
 
@@ -132,12 +127,13 @@ if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
 	require_once(dirname(__FILE__).'/lang/eng.php');
 	$pdf->setLanguageArray($l);
 }
-
+ 
+ 
 // ---------------------------------------------------------
 
 // set font
-$pdf->SetFont('times', '', 12, '', 'false');
-$pdf->SetFontSize(12);
+$pdf->SetFont('times', '', 13, '', 'false');
+$pdf->SetFontSize(13);
 $pdf->SetPrintHeader(false);
 $pdf->SetPrintFooter(false);
   
@@ -165,8 +161,8 @@ $totalbiledduration=0;
 	  
   $html = '
  
-   
-<table>
+  <table border="0" cellpadding="2" cellspacing="2">
+ 
 <tr>
 <td>
 From: <br>
@@ -178,41 +174,75 @@ ceo@ecs-net.net<br>
 </td>
  
 <td  style="font-size:200%;color:#ff0000;"> INVOICE </td>
-<td width="150px"> <img alt="CompanyLogo" src="logouploads/ECS-Logo.png" width="100" heigth="100"/> </td>
+<td width="150px"> <img alt="CompanyLogo" src="invoicelogo.png" width="100" heigth="100"/> </td>
 </tr>
+</table>
 
+<table>
 <tr>
 <td>To.</td>
-<td>&nbs;</td>
+<td width="35%">&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
 
 <tr>
 <td>'.$rowinv->companyname.' </td>
+<td width="35%">&nbsp;</td>
 <td>&nbsp;</td>
-<td> Inv. #'.$rowinv->invoicenumber.' </td>
+<td>Inv#.</td>
+<td style="text-align:right">'.$rowinv->invoicenumber.' </td>
+<td>&nbsp;</td>
 </tr>
 
 
-<tr> <td> &nbsp; </td> <td>&nbsp;</td> <td> Create Date '.$rowinv->invoicecreateddate.' </td> </tr>
-<tr> <td> &nbsp; </td> <td>&nbsp;</td> <td> Due Date '.$rowinv->invoiceduedate.' </td> </tr>
+<tr>
+<td>&nbsp;</td> 
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>Create Date</td>
+<td style="text-align:right">'.$rowinv->invoicecreateddate.' </td> 
+<td>&nbsp;</td>
+</tr>
 
-
+<tr> 
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>Due Date  </td>
+<td style="text-align:right">'.$rowinv->invoiceduedate.' </td>
+<td>&nbsp;</td>
+</tr>
 
 </table>
 
 <p> <br> </p>
-<table border="1" >
+<table>
 
-  <tr style="background-color:#000000;color:#FFFFFF;">
+  <tr style="background-color:#000000;color:#FFFFFF;text-align:center;">
 		    
-		    <td>Prefix</td>
-		    <td>Description </td>
-		    <td>Quantity</td>
-			<td>Price</td>
-		    <td>Charged Amount</td>
+		    <td style="border-bottom:solid 5px #ff0000;height:20px;">Prefix</td>
+		    <td style="border-bottom:solid 5px #ff0000;" width="35%">Description</td>
+		    <td style="border-bottom:solid 5px #ff0000;">Quantity</td>
+			<td style="border-bottom:solid 5px #ff0000;">Price</td>
+		    <td style="border-bottom:solid 5px #ff0000;">Amount</td>
+			<td border="0" style="border-right:1px solid #FFFFFF;background-color:#FFFFFF;">&nbsp;</td>
+			
 
- </tr>';
+ </tr> 
+ <tr>
+	
+	<td style="border-bottom:2px solid #FF0000;" width="35%">&nbsp;</td>
+	<td style="border-bottom:2px solid #FF0000;"> &nbsp;</td>	 
+	<td style="border-bottom:2px solid #FF0000;">&nbsp;</td>	 
+	<td style="border-bottom:2px solid #FF0000;">&nbsp;</td>
+	<td>&nbsp; </td>
+ </tr>
+ 
+  ';
+
 
  	 $htmlsub='';
 	
@@ -222,18 +252,21 @@ ceo@ecs-net.net<br>
  $totalchargedamount=0;
  $totalbiledduration =0;
  $resultChild = mysql_query($sqlchild);
- 
+ $rk=0;
 while($rowChild = mysql_fetch_object($resultChild)){
 	//print_r($row);
-	 
- $htmlsubtxt = '	 
-	<tr>
-	<td>'.$rowChild->prefix.'</td>			
+	 if ($rk==0)
+		$rdt = '<tr style="background-color:#CCC;">';
+	 else
+		$rdt = '<tr style="background-color:#FFF;">';
+	$rk = $rk + 1 ;
+ $htmlsubtxt = $rdt.'
+    <td style="text-align:center">'.$rowChild->prefix.'</td>			
 	<td>'.$rowChild->Description.'</td>
-	<td>'.$rowChild->Duration_min.'.</td>
-	<td>'.$rowChild->price_per_1_min.'</td>
-	<td>'.$rowChild->Charged_Amount.'  </td>  
-	<td><span style="color:red">USD </span> </td>  
+	<td style="text-align:right">'.$rowChild->Duration_min.'.</td>
+	<td style="text-align:right">'.$rowChild->price_per_1_min.'</td>
+	<td style="text-align:right">'.$rowChild->Charged_Amount.'  </td>  
+	<td style="background-color:#FFFFFF;border-right:1px solid #FFFFFF;color:red;text-align:left;"> USD</td>  
 	</tr>';
 	 $htmlsub =  $htmlsub.$htmlsubtxt;  
 
@@ -246,34 +279,81 @@ while($rowChild = mysql_fetch_object($resultChild)){
 		 
 	}
 	
+	
+	
 	 
 
 
 $html = $html.$htmlsub;
 
 $html = $html. '
- <tr> <td colspan="5"> Total Minutes: '.$rowinv->invoiceTotalminutes.' &nbsp; charged Amount :'.$rowinv->invoiceamount.'</td> </tr>
-
- <hr>
+<tr>
+	
+	<td style="border-bottom:2px solid #FF0000;" width="35%">&nbsp;</td>
+	<td style="border-bottom:2px solid #FF0000;"> &nbsp;</td>	 
+	<td style="border-bottom:2px solid #FF0000;">&nbsp;</td>	 
+	<td style="border-bottom:2px solid #FF0000;">&nbsp;</td>
+	
+	<td>&nbsp; </td>
+ </tr>
  
  </table>
+ <p> <br> </p>
  
-<p> <br> </p>
+ <table>
+ <tr>
+	<td width="35%">&nbsp;</td>
+	<td>Total Minutes:</td>	 
+	<td><span style="text-align:right"> '.$rowinv->invoiceTotalminutes.'  </span> </td>
+	<td style="text-align:right">  Total : </td>
+	<td><span style="text-align:right">'.$rowinv->invoiceamount.'</span> </td>
+	<td> <span style="color:red">USD </span>  </td>
+ </tr>
  
- <p style="">  &nbsp; &nbsp; &nbsp; &nbsp; Total Minutes: '.$rowinv->invoiceTotalminutes.'  </span>
- <span style="text-align:right">Total : '.$rowinv->invoiceamount.' <span style="color:red">USD </span>  </span>
- </p>
- <p style="text-align:right"> Outstanding 0.00 <span style="color:red">USD </span>  </p>
- <p style="text-align:right"> Subtotal '.$rowinv->invoicesubtotal.' <span style="color:red">USD </span>  </p>
+ <tr>
+	<td width="35%">&nbsp;</td>
+	<td> &nbsp; </td>
+	<td> &nbsp; </td>
+	<td style="text-align:right"> Outstanding : </td>
+	<td  style="text-align:right">0.00</td>
+	<td> <span style="color:red">USD </span>  </td>
+ </tr>
+ 
+ <tr>
+	<td width="35%">&nbsp;</td>
+	<td>&nbsp;</td>	 
+	<td>&nbsp;</td>	 
+	<td style="text-align:right"> Subtotal : </td>
+	<td style="text-align:right">'.$rowinv->invoicesubtotal.'</td>
+	<td> <span style="color:red">USD </span>  </td>
+ </tr>
+ 
+ </table>
+ <p> <br> </p>
  
  <p style="color:#ff0000;">Note: No dispute will be entertained after 72 hours of the invoice date. </p>
  
- <hr>
+  
+ 
+ <table Style="background-color:#FFFFFF;border-top:1px solid; border-bottom:2px solid">
+ <tr>
+  <td> This invoice is for the period of '.$rowinv->invoicefromdate.' 00:00:00 to '.$rowinv->invoicetodate.'23:59:59. </td>
+ </tr>
+ 
+ <tr>
+ <td> '.$rowinv->invoicebilleddesc.' </td>
+ </tr>
+ 
+ <tr>
+ <td> '.$rowinv->invoicedisputeemail.' </td>
+ </tr>
+ 
+ <tr>
+ <td> !!!!!!!!!!!!!Thank you for your business!!!!!!!!!!!!!!  </td>
+ </tr>
+</table>
 
-<p> This invoice is for the period of '.$rowinv->invoicefromdate.' 00:00:00 to '.$rowinv->invoicetodate.'23:59:59. </p>
-<p>'.$rowinv->invoicebilleddesc.'</p>
-<p> In case of any dispute please send email to accounts@ecs-net.net </p>
-<p> !!!!!!!!!!!!!Thank you for your business!!!!!!!!!!!!!! </p>
+ 
 
  
 ';
