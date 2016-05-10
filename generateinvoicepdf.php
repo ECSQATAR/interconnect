@@ -174,7 +174,7 @@ ceo@ecs-net.net<br>
 </td>
  
 <td  style="font-size:200%;color:#ff0000;"> INVOICE </td>
-<td width="150px"> <img alt="CompanyLogo" src="invoicelogo.png" width="100" heigth="100"/> </td>
+<td width="150px" style="text-align:right"> <img alt="CompanyLogo" src="logouploads/ECS-Logo.png"  /> </td>
 </tr>
 </table>
 
