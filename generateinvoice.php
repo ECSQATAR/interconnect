@@ -11,6 +11,31 @@ mysql_select_db($dbName);
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <link rel="stylesheet" href="/resources/demos/style.css">
+ <script>
+    jQuery(document).ready(function () {
+	jQuery("#recalculculate").click(function() {
+		$( ".Duration_min" ).each(function( index,value ) {
+	//console.log('div' + index + ':' + $(this).attr('id')); 
+		var mysDiv = $(this).attr('id');
+		var res = mysDiv.split('_'); 
+		var myId = res[2];
+		var Duration_min = jQuery('Duration_min_'+myId).val();
+		var price_per_1_min_ = jQuery('price_per_1_min_'+myId).val();
+		var Duration_min = jQuery('Duration_min_'+myId).val();
+		
+		});
+
+});
+
+	
+  });
+
+ </script>
+<style>
+.Duration_min{
+
+}
+</style>
 <?php 
 
 function sendEMail($toEmail,$pdfpath) {
@@ -160,8 +185,11 @@ ceo@ecs-net.net<br>
 </tr>
 
 
-<tr> <td> <textarea name="invoicecomments"> </textarea> </td> <td>&nbsp;</td> <td> Create Date <input type="text" name="createdDate" value="<?php echo $createdDate;?>" /> </td> </tr>
-<tr> <td> &nbsp; </td> <td>&nbsp;</td> <td> Due Date  <input type="text" name="dueDate" value="<?php echo $dueDate;?>" /> </td> </tr>
+<tr>
+<td> &nbsp; </td> <td> &nbsp; </td>  <td> Create Date <input type="text" name="createdDate" value="<?php echo $createdDate;?>" /> </td> 
+</tr>
+
+<tr> <td colspan='2'>Comments:<textarea name="invoicecomments" class="form-control"> </textarea> </td>  <td> Due Date  <input type="text" name="dueDate" value="<?php echo $dueDate;?>" /> </td> </tr>
 
 
 
@@ -179,14 +207,14 @@ ceo@ecs-net.net<br>
 		    <td>Prefix</td>
 		    <td>Description </td>
 		    <td>Quantity</td>
-			<td>Price</td>
+		    <td>Price</td>
 		    <td>Charged Amount</td>
-			<td border="0" cellpadding="2" cellspacing="2" style="border-right:1px solid #FFFFFF;background-color:#FFFFFF;">&nbsp;</td>
+		<td border="0" cellpadding="2" cellspacing="2" style="border-right:1px solid #FFFFFF;background-color:#FFFFFF;">&nbsp;</td>
 
  </tr>
 
 <?php
-	
+	$totalrecords=0;
 while($row = mysql_fetch_object($resultinvoice)){
 	//echo "<pre>";print_r($row);
 	 
@@ -194,16 +222,19 @@ while($row = mysql_fetch_object($resultinvoice)){
 	<tr>
 	<td><input type="hidden" name="prefix[]" value="<?php echo $row->prefix;?>" /> <?php echo $row->prefix;?></td>			
 	<td><input type="hidden" name="description[]" value="<?php echo  $prefixmasterList[$row->prefix];?>" /> <?php echo $prefixmasterList[$row->prefix];?>  </td>
-	<td><input type="text" name="Duration_min[]" value="<?php echo $row->Duration_min;?>" />  </td>
+	<td><input type="text" name="Duration_min[]" class="Duration_min" id="Duration_min_<?php echo $row->id; ?>" value="<?php echo $row->Duration_min;?>" />  </td>
 	<td>
-		<input type="text" name="price_per_1_min[]" value="<?php echo $row->price_per_1_min;?>" />
+		<input type="text" name="price_per_1_min[]" id="price_per_1_min_<?php echo $row->id; ?>"  value="<?php echo $row->price_per_1_min;?>" />
 		<input type="hidden" name="numberofCalls[]" value="<?php echo $row->numberofCalls;?>" />
 	</td>
-	<td style="text-align:right"><input type="text" name="Charged_Amount[]" value="<?php echo round($row->Charged_Amount,2);?>" /> </td>  
+	<td style="text-align:right"><input type="text" name="Charged_Amount[]"  id="Charged_Amount_<?php echo $row->id; ?>"  value="<?php echo round($row->Charged_Amount,2);?>" /> </td>  
 	<td style="border-right:1px solid #FFFFFF;color:red;text-align:left;"> USD</td>  
 	</tr>
-	<?php
 
+	
+
+	<?php
+		$totalrecords = $totalrecords + 1;
 		$getTotalTime +=  addDurationAsSeconds($row->Duration_min);
 	 	$totalchargedamount = $totalchargedamount + $row->Charged_Amount;
 		$fromDate = date("d-m-Y",strtotime($row->fromdate));
@@ -243,11 +274,10 @@ while($row = mysql_fetch_object($resultinvoice)){
 </td>
  <td style="border:0px 0px 0px 0px  solid #FFFFFF;color:red;text-align:left;"> USD</td>  
 </tr>
+ </table>
 
-
-
-</table>
-
+ <input type="text" name="totalrecords" value="<?php echo $totalrecords;?>" />
+<input type="button" value="recalculculate" id="recalculculate"/>
 
  
  
@@ -259,7 +289,7 @@ while($row = mysql_fetch_object($resultinvoice)){
  
  <div style="border-top: solid; border-bottom:solid;">
 <p>This invoice is for the period of <input type="text" name="fromDate" value="<?php echo $fromDate;?>" /> 00:00:00 to <input type="text" name="toDate" value="<?php echo $toDate;?>" /> 23:59:59. </p>
-<p><input type="text" class="form-control" name="invoicebilleddesc" value="All invoices are billed at Dubai (UAE) local time GMT+4" />. </p>
+<p><input type="text" class="form-control" name="invoicebilleddesc" value="All invoices are billed at Dubai (UAE) local time GMT+4." /> </p>
 <p><input type="text" class="form-control" name="invoicedisputeemail" value="In case of any dispute please send email to accounts@ecs-net.net" /> </p>
 <p> !!!!!!!!!!!!!Thank you for your business!!!!!!!!!!!!!! </p>
 </div>
@@ -342,3 +372,4 @@ header('Location: wholesaleinvoiceslist.php');
 exit(0); 
 }
 ?>
+  
