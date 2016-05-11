@@ -28,6 +28,41 @@ session_start();
 
     });
 
+$( ".savecomments" ).click(function(){
+	 
+	
+	var sid = jQuery(this).attr("id");
+  	var notes_comments = jQuery('#cdata-'+sid).val();
+	 
+	var	data = {
+		invoice_id:sid,
+		invoicecomments:notes_comments,
+		action:'invoicecomment'
+	};
+	//alert(data);
+	
+	 $.post("updatecomments.php", data, function(resp){
+        alert('Your comment updated.');
+		jQuery('#mastercmnt'+sid).text(notes_comments);
+		jQuery('#mastercmnt'+sid).show('slow');
+		jQuery("#childcmnt"+sid).hide('slow');
+    });
+	
+ });
+
+
+  $( ".showcomments" ).click(function(){
+		
+		var masterdivid = jQuery(this).attr("id");
+		var k = masterdivid.split('mastercmnt')	;
+		//alert(k);
+		 
+		jQuery('#'+masterdivid).hide('slow');
+		jQuery("#childcmnt"+k[1]).show('slow');
+		  
+ });
+  
+	 
 });
 
 </script> 
@@ -93,11 +128,14 @@ while($row = mysql_fetch_object($result)){
  <table  class="table"  border="0" bgcolor="#dbeefc" cellpadding="5">
 		  <tr align="center" class="bg_head_payments white font_18">
 		   <td>Company Name </td>
+		    <td> GMT </td>
 		    <td>Invoice No </td>
 		    <td>Invoice Date </td>
-		    <td>Due Date</td>
+		    <td>From Date</td>
+		    <td>To Date</td>
 			<td>Amount</td>
-			<td>Paid Invoice </td>
+			<td>Paid Amount </td>
+			<td> Comments </td>
 			<td>&nbsp; </td>
         </tr>
 <?php
@@ -106,12 +144,24 @@ while($row = mysql_fetch_object($result)){
  while($rowinv = mysql_fetch_object($result)){
 	?>	
 	<tr class="border_bottom_payments">
-	<td> <?php echo $rowinv->companyname;?></td>			
+	<td> <?php echo $rowinv->companyname;?></td>
+	<td> <?php echo 'GMT+0'; ?>			
 	<td> <?php echo $rowinv->invoicenumber;?></td>			
 	<td> <?php echo $rowinv->invoicecreateddate;?></td>
-	<td> <?php echo $rowinv->invoiceduedate;?></td>
-	<td> <?php echo $rowinv->invoiceamount;?></td>
-	<td> <?php echo $rowinv->paidinvoice;?></td>
+	<td> <?php echo $rowinv->invoicefromdate;?></td>
+	<td> <?php echo $rowinv->invoicetodate;?></td>
+	<td> <?php echo $rowinv->invoiceamount;?>$</td>
+	<td> <?php echo $rowinv->paidinvoice;?>$</td>
+<td>
+
+<span title='Click here to update your comments' class="showcomments" id="<?php echo 'mastercmnt'.$rowinv->id; ?>" > <?php if( strlen(trim($rowinv->invoicecomments)) == 0) echo 'Add your comments here.'; else  echo $rowinv->invoicecomments;?> </span>
+<span id="<?php echo 'childcmnt'.$rowinv->id; ?>" style='display:none'> 
+<input type='text' value="<?php echo $rowinv->invoicecomments;?>" class="form-control"   id="cdata-<?php echo $rowinv->id;?>" >    <img src ="make_comment.png"  class="savecomments"  id="<?php echo $rowinv->id;?>"   title="Save Comments" /> 
+</span>
+</td>
+ 	
+
+
 	<td>
 	<a href="#">Send Pdf</a> <br/>
 	 <a href="<?php echo 'generateinvoicepdf.php?id='.$rowinv->id;?>">Generate pdf</a> <br/>
@@ -127,3 +177,4 @@ while($row = mysql_fetch_object($result)){
  </table>
 </div>
 </div>
+

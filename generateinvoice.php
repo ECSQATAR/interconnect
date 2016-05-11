@@ -112,10 +112,13 @@ while($rowp = mysql_fetch_object($resultp)){
 
 $company_id = $_SESSION['company_id'];
 
-$sql = "SELECT * FROM company where id=1";
+$sql = "SELECT * FROM company where id=$company_id";
 $oldrec = mysql_query($sql);
 $rowold = mysql_fetch_object($oldrec);
+$companyname = $rowold->nameofcompany;
 
+
+ 
 $cdate = date("Y-m-d");
 $sqlcurntInvcount = "select count(id) as cnt From wsalesinvoicesmaster WHERE company_id=$company_id AND date(invoicecreateddate) = '$cdate' ";
 $recCountData = mysql_query($sqlcurntInvcount);
@@ -131,6 +134,7 @@ $sqlnew = "SELECT * FROM company where id=$company_id";
 $newrec = mysql_query($sqlnew);
 $rownewcompany = mysql_fetch_object($newrec);
 $company_id = $rownewcompany->id;
+$companyname = $rownewcompany->nameofcompany;
 //define ('PDF_HEADER_LOGO', 'logoVoip.png');
 
 
@@ -141,9 +145,6 @@ else
  	$lastInserId = 1;
 
 
-$sqlold = "SELECT * FROM company where id=61";
-$oldrec = mysql_query($sqlold);
-$rowold = mysql_fetch_object($oldrec);
 
  $Condition='';
  $sql = "SELECT * from tempwsaleinvoicedata WHERE 1 = 1  ";
@@ -159,7 +160,6 @@ $dueDate =  date('d/m/Y', strtotime($createdDate. ' + 3 day'));
 $invNo = $currentDate.$oldRecordsCount;
 $invoicenumber = $invNo; 
 
-$companyname = $rowold->nameofcompany;
 
 $totalchargedamount = 0;
 $totalbiledduration=0;
@@ -262,7 +262,7 @@ while($row = mysql_fetch_object($resultinvoice)){
 
  <tr style="border-right:1px solid #FFFFFF;text-align:right;">
  <td colspan="3" style="text-align:right">Total Minutes :
-<input type="text" name="totalbiledduration" value="<?php echo $totalbiledduration;?>" /> 
+<input tsype="text" name="totalbiledduration" value="<?php echo $totalbiledduration;?>" /> 
 </td>
  <td colspan="2" style="text-align:right">Total : 
  <input type="text" name="totalchargedamount" value="<?php echo round($totalchargedamount,2);?>" /> 
@@ -330,8 +330,14 @@ if (isset($_POST['conform'])){
 	$totalbiledduration = $_POST['totalbiledduration'];
 	$invoiceduedate =  date('Y-m-d',strtotime($dueDate));	
 	$invoicecreateddate = date('Y-m-d',strtotime($createdDate));
-	$invoicefromdate  = date('Y-m-d',strtotime($fromDate));
-	$invoicetodate  = date('Y-m-d',strtotime($toDate));
+	$fromDate = $_POST['fromDate'];
+	$toDate = $_POST['toDate'];
+	//$invoicefromdate  = date('Y-m-d',strtotime($fromDate));
+	//$invoicetodate  = date('Y-m-d',strtotime($toDate));
+	$invoicefromdate  = $fromDate;
+	$invoicetodate  = $toDate;
+
+
 	$totalchargedamount = $_POST['totalchargedamount'];
 	$invoicebilleddesc = $_POST['invoicebilleddesc'];
     	$invoiceoutstanding = $_POST['outstanding'];
@@ -341,12 +347,12 @@ if (isset($_POST['conform'])){
 
 	$invoiceoutstanding = 0;
  
-		 $invoicedisputeemail = $_POST['invoicedisputeemail'];
+	$invoicedisputeemail = $_POST['invoicedisputeemail'];
 		
 	$ftotamount = round($totalchargedamount,0);
 	$pdffilename = trim($rownewcompany->nameofcompany.date("d-m-Y").$ftotamount.'.pdf');
 	
-	$sqlinv = "INSERT INTO wsalesinvoicesmaster (`company_id`, `companyname`, `invoicenumber`, `invoicecreateddate`, `invoiceduedate`, `invoiceTotalminutes`, `invoiceamount`, `invoiceoutstanding`, `invoicesubtotal`, `invoicefromdate`, `invoicetodate`, `paidinvoice`, `pdffilename`,invoicebilleddesc,invoicedisputeemail) 
+	echo $sqlinv = "INSERT INTO wsalesinvoicesmaster (`company_id`, `companyname`, `invoicenumber`, `invoicecreateddate`, `invoiceduedate`, `invoiceTotalminutes`, `invoiceamount`, `invoiceoutstanding`, `invoicesubtotal`, `invoicefromdate`, `invoicetodate`, `paidinvoice`, `pdffilename`,invoicebilleddesc,invoicedisputeemail) 
 		 VALUES($company_id, '$companyname', '$invoicenumber', '$invoicecreateddate', '$invoiceduedate', '$totalbiledduration', $totalchargedamount, $invoiceoutstanding, $totalchargedamount, '$invoicefromdate', '$invoicetodate', 0, '$pdffilename','$invoicebilleddesc','$invoicedisputeemail')";
      mysql_query($sqlinv);
 	$invmasterid =	 mysql_insert_id();

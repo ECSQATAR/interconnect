@@ -203,7 +203,7 @@ ceo@ecs-net.net<br>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>Create Date</td>
-<td style="text-align:right">'.$rowinv->invoicecreateddate.' </td> 
+<td style="text-align:right">'.date("d/m/Y",strtotime($rowinv->invoicecreateddate)).' </td> 
 <td>&nbsp;</td>
 </tr>
 
@@ -212,7 +212,7 @@ ceo@ecs-net.net<br>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>Due Date  </td>
-<td style="text-align:right">'.$rowinv->invoiceduedate.' </td>
+<td style="text-align:right">'.date("d/m/Y",strtotime($rowinv->invoiceduedate)).' </td>
 <td>&nbsp;</td>
 </tr>
 
@@ -328,7 +328,7 @@ $html = $html. '
  
  <table Style="background-color:#FFFFFF;border-top:1px solid; border-bottom:2px solid">
  <tr>
-  <td> This invoice is for the period of '.$rowinv->invoicefromdate.' 00:00:00 to '.$rowinv->invoicetodate.' 23:59:59. </td>
+  <td> This invoice is for the period of '.$rowinv->invoicefromdate.' to '.$rowinv->invoicetodate.'. </td>
  </tr>
  
  <tr>
