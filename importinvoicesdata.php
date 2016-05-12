@@ -8,7 +8,6 @@ require_once('head.php');
   <link rel="stylesheet" href="/resources/demos/style.css">
   <script>
     jQuery(document).ready(function () {
- 
 
      $( "#from_date").datepicker({
       showOn: "button",
