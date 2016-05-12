@@ -74,7 +74,8 @@ $( ".savecomments" ).click(function(){
 <form role="form" method="GET" action="<?php echo $_SERVER['PHP_SELF']; ?>">
 
 <div class="row">
-    <a href="index.php"> Back to home Page </a> || &nbsp;  <a href="importinvoicesdata.php"> Import invoices data </a> ;&nbsp; 
+    <a href="index.php"> Back to home Page </a> | &nbsp;  <a href="importinvoicesdata.php"> Import invoices data </a> ;&nbsp; 
+|| <a href="prefixmasterlist.php"> Manage Prefix </a>
 </div>
 
 <div class="row">
