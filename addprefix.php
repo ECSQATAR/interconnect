@@ -30,25 +30,6 @@ if(isset($_GET['action']) && $_GET['action']=='delete'){
       <div class="panel-body">
 
 	  
-	  <div class="row">
-	 
-	  <label>Company Name</label>
-	 
-	<select  name="company_id"  class="form-control" required >
-	<option value="">Select Company</option>
-	<?php
-	  $sql = "SELECT id,nameofcompany FROM company";
-	 $result = mysql_query($sql);
-	while($row = mysql_fetch_object($result)){
-	?>
-	<option value="<?php echo $row->id;?>" <?php if(isset($_GET['company_id']) && $_GET['company_id'] == $row->id) echo 'selected=selected';?> > 
-	<?php echo $row->nameofcompany;?></option>
-	<?php  
-	} 
-
-	?> 
-	</select> 
-</div>
  
 
 		<div class="row">
@@ -63,6 +44,7 @@ if(isset($_GET['action']) && $_GET['action']=='delete'){
 			</div>
 			
 			<div class="row">
+			<br>
 				<button type="submit" name="submit" class="btn btn-primary">Save</button>
 			</div>				
 			  
@@ -78,7 +60,7 @@ if(isset($_GET['action']) && $_GET['action']=='delete'){
 
 function savedb(){
 /// echo "<pre>";	print_r($_POST);
-	 $company_id = $_POST['company_id'];
+	 $company_id = 1; //$_POST['company_id'];
 	 $prefix  = mysql_escape_string( $_POST['prefix']);
 	 $description  = mysql_escape_string($_POST['description']);
 	

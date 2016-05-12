@@ -378,7 +378,7 @@ $pdfpath = $_SERVER['DOCUMENT_ROOT']."interconnect/invoicepdfs/".$rowinv->pdffil
 $toEmail='snmurty99@gmail.com'; 
 //sendEMail($toEmail,$pdfpath);
 $pdf->Output($pdfpath, 'F');
-$pdf->Output('output.pdf', 'I');
+$pdf->Output($rowinv->pdffilename, 'I');
 //============================================================+
 // END OF FILE
 //============================================================+

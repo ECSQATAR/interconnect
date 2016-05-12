@@ -350,7 +350,7 @@ if (isset($_POST['conform'])){
 	$invoicedisputeemail = $_POST['invoicedisputeemail'];
 		
 	$ftotamount = round($totalchargedamount,0);
-	$pdffilename = trim($rownewcompany->nameofcompany.date("d-m-Y").$ftotamount.'.pdf');
+	$pdffilename = trim($rownewcompany->nameofcompany.'-'.date("DD-M-yy").'-'.$ftotamount.'.pdf');
 	
 	echo $sqlinv = "INSERT INTO wsalesinvoicesmaster (`company_id`, `companyname`, `invoicenumber`, `invoicecreateddate`, `invoiceduedate`, `invoiceTotalminutes`, `invoiceamount`, `invoiceoutstanding`, `invoicesubtotal`, `invoicefromdate`, `invoicetodate`, `paidinvoice`, `pdffilename`,invoicebilleddesc,invoicedisputeemail) 
 		 VALUES($company_id, '$companyname', '$invoicenumber', '$invoicecreateddate', '$invoiceduedate', '$totalbiledduration', $totalchargedamount, $invoiceoutstanding, $totalchargedamount, '$invoicefromdate', '$invoicetodate', 0, '$pdffilename','$invoicebilleddesc','$invoicedisputeemail')";

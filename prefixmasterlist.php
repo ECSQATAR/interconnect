@@ -147,7 +147,6 @@ $rs_result = mysql_query ($sql);
 <thead>  
 <tr>   
 <th>S.No</th>
-<th>Company Name</th>
 <th>Prefix</th>
 <th>Description</th>
 <th> &nbsp;</th>
@@ -160,7 +159,6 @@ while ($row = mysql_fetch_object($rs_result)) {
 ?>  
 <tr>
 <td><?php echo $k;?></td>
-<td><?php echo $compniesList[$row->company_id];?></td>
 <td><?php echo $row->prefix;?></td>
 <td><?php echo $row->description;?></td>
 <td style="text-align:center">  &nbsp; &nbsp; <image src="remove.png" width="20" height="20" title="Delete" onclick="checkdelte(<?php echo $row->id;?>)"/> </td>

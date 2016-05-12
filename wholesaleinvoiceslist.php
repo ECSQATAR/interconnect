@@ -62,12 +62,73 @@ $( ".savecomments" ).click(function(){
 		  
  });
   
+
+
+
+$( ".savepayments" ).click(function(){
+	 
+	
+	var sid = jQuery(this).attr("id");
+  	var paidamount = jQuery('#cdata-'+sid).val();
+	 
+	var	data = {
+		invoice_id:sid,
+		paidamount:paidamount,
+		action:'invoicecomment'
+	};
+	//alert(data);
+	
+	 $.post("updateinvoicepayments.php", data, function(resp){
+        alert('Your payment updated.');
+		jQuery('#mastercmnt'+sid).text(paidamount);
+		jQuery('#mastercmnt'+sid).show('slow');
+		jQuery("#childcmnt"+sid).hide('slow');
+    });
+	
+ });
+
+
+  $( ".showpayments" ).click(function(){
+		
+		var masterdivid = jQuery(this).attr("id");
+		var k = masterdivid.split('mastercmnt')	;
+		//alert(k);
+		 
+		jQuery('#'+masterdivid).hide('slow');
+		jQuery("#childcmnt"+k[1]).show('slow');
+		  
+ });
 	 
 });
 
 </script> 
+
+
+<script>
+function checkdelte(id){
+//alert(id);
  
+if (confirm('Are you sure you want to Remove ?')) {
+    window.location.href = "wholesaleinvoiceslist.php?action=delete&id="+id;
+    // Save it!
+} 
+
+}
+</script>
+<style>
 <div class="container">
+
+<?php
+
+if(isset($_GET['action']) && $_GET['action']=='delete'){
+//print_r($_GET);
+	$id = $_GET['id'];
+	$sqldelete = "DELETE from wsalesinvoicesmaster where id=$id";
+	mysql_query($sqldelete); 
+	//header("Location:prefixmasterlist.php");
+	//exit(0);
+}
+?>
 
 <h1>Whole Sales Invoices List </h1>
 
@@ -140,6 +201,7 @@ while($row = mysql_fetch_object($result)){
 			<td>&nbsp; </td>
         </tr>
 <?php
+$sumtotalinv = 0;
  $sql = "SELECT * From wsalesinvoicesmaster";
  $result = mysql_query($sql);
  while($rowinv = mysql_fetch_object($result)){
@@ -152,7 +214,13 @@ while($row = mysql_fetch_object($result)){
 	<td> <?php echo $rowinv->invoicefromdate;?></td>
 	<td> <?php echo $rowinv->invoicetodate;?></td>
 	<td> <?php echo $rowinv->invoiceamount;?>$</td>
-	<td> <?php echo $rowinv->paidinvoice;?>$</td>
+	<td> 
+<span title='Click here to update your comments' class="showcomments" id="<?php echo 'mastercmnt'.$rowinv->id; ?>" > <?php if( strlen(trim($rowinv->invoicecomments)) == 0) echo 'Add your comments here.'; else  echo $rowinv->invoicecomments;?> </span>
+<span id="<?php echo 'childcmnt'.$rowinv->id; ?>" style='display:none'> 
+<input type='text' value="<?php echo $rowinv->invoicecomments;?>" class="form-control"   id="cdata-<?php echo $rowinv->id;?>" >    <img src ="make_comment.png"  class="savecomments"  id="<?php echo $rowinv->id;?>"   title="Save Comments" /> 
+</span>
+
+<?php echo $rowinv->paidinvoice;?>$</td>
 <td>
 
 <span title='Click here to update your comments' class="showcomments" id="<?php echo 'mastercmnt'.$rowinv->id; ?>" > <?php if( strlen(trim($rowinv->invoicecomments)) == 0) echo 'Add your comments here.'; else  echo $rowinv->invoicecomments;?> </span>
@@ -164,17 +232,24 @@ while($row = mysql_fetch_object($result)){
 
 
 	<td>
-	<a href="#">Send Pdf</a> <br/>
-	 <a href="<?php echo 'generateinvoicepdf.php?id='.$rowinv->id;?>">Generate pdf</a> <br/>
-	 <a href="#">Delete Invoice</a>
+	 <a href="<?php echo 'generateinvoicepdf.php?id='.$rowinv->id;?>"> <img src="geneatepdf.png" width="20" height="20"   title="Generater Pdf" </a> &nbsp;
+   &nbsp; &nbsp; <image src="remove.png" width="20" height="20" title="Delete" onclick="checkdelte(<?php echo $rowinv->id;?>)"/> 
+
+
 	 </td>
 	
 	
 	</tr>
 <?php
   
+$sumtotalinv = $sumtotalinv +  $rowinv->invoiceamount;
 	}
 ?>
+
+<tr>
+<td colspan="10"> Total : <?php echo $sumtotalinv; ?> </td>
+</tr>
+
  </table>
 </div>
 </div>
