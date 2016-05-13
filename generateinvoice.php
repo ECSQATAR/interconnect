@@ -190,8 +190,8 @@ ceo@ecs-net.net<br>
 </tr>
 
 <tr>
-<td><?php echo $companyname;?> </td>
-<td>&nbsp;</td>
+<td colspan="2"><input type="text" name="companyname"  class="form-control" value="<?php echo $companyname;?>" />  </td>
+ 
 <td>Inv.# <input type="text" name="invoicenumber" value="<?php echo $invNo;?>" /> </td>
 </tr>
 
@@ -342,7 +342,7 @@ if (isset($_POST['conform'])){
 	$invoicebilleddesc = $_POST['invoicebilleddesc'];
     	$invoiceoutstanding = $_POST['outstanding'];
 
-
+	$companyname = $_POST['companyname'];
  
 
 	$invoiceoutstanding = 0;
@@ -352,7 +352,7 @@ if (isset($_POST['conform'])){
 	$ftotamount = round($totalchargedamount,0);
 	$pdffilename = trim($rownewcompany->nameofcompany.'-'.date("DD-M-yy").'-'.$ftotamount.'.pdf');
 	
-	echo $sqlinv = "INSERT INTO wsalesinvoicesmaster (`company_id`, `companyname`, `invoicenumber`, `invoicecreateddate`, `invoiceduedate`, `invoiceTotalminutes`, `invoiceamount`, `invoiceoutstanding`, `invoicesubtotal`, `invoicefromdate`, `invoicetodate`, `paidinvoice`, `pdffilename`,invoicebilleddesc,invoicedisputeemail) 
+	 $sqlinv = "INSERT INTO wsalesinvoicesmaster (`company_id`, `companyname`, `invoicenumber`, `invoicecreateddate`, `invoiceduedate`, `invoiceTotalminutes`, `invoiceamount`, `invoiceoutstanding`, `invoicesubtotal`, `invoicefromdate`, `invoicetodate`, `paidamount`, `pdffilename`,invoicebilleddesc,invoicedisputeemail) 
 		 VALUES($company_id, '$companyname', '$invoicenumber', '$invoicecreateddate', '$invoiceduedate', '$totalbiledduration', $totalchargedamount, $invoiceoutstanding, $totalchargedamount, '$invoicefromdate', '$invoicetodate', 0, '$pdffilename','$invoicebilleddesc','$invoicedisputeemail')";
      mysql_query($sqlinv);
 	$invmasterid =	 mysql_insert_id();

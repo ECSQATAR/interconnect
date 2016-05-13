@@ -189,9 +189,7 @@ ceo@ecs-net.net<br>
 </tr>
 
 <tr>
-<td>'.$rowinv->companyname.' </td>
-<td width="35%">&nbsp;</td>
-<td>&nbsp;</td>
+<td colspan="3" >'.$rowinv->companyname.' </td>
 <td>Inv#.</td>
 <td style="text-align:right">'.$rowinv->invoicenumber.' </td>
 <td>&nbsp;</td>
