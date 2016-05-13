@@ -69,7 +69,7 @@ $( ".savepayments" ).click(function(){
 	 
 	
 	var sid = jQuery(this).attr("id");
-  	var paidamount = jQuery('#cdata-'+sid).val();
+  	var paidamount = jQuery('#pdata-'+sid).val();
 	 
 	var	data = {
 		invoice_id:sid,
@@ -133,7 +133,7 @@ if(isset($_GET['action']) && $_GET['action']=='delete'){
 
 <div class="row">
     <a href="index.php"> Back to home Page </a> | &nbsp;  <a href="importinvoicesdata.php"> Import invoices data </a> ;&nbsp; 
-|| <a href="prefixmasterlist.php"> Manage Prefix </a>
+|| <a href="prefixmasterlist.php"> Manage Prefix </a> || <a href="companieslist.php"> Manage Company</a> || <a href="addcompany.php"> Add Company </a>
 </div>
 
 <div class="row">
@@ -195,7 +195,7 @@ while($row = mysql_fetch_object($result)){
 			<td>Amount</td>
 			<td>Paid Amount </td>
 			<td> Comments </td>
-			<td>&nbsp; </td>
+			<td width="10%">&nbsp; </td>
         </tr>
 <?php
 $sumtotalinv = 0;
@@ -215,7 +215,7 @@ $sumtotalinv = 0;
 
 <span title='Click here to update your payments' class="showpayments" id="<?php echo 'masterpmnt'.$rowinv->id; ?>" > <?php if( $rowinv->paidamount == 0) echo 'Add your payments here.'; else  echo $rowinv->paidamount;?> </span>
 <span id="<?php echo 'childpmnt'.$rowinv->id; ?>" style='display:none'> 
-<input type='text' value="<?php echo $rowinv->paidamount;?>" class="form-control"   id="cdata-<?php echo $rowinv->id;?>" >    <img src ="make_comment.png"  class="savepayments"  id="<?php echo $rowinv->id;?>"   title="Save Payments" /> 
+<input type='text' value="<?php echo $rowinv->paidamount;?>" class="form-control"   id="pdata-<?php echo $rowinv->id;?>" >    <img src ="make_comment.png"  class="savepayments"  id="<?php echo $rowinv->id;?>"   title="Save Payments" /> 
 </span>
 </td>
  	
