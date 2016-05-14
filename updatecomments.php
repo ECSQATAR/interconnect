@@ -1,5 +1,8 @@
 <?php
     include_once("dbconfig.php");    
+$conn = mysql_connect($dbhost, $dbuser, $dbpass);
+mysql_select_db($dbName);
+
 
     //get search term
 //print_r($_POST);

@@ -138,32 +138,33 @@ if(isset($_GET['action']) && $_GET['action']=='delete'){
 
 <div class="row">
 
- <div class="col-md-3">
+<div class="col-md-3">
 
-  <label>Wholeseller</label>
+   <label>Company Name</label>
  
-<select  name="wholeseller_id" required >
-<option value="">Select Wholeseller</option>
+<select  name="company_id" required >
+<option value="">Select Company</option>
 <?php
-  $sql = "SELECT id,accountname FROM accountusers Where accountgroup_id=62";
+  $sql = "SELECT id,nameofcompany FROM company";
  $result = mysql_query($sql);
 while($row = mysql_fetch_object($result)){
 ?>
-<option value="<?php echo $row->id;?>" <?php if(isset($_GET['wholeseller_id']) && $_GET['wholeseller_id'] == $row->id) echo 'selected=selected';?> ><?php echo $row->accountname;?></option>
+<option value="<?php echo $row->id;?>" <?php if(isset($_GET['company_id']) && $_GET['company_id'] == $row->id) echo 'selected=selected';?> > 
+<?php echo $row->nameofcompany;?></option>
 <?php  
 } 
 
 ?> 
 </select> 
 </div>
-
   
-<div class="col-md-4">
+  
+<div class="col-md-3">
 <label>From Date</label> 
 <input type="text" id="from_date"   name="from_date"  value="<?php echo $_GET['from_date'];?>" placeholder="Please select from  date" required /> 
 </div>
 
-<div class="col-md-5">
+<div class="col-md-3">
 <label>To Date</label> 
 <input type="text" id="to_date" name="to_date"  value="<?php echo $_GET['to_date'];?>" placeholder="Please select to  date" required /> 
 
@@ -240,13 +241,17 @@ $sumtotalinv = 0;
 	
 	</tr>
 <?php
-  
-$sumtotalinv = $sumtotalinv +  $rowinv->invoiceamount;
+	$sumpaidAmount = $sumpaidAmount +  $rowinv->paidamount;
+	$sumtotalinv = $sumtotalinv +  $rowinv->invoiceamount;
 	}
+
+$balanceAmount =  $sumtotalinv - $sumpaidAmount;
 ?>
 
 <tr>
-<td colspan="10"> Total : <?php echo $sumtotalinv; ?> </td>
+<td>&nbsp; </td> <td>&nbsp; </td> <td>&nbsp; </td><td>&nbsp; </td> <td>&nbsp; </td> 
+<td>&nbsp;<b>Total</b> :  </td>  <td> <?php echo $sumtotalinv; ?>$ </td> <td><?php echo $sumpaidAmount; ?>$ </td> 
+<td> Balance Amount : <?php echo $balanceAmount; ?>$ </td> <td>&nbsp; </td>  <td>&nbsp;</td>
 </tr>
 
  </table>
