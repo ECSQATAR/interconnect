@@ -299,9 +299,9 @@ while($row = mysql_fetch_object($resultinvoice)){
 <p style="color:#ff0000;">Note: No dispute will be entertained after 72 hours of the invoice date. </p>
  
  <div style="border-top: solid; border-bottom:solid;">
-<p>This invoice is for the period of <input type="text" name="fromDate" value="<?php echo $fromDate.' 00:00:00';?>" />  to <input type="text" name="toDate" value="<?php echo $toDate.' 23:59:59';?>" />. </p>
+<p>This invoice is for the period of <input type="text" name="fromDate" value="<?php echo $fromDate.' 00:00:00';?>" />  to <input type="text" name="toDate" value="<?php echo $toDate.' 00:00:00';?>" />. </p>
 <p><input type="text" class="form-control" name="invoicebilleddesc" value="All invoices are billed at Dubai (UAE) local time GMT+4." /> </p>
-<p><input type="text" class="form-control" name="invoicedisputeemail" value="In case of any dispute please send email to accounts@ecs-net.net" /> </p>
+<p><input type="text" class="form-control" name="invoicedisputeemail" value="In case of any dispute please send email to accounts@ecs-net.net cc to ceo@ecs-net.net." /> </p>
 <p> !!!!!!!!!!!!!Thank you for your business!!!!!!!!!!!!!! </p>
 </div>
 

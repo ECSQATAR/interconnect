@@ -111,6 +111,19 @@ if (confirm('Are you sure you want to Remove ?')) {
 } 
 
 }
+
+
+function lockinvoice(id){
+//alert(id);
+ 
+if (confirm('Are you sure you want to Lock the invoice ?')) {
+    window.location.href = "wholesaleinvoiceslist.php?action=lock&id="+id;
+    // Save it!
+} 
+
+}
+
+
 </script>
 
 <div class="container">
@@ -125,6 +138,17 @@ if(isset($_GET['action']) && $_GET['action']=='delete'){
 	//header("Location:prefixmasterlist.php");
 	//exit(0);
 }
+
+
+if(isset($_GET['action']) && $_GET['action']=='lock'){
+//print_r($_GET);
+	$id = $_GET['id'];
+	$sqldelete = "update wsalesinvoicesmaster set lockedinvoice=1  where id=$id";
+	mysql_query($sqldelete); 
+	//header("Location:prefixmasterlist.php");
+	//exit(0);
+}
+
 ?>
 
 <h1>Whole Sales Invoices List </h1>
@@ -187,6 +211,7 @@ while($row = mysql_fetch_object($result)){
 <div class="row">
  <table  class="table"  border="0" bgcolor="#dbeefc" cellpadding="5">
 		  <tr align="center" class="bg_head_payments white font_18">
+		<td>S.No.</td>
 		   <td>Company Name </td>
 		    <td> GMT </td>
 		    <td>Invoice No </td>
@@ -202,9 +227,14 @@ while($row = mysql_fetch_object($result)){
 $sumtotalinv = 0;
  $sql = "SELECT * From wsalesinvoicesmaster";
  $result = mysql_query($sql);
+$sno = 0;
  while($rowinv = mysql_fetch_object($result)){
+$sno = $sno+1;
+
 	?>	
 	<tr class="border_bottom_payments">
+	<td> <?php echo $sno;?></td>
+
 	<td> <?php echo $rowinv->companyname;?></td>
 	<td> <?php echo 'GMT+0'; ?>			
 	<td> <?php echo $rowinv->invoicenumber;?></td>			
@@ -233,7 +263,13 @@ $sumtotalinv = 0;
 
 	<td>
 	 <a href="<?php echo 'generateinvoicepdf.php?id='.$rowinv->id;?>"> <img src="geneatepdf.png" width="20" height="20"   title="Generater Pdf"/> </a> &nbsp;
-   &nbsp; &nbsp; <image src="remove.png" width="20" height="20" title="Delete" onclick="checkdelte(<?php echo $rowinv->id;?>)"/> 
+<?php if($rowinv->lockedinvoice==0){?>
+   &nbsp; &nbsp; <image src="remove.png" width="20" height="20" title="Delete" onclick="checkdelte(<?php echo $rowinv->id;?>)"/>
+ <image src="invoice_lock.png" width="20" height="20" title="locke your invoice" onclick="lockinvoice(<?php echo $rowinv->id;?>)"/>  
+<?php } ?>
+
+		
+
 
 
 	 </td>

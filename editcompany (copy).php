@@ -1,37 +1,46 @@
+<?php
+echo 'narasimha';
+include_once("head.php"); 
+//include_once("logincheck.php");
+?>
 <link href="css/bootstrap-toggle.min.css" rel="stylesheet">
 <script src="js/bootstrap-toggle.min.js"></script>
+ 
 <script type="text/javascript" src="jquery.timepicker.js"></script>
 <link rel="stylesheet" type="text/css" href="jquery.timepicker.css" />
+ 
 <?php
-include_once("head.php"); 
 
 if(isset($_GET['action']) && $_GET['action']=='delete'){
-//print_r($_GET);
+print_r($_GET);
 	$id = $_GET['id'];
 	$sqldelete = "DELETE from company where id=$id";
 	mysql_query($sqldelete); 
 	header("Location:companieslist.php");
 	exit(0);
 
-}
 ?>
   
 <div class="container">
 
   <center><h2>VOIP Interconnect Form - Edit Company</h2></center>
 
-
+<h5> Our Company information </h5>
 <?php
 
 $lastInserId = $_GET['id'];
 $sqlnew = "SELECT * FROM company where id=$lastInserId";
 $newrec = mysql_query($sqlnew);
 $rownew = mysql_fetch_object($newrec);
- //echo "<pre>"; print_r($rownew); echo "</pre>";
+
+
+
 ?>
  
-  
-<form method="post"  role="form"   action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
+ 
+<h5> Please fill your company information bellow form and click on submit </h5>
+
+       <form method="post"  role="form"   action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data" >
  
   <div class="panel-group">
  
@@ -385,32 +394,171 @@ $rownew = mysql_fetch_object($newrec);
 
  			
 	</div>
-  
+	<?php 
+		$office_hours = $rownew->office_hours;
+		$office_hours_Data = 	explode("till",$office_hours);
+		$office_hours_from = $office_hours_Data[0];
+		$office_hours_to = $office_hours_Data[1];
+	?>	
+	
+	<div class="row">
+ 		  <div class="col-md-6 col-sm-12 col-ls-6">
+ 			    <label>     Working Hours    </label>   <br/>
+			   	From <input id="timeformatExample1" name="office_hours_from" value="<?php echo  $rownew->office_hours_from;?>"   type="text" class="time" required /> 
+				To <input id="timeformatExample2" name="office_hours_to"     value="<?php echo  $rownew->office_hours_to;?>"   type="text" class="time" required  />
+
+	    	  </div>
+
+		   <div class="col-md-6 col-sm-12 col-ls-6">
+			<label>Please Upload Your Company Logo: </label>
+			<input class="form-control"    type="file" name="companylogo"  />
+		   </div>
+
+
+
+ 	 </div>
+
+
 	</div>  </div> <!-- panelclose -->
    
 
        
- 
 
+	 </div> </div> <!-- panel close -->
+
+    <div class="panel panel-warning">
+      <div class="panel-heading">Payment Terms</div>
+      <div class="panel-body"> 
+<div class="row">
+ <label> Choose your payment terms:  </label>
+<select name="paymentterms">
+  <option value="prepayment only"  <?php if($rownew->paymentterms=='prepayment only') echo 'selected' ;?> > Prepayment only </option>
+  <option value="Credit facility"  <?php if($rownew->paymentterms=='Credit facility') echo 'selected' ;?> > Credit facility </option>
+</select> 
+ 
+</div>
+	
+	  </div>   </div> <!-- panel close -->
    </div>
 
  
 <div class="row" style="text-align:center">
-<input type="hidden" name="id" value="<?php echo $lastInserId ;?> " />
    <input id="task" name="task" type="submit"  class="btn btn-info"  value="Submit" />
 </div>
                   
 
  </form>
+
+
 <?php
  
+
+ function rechargeVoucher() {
+ 	$secret = $_POST['secret'];
+	$sql = "SELECT * FROM sippyreseller where phonenumber=$secret";
+	$oldrec = mysql_query($sql);
+	$rowold = mysql_fetch_object($oldrec);
+	
+	$rowold->api_password = base64_decode($rowold->api_password);
+	
+ 		 if(!isset($rowold->email)){
+			$rowold->email = "";
+			$rowold->batchtag="";
+			$rowold->i_billing_plan = 0;
+			$rowold->api_access ="";
+			$rowold->api_password = ""; 
   
+  		}
+
+	    $_SESSION['rowold'] = $rowold;
+
+		$_POST['email'] = $rowold->email;
+		$_POST['reseller_id'] = $rowold->id;
+ 		
+	    $params = array(new xmlrpcval(array("username" => new xmlrpcval($_POST['username'], "string"),
+                                    "voucher_id"     	=> new xmlrpcval($_POST['voucher_id'], "string"),
+
+                                     ), 'struct'));
+    $msg = new xmlrpcmsg('rechargeVoucher', $params);
+// echo "<pre>"; print_r($msg); echo "</pre>";
+    /* replace here URL  and credentials to access to the API */
+    $cli = new xmlrpc_client('https://38.130.112.22/xmlapi/xmlapi');
+    $cli->setSSLVerifyPeer(false);
+    $cli->setSSLVerifyHost(false);
+    $cli->setCredentials($rowold->api_access,$rowold->api_password, CURLAUTH_DIGEST);
+ 
+
+   $r = $cli->send($msg, 20);       /* 20 seconds timeout */
+   return $r;
+
+}
+ 
   
 
+function sendEMail($a) {
+
+  $rowold = $_SESSION['rowold'];
+
+    $body = " 
+<table>
+<tr><td> Welcome to Mob-Voip </td></tr>
+<tr><td> Please keep this email for your records. Your recharge information is as follows:</td> </tr>
+<tr><td> &nbsp; </td></tr>
+<tr><td>      username : ${a['username']}   </td> </tr>	
+<tr><td>      Vocher id : ${a['voucher_id']}   </td> </tr>
+<tr><td>      Amount : ${a['payer_amount']}  ${a['voucher_currency']}  </td> </tr>
+         
+<tr><td> <tr><td> &nbsp; </td> </tr>
+<tr><td> &nbsp; </td> </tr>
+<tr><td> Please feel free to contact us in case of any assiatnce, we are available on skype id 'mob-voip' </td> </tr>
+<tr><td> Whatsapp # +16473602360  </td> </tr>
+<tr><td> &nbsp;  </td> </tr>
+<tr><td> Thank you for Business! </td> </tr>
+<tr><td> &nbsp; </td> </tr>
+<tr><td>   Mob-Voip  Team. </td> </tr>
+</table>";
  
+#$bcc = "mail@mob-voip.net";
+$to = $_POST['email'];
+$subject = 'Top Up Voucher Confirmation -'.$rowold->api_access;
+		$from ='info@mob-voip.net'; 
+        $headers  = "From: " . $from . "\r\n";
+		$headers .= "Reply-To: ". $from . "\r\n";
+		$headers .= "MIME-Version: 1.0\r\n";
+		$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+
+ 
+	externalmail($to,$subject,$body);
+
+
+
+	 
+
+
+
+}
+
+
+function saveMail($frm)
+{
+
+ 
+	$text = "--------------------------- \n";
+	foreach ($frm as $key=>$value) 
+	{
+		$text .= "$key=$value, \n";
+	}
+	$log_file = 'sms_log.txt';
+	$fp=fopen($log_file,'a');
+	fwrite($fp, $text . "\n\n");
+	fwrite($fp, $sql . "\n\n");
+	fclose($fp);  // close fil
+
+
+}
+
 function savedb(){
 /// echo "<pre>";	print_r($_POST);
-	$lastInserId = $_POST['id'];
 	$nameofcompany =  mysql_escape_string($_POST['nameofcompany']); 
 	$country =  mysql_escape_string($_POST['country']);
 	$primarycontact = mysql_escape_string( $_POST['primarycontact']);
@@ -419,25 +567,102 @@ function savedb(){
 	$position = mysql_escape_string( $_POST['position']);
 	$mobile =  mysql_escape_string($_POST['mobile']);
 	$email = mysql_escape_string( $_POST['email']);
- 	$website = mysql_escape_string($_POST['website']);
-  	$emailcc = mysql_escape_string($_POST['emailcc']);
+	$office_hours_from = mysql_escape_string( $_POST['office_hours_from']);
+	$office_hours_to = mysql_escape_string( $_POST['office_hours_to']);
+	$office_hours =  $office_hours_from .' till '.$office_hours_to;
+
+
+	$Called_Number_Format  = mysql_escape_string($_POST['Called_Number_Format']);
+	$Calling_Number_Format  = mysql_escape_string( $_POST['Calling_Number_Format']);
+ 	$codecs_supported = $_POST['codecs_supported'];
+	//print_r($codecs_supported);
+ 	$codecs_supported = implode(",",$codecs_supported);
+ 
+	$website = mysql_escape_string($_POST['website']);
+	
+	$protocols = mysql_escape_string( $_POST['protocols']);
+	$ports = mysql_escape_string( $_POST['ports']);
+
+
+	$ip_address = mysql_escape_string($_POST['ip_address']);
+
+	$Manufaturere_Model = mysql_escape_string( $_POST['Manufaturere_Model']);
+	$emailcc = mysql_escape_string($_POST['emailcc']);
  	$skype = mysql_escape_string($_POST['skype']);
- 	$website = $_POST['website'];
+
+	 
+	
+if(isset($_POST['paypal']))
+ 	$paypal  = $_POST['paypal'];
+else
+	$paypal  = 'No';
+
+
+if(isset($_POST['Skrill']))
+ 	$Skrill  = $_POST['Skrill'];
+else
+	$Skrill  = 'No';
+
+
+
+if(isset($_POST['Local_Bank_Deposit']))
+ 	$Local_Bank_Deposit  = $_POST['Local_Bank_Deposit'];
+else
+	$Local_Bank_Deposit  = 'No';
+
+
+
+
+if(isset($_POST['wire_transform']))
+ 	$wire_transform   = $_POST['wire_transform'];
+else
+	$wire_transform   = 'No';
+
+
+
+
+ 
+if(isset($_POST['Western_union']))
+ 	$Western_union   = $_POST['Western_union'];
+else
+	$Western_union   = 'No';
+
+	$target_dir = $_SERVER['DOCUMENT_ROOT']."/interconnect/logouploads/";
+	$temp_file_name = mt_rand().basename($_FILES["companylogo"]["name"]);
+	$target_file = $target_dir.$temp_file_name;
+	$companylogo = $temp_file_name;
+ 
+	// Check if image file is a actual image or fake image
+       if(isset($_POST['task']) &&  $_FILES["companylogo"]["error"]!=4 ) {
+       
+	    if (@move_uploaded_file($_FILES["companylogo"]["tmp_name"], $target_file)) 
+        	echo "The file ". basename( $_FILES["companylogo"]["name"]). " has been uploaded.";
+   
+	}
+	 
+
+
+
+	$website = $_POST['website'];
  	$fax = $_POST['fax'];
-  	$visitor_ip = $_SERVER['REMOTE_ADDR'];
+  	$paymentterms = $_POST['paymentterms'];
+	$tech_prefix = $_POST['tech_prefix'];
+	$visitor_ip = $_SERVER['REMOTE_ADDR'];
 		 
-  	echo   $sqlupdt =  "Update company set `nameofcompany` = '$nameofcompany' , `country`='$country', `primarycontact` = '$primarycontact', `telephone` =  '$telephone',position = '$position' ,companyaddress = '$companyaddress', `mobile`='$mobile', `email`='$email', `skype`='$skype',website='$website', `fax`='$fax', `emailcc` = '$emailcc' Where id = $lastInserId ";
+  	  $sqlupdt =  "INSERT INTO company (`nameofcompany`, `country`, `primarycontact`, companylogo,`telephone`,position ,companyaddress, `mobile`, `email`, `office_hours`, `skype`, `website`, `fax`, `emailcc`, `Manufaturere_Model`, `ip_address`, `protocols`,`ports`, `codecs_supported`, `tech_prefix`, `Called_Number_Format`, `Calling_Number_Format`, `paypal`, `Skrill`, `Western_union`, `wire_transform`, `Local_Bank_Deposit`,  `paymentterms`,  `visitor_ip`)
+		 VALUES ('$nameofcompany', '$country', '$primarycontact','$companylogo',  '$telephone', '$position', '$companyaddress', '$mobile', '$email', '$office_hours',
+ 		'$skype','$website','$fax','$emailcc','$Manufaturere_Model','$ip_address','$protocols','$ports','$codecs_supported',
+		'$tech_prefix','$Called_Number_Format', '$Calling_Number_Format','$paypal', '$Skrill', '$Western_union', '$wire_transform', '$Local_Bank_Deposit', '$paymentterms','$visitor_ip')";
 
 		 mysql_query($sqlupdt); 
 		sleep(5);
-	  
+	 	$lastInserId =	 mysql_insert_id();
 	 	mysql_close();
-	 	header("Location:companieslist.php");
+	 	header("Location:generatepdf.php?lastInserId=".$lastInserId);
 	 	exit(0);
 	
   
 }
-
 if(isset($_POST['task']))
 	savedb();
 
