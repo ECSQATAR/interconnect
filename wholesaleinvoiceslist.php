@@ -185,12 +185,12 @@ while($row = mysql_fetch_object($result)){
   
 <div class="col-md-3">
 <label>From Date</label> 
-<input type="text" id="from_date"   name="from_date"  value="<?php echo $_GET['from_date'];?>" placeholder="Please select from  date" required /> 
+<input type="text" id="from_date"   name="from_date"  value="<?php echo $_GET['from_date'];?>" placeholder="Please select from  date" /> 
 </div>
 
 <div class="col-md-3">
 <label>To Date</label> 
-<input type="text" id="to_date" name="to_date"  value="<?php echo $_GET['to_date'];?>" placeholder="Please select to  date" required /> 
+<input type="text" id="to_date" name="to_date"  value="<?php echo $_GET['to_date'];?>" placeholder="Please select to  date" /> 
 
 <input type="submit" name="Go" value="submit" />
 </div>
@@ -224,8 +224,19 @@ while($row = mysql_fetch_object($result)){
 			<td width="10%">&nbsp; </td>
         </tr>
 <?php
+
+$condition = " Where 1 = 1   ";
+if (isset($_GET['Go'])){
+if (strlen($_GET['company_id'])>0 && isset($_GET['company_id'])){
+	$company_id = $_GET['company_id'];
+	$condition = $condition." AND company_id = $company_id";
+	$linkurl  = $linkurl."&company_id=$company_id"; 
+	}
+
+}
+
 $sumtotalinv = 0;
- $sql = "SELECT * From wsalesinvoicesmaster";
+ $sql = "SELECT * From wsalesinvoicesmaster $condition  ";
  $result = mysql_query($sql);
 $sno = 0;
  while($rowinv = mysql_fetch_object($result)){

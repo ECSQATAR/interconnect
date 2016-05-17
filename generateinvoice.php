@@ -156,7 +156,7 @@ else
  
 $currentDate = date("Ymd");
 $createdDate = date("d/m/Y");
-$dueDate =  date('d/m/Y', strtotime($createdDate. ' + 3 day'));
+$dueDate =  date('d/m/Y', strtotime(' + 3 day'));
 $invNo = $currentDate.$oldRecordsCount;
 $invoicenumber = $invNo; 
 
@@ -325,11 +325,19 @@ while($row = mysql_fetch_object($resultinvoice)){
 if (isset($_POST['conform'])){
 
 	$invoicenumber = $_POST['invoicenumber'];
-	$dueDate = $_POST['dueDate'];
-	$createdDate = $_POST['dueDate'];
 	$totalbiledduration = $_POST['totalbiledduration'];
-	$invoiceduedate =  date('Y-m-d',strtotime($dueDate));	
-	$invoicecreateddate = date('Y-m-d',strtotime($createdDate));
+	
+
+	$dueDate = $_POST['dueDate'];
+	$dueDateObject = explode('/',$dueDate);
+	$invoiceduedate =  date('Y-m-d',mktime(0,0,0,$dueDateObject[1],$dueDateObject[0],$dueDateObject[2]));
+	
+	
+	$createdDate = $_POST['createdDate'];
+	$createdDateObject = explode('/',$createdDate);
+	$invoicecreateddate =  date('Y-m-d',mktime(0,0,0,$createdDateObject[1],$createdDateObject[0],$createdDateObject[2]));
+	
+	
 	$fromDate = $_POST['fromDate'];
 	$toDate = $_POST['toDate'];
 	//$invoicefromdate  = date('Y-m-d',strtotime($fromDate));
