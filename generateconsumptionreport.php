@@ -138,11 +138,11 @@ $totalbiledduration=0;
 <tr>
 <td width="25%">
 From: <br>
-ECS-NET FZE<br>
-Ajman Free Zone <br>
-United Arab Emirates<br>
-Tel #: +971506466878<br>
-ceo@ecs-net.net<br>
+<?php echo $rownewcompany->nameofcompany;?><br>
+<?php echo $rownewcompany->companyaddress;?><br>
+<?php echo $rownewcompany->country;?><br>
+<?php echo $rownewcompany->mobile;?><br>
+<?php echo $rownewcompany->email;?><br>
 </td>
  
 <td width="50%" style="font-size:200%;color:#ff0000;text-align:center;"> Consumption Report </td>
