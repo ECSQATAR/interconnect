@@ -135,18 +135,18 @@ if(isset($_POST['submit'])){
 //	echo "<pre>";print_r($explodeInvData); echo "</pre>"; 
 
 
-		 $customerName = $explodeInvData[0] .  $explodeInvData[1];
-		 $prefix  =  $explodeInvData[2];
-		 $country = $explodeInvData[3]; 
-		 $Description = $explodeInvData[4];
-		 $price_per_1_min =  $explodeInvData[5];
-		 $price_per_n_min =   $explodeInvData[6];
-		 $numberofCalls =  $explodeInvData[7];
-		 $Duration_min =  $explodeInvData[8];
-		 $BilledDuration_min =  $explodeInvData[9];
-		 $Charged_Amount =  $explodeInvData[10];
+		 $customerName = $explodeInvData[0];
+		 $prefix  =  $explodeInvData[1];
+		 $country = $explodeInvData[2]; 
+		 $Description = $explodeInvData[3];
+		 $price_per_1_min =  $explodeInvData[4];
+		 $price_per_n_min =   $explodeInvData[5];
+		 $numberofCalls =  $explodeInvData[6];
+		 $Duration_min =  $explodeInvData[7];
+		 $BilledDuration_min =  $explodeInvData[8];
+		 $Charged_Amount =  $explodeInvData[9];
 
-//print_r($data->sheets[0]['cells'][$i]);
+		//print_r($data->sheets[0]['cells'][$i]);
 		 $account_id=$company_id;
 		$_SESSION['company_id'] = $company_id;
 		$sql = "INSERT INTO  tempwholeconsumeddata(customerName,	company_id,`account_id`, `prefix`, `country`, `Description`, `price_per_1_min`, `price_per_n_min`, `numberofCalls`, `Duration_min`, `BilledDuration_min`, `Charged_Amount`,fromDate,toDate) 

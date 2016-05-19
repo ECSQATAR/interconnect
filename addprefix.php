@@ -64,7 +64,7 @@ function savedb(){
 	 $prefix  = mysql_escape_string( $_POST['prefix']);
 	 $description  = mysql_escape_string($_POST['description']);
 	
-      $sqlupdt =  "INSERT INTO prefixmaster (company_id,prefix,description) VALUES ($company_id,$prefix, '$description')";
+      $sqlupdt =  "INSERT INTO prefixmaster (company_id,prefix,description) VALUES ($company_id,'$prefix', '$description')";
 
 		 mysql_query($sqlupdt); 
 		sleep(5);

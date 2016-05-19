@@ -53,7 +53,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'delete'){
 <div class="row">
 <table  class="table"  border="0" bgcolor="#dbeefc" cellpadding="5">
 		  <tr align="center" class="bg_head_payments white font_18">
-		   <td width="160">Customer Name </td>
+		   <td width="160">Vendor Name </td>
 		    <td width="160">Prefix </td>
 		    <td width="160">country </td>
 		    <td width="160">Description </td>

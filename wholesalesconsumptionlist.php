@@ -286,7 +286,8 @@ $sno = $sno+1;
 
 
 	<td>
-	
+	 <a href="<?php echo 'generateconsumptionpdf.php?id='.$rowinv->id;?>"> <img src="geneatepdf.png" width="20" height="20"   title="Generater Pdf"/> </a> &nbsp;
+
 <?php if($rowinv->lockedinvoice==0){?>
    &nbsp; &nbsp; <image src="remove.png" width="20" height="20" title="Delete" onclick="checkdelte(<?php echo $rowinv->id;?>)"/>
  <image src="invoice_lock.png" width="20" height="20" title="locke your invoice" onclick="lockinvoice(<?php echo $rowinv->id;?>)"/>  

@@ -244,7 +244,7 @@ ceo@ecs-net.net<br>
  $rk=0;
 while($rowChild = mysql_fetch_object($resultChild)){
 	//print_r($row);
-	 if ($rk==0)
+	 if ($rk%2==0)
 		$rdt = '<tr style="background-color:#CCC;">';
 	 else
 		$rdt = '<tr style="background-color:#FFF;">';

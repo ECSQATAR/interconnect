@@ -150,14 +150,13 @@ From: <br>
 </tr>
 
 <tr>
-<td>To.</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
 
 <tr>
-<td colspan="2"><input type="text" name="companyname"  class="form-control" value="<?php echo $companyname;?>" />  </td>
- 
+<td colspan="2">
+<input type="hidden" name="companyname"  class="form-control" value="<?php echo $companyname;?>" />  </td>
 <td>Inv.# <input type="text" name="invoicenumber" value="<?php echo $invNo;?>" /> </td>
 </tr>
 
@@ -166,7 +165,16 @@ From: <br>
 <td> &nbsp; </td> <td> &nbsp; </td>  <td> Create Date <input type="text" name="createdDate" value="<?php echo $createdDate;?>" /> </td> 
 </tr>
 
-<tr> <td colspan='2'>Comments:<textarea name="invoicecomments" class="form-control"> </textarea> </td>  <td> Due Date  <input type="text" name="dueDate" value="<?php echo $dueDate;?>" /> </td> </tr>
+<tr> <td colspan='2'>Comments:<textarea name="invoicecomments" class="form-control"> </textarea> </td>  
+<td> Payment mode 
+<select name="paymentmode">
+<option value="Credit">Credit</option>
+<option value="Prepaid">Prepaid</option>
+<option value="Traffic">Traffic</option>
+<option value="Exchange">Exchange</option>
+</select>
+
+<input type="hidden" name="dueDate" value="<?php echo $dueDate;?>" /> </td> </tr>
 
 
 
@@ -201,10 +209,10 @@ while($row = mysql_fetch_object($resultinvoice)){
 	<td><input type="hidden" name="description[]" value="<?php echo  $prefixmasterList[$row->prefix];?>" /> <?php echo $prefixmasterList[$row->prefix];?>  </td>
 	<td><input type="text" name="Duration_min[]" class="Duration_min" id="Duration_min_<?php echo $row->id; ?>" value="<?php echo $row->Duration_min;?>" />  </td>
 	<td>
-		<input type="text" name="price_per_1_min[]" id="price_per_1_min_<?php echo $row->id; ?>"  value="<?php echo $row->price_per_1_min;?>" />
-		<input type="hidden" name="numberofCalls[]" value="<?php echo $row->numberofCalls;?>" />
+	<input type="text" name="price_per_1_min[]" id="price_per_1_min_<?php echo $row->id; ?>"  value="<?php echo $row->price_per_1_min;?>" />
+	<input type="hidden" name="numberofCalls[]" value="<?php echo $row->numberofCalls;?>" />
 	</td>
-	<td style="text-align:right"><input type="text" name="Charged_Amount[]"  id="Charged_Amount_<?php echo $row->id; ?>"  value="<?php echo round($row->Charged_Amount,2);?>" /> </td>  
+	<td style="text-align:right"><input type="text" name="Charged_Amount[]"  id="Charged_Amount_<?php echo $row->id; ?>"  value="<?php echo round($row->Charged_Amount,4);?>" /> </td>  
 	<td style="border-right:1px solid #FFFFFF;color:red;text-align:left;"> USD</td>  
 	</tr>
 
@@ -231,7 +239,7 @@ while($row = mysql_fetch_object($resultinvoice)){
 <input tsype="text" name="totalbiledduration" value="<?php echo $totalbiledduration;?>" /> 
 </td>
  <td colspan="2" style="text-align:right">Total : 
- <input type="text" name="totalchargedamount" value="<?php echo round($totalchargedamount,2);?>" /> 
+ <input type="text" name="totalchargedamount" value="<?php echo round($totalchargedamount,4);?>" /> 
    
  </td>
  <td style="border:0px 0px 0px 0px  solid #FFFFFF;color:red;text-align:left;"> USD</td>  
@@ -247,7 +255,7 @@ while($row = mysql_fetch_object($resultinvoice)){
 
 <tr style="border-right:1px solid #FFFFFF;text-align:right;">
  <td colspan="5" style="text-align:right"> Subtotal :
-<input type="text" name="totalchargedamount" value="<?php echo round($totalchargedamount,2);?>" /> 
+<input type="text" name="totalchargedamount" value="<?php echo round($totalchargedamount,4);?>" /> 
 </td>
  <td style="border:0px 0px 0px 0px  solid #FFFFFF;color:red;text-align:left;"> USD</td>  
 </tr>
@@ -303,7 +311,7 @@ if (isset($_POST['conform'])){
 	
 	$totalbiledduration = $_POST['totalbiledduration'];
 	
-	
+	$paymentmode = $_POST['paymentmode'];
 	
 	$fromDate = $_POST['fromDate'];
 	$toDate = $_POST['toDate'];
@@ -327,8 +335,8 @@ if (isset($_POST['conform'])){
 	$ftotamount = round($totalchargedamount,0);
 	$pdffilename = trim($rownewcompany->nameofcompany.'-'.date("d-M-y").'-'.$ftotamount.'.pdf');
 	
-	 $sqlinv = "INSERT INTO wsalesconsumptionmaster (`company_id`, `companyname`, `invoicenumber`, `invoicecreateddate`, `invoiceduedate`, `invoiceTotalminutes`, `invoiceamount`, `invoiceoutstanding`, `invoicesubtotal`, `invoicefromdate`, `invoicetodate`, `paidamount`, `pdffilename`,invoicebilleddesc,invoicedisputeemail) 
-		 VALUES($company_id, '$companyname', '$invoicenumber', '$invoicecreateddate', '$invoiceduedate', '$totalbiledduration', $totalchargedamount, $invoiceoutstanding, $totalchargedamount, '$invoicefromdate', '$invoicetodate', 0, '$pdffilename','$invoicebilleddesc','$invoicedisputeemail')";
+	 $sqlinv = "INSERT INTO wsalesconsumptionmaster (paymentmode,`company_id`, `companyname`, `invoicenumber`, `invoicecreateddate`, `invoiceduedate`, `invoiceTotalminutes`, `invoiceamount`, `invoiceoutstanding`, `invoicesubtotal`, `invoicefromdate`, `invoicetodate`, `paidamount`, `pdffilename`,invoicebilleddesc,invoicedisputeemail) 
+		 VALUES('$paymentmode',$company_id, '$companyname', '$invoicenumber', '$invoicecreateddate', '$invoiceduedate', '$totalbiledduration', $totalchargedamount, $invoiceoutstanding, $totalchargedamount, '$invoicefromdate', '$invoicetodate', 0, '$pdffilename','$invoicebilleddesc','$invoicedisputeemail')";
      mysql_query($sqlinv);
 	$invmasterid =	 mysql_insert_id();
 	$prefixData = $_POST['prefix'];
