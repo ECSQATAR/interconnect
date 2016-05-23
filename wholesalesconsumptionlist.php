@@ -88,6 +88,44 @@ $( ".savepayments" ).click(function(){
  });
 
 
+ 
+ 
+ 
+$( ".savepaymentdate" ).click(function(){
+	 
+	
+	var sid = jQuery(this).attr("id");
+  	var paiddate = jQuery('#pddata-'+sid).val();
+	 
+	var	data = {
+		invoice_id:sid,
+		paiddate:paiddate,
+		action:'invoicepaymentdate'
+	};
+	//alert(data);
+	
+	 $.post("updateconsumptionpayments.php", data, function(resp){
+        alert('Your payment date updated.');
+		jQuery('#masterpdmnt'+sid).text(paiddate);
+		jQuery('#masterpdmnt'+sid).show('slow');
+		jQuery("#childpdmnt"+sid).hide('slow');
+    });
+	
+ });
+
+ 
+  $( ".showpaymentdate" ).click(function(){
+		
+		var masterdivid = jQuery(this).attr("id");
+		var k = masterdivid.split('masterpdmnt')	;
+		//alert(k);
+		 
+		jQuery('#'+masterdivid).hide('slow');
+		jQuery("#childpdmnt"+k[1]).show('slow');
+		  
+ });
+ 
+
   $( ".showpayments" ).click(function(){
 		
 		var masterdivid = jQuery(this).attr("id");
@@ -209,12 +247,12 @@ while($row = mysql_fetch_object($result)){
   
 <div class="col-md-3">
 <label>From Date</label> 
-<input type="text" id="from_date"   name="from_date"  value="<?php echo $_GET['from_date'];?>" placeholder="Please select from  date" required /> 
+<input type="text" id="from_date"   name="from_date"  value="<?php echo $_GET['from_date'];?>" placeholder="Please select from  date" /> 
 </div>
 
 <div class="col-md-3">
 <label>To Date</label> 
-<input type="text" id="to_date" name="to_date"  value="<?php echo $_GET['to_date'];?>" placeholder="Please select to  date" required /> 
+<input type="text" id="to_date" name="to_date"  value="<?php echo $_GET['to_date'];?>" placeholder="Please select to  date" /> 
 
 <input type="submit" name="Go" value="submit" />
 </div>
@@ -244,12 +282,47 @@ while($row = mysql_fetch_object($result)){
 		    <td>To Date</td>
 			<td>Amount</td>
 			<td>Paid Amount </td>
+			<td>Paid Date </td>
 			<td> Comments </td>
 			<td width="10%">&nbsp; </td>
         </tr>
 <?php
+
+$condition = " Where 1 = 1   ";
+if (isset($_GET['Go'])){
+if (strlen($_GET['company_id'])>0 && isset($_GET['company_id'])){
+	$company_id = $_GET['company_id'];
+	$condition = $condition." AND company_id = $company_id";
+	$linkurl  = $linkurl."&company_id=$company_id"; 
+	}
+
+
+	if (strlen(trim($_GET['from_date']))>0 && isset($_GET['from_date'])){
+	 $from_date = $_GET['from_date'];
+	$condition = $condition." AND DATE(invoicecreateddate)>='$from_date' ";
+
+ 
+	$linkurl  = $linkurl."&reseller_id=$reseller_id"; 
+
+	}
+
+	if (strlen(trim($_GET['to_date']))>0 && isset($_GET['to_date'])){
+
+	 $to_date = $_GET['to_date'];
+	$condition = $condition." AND DATE(invoicecreateddate)<='$to_date' ";
+
+
+		$to_date = $_GET['to_date'];
+	}
+
+
+
+
+}
+
+
 $sumtotalinv = 0;
- $sql = "SELECT * From  wsalesconsumptionmaster ";
+ $sql = "SELECT * From  wsalesconsumptionmaster $condition ";
  $result = mysql_query($sql);
 $sno = 0;
  while($rowinv = mysql_fetch_object($result)){
@@ -275,6 +348,18 @@ $sno = $sno+1;
 </td>
  	
 
+ 	
+
+
+<td>
+
+<span title='Click here to update your payment date' class="showpaymentdate" id="<?php echo 'masterpdmnt'.$rowinv->id; ?>" > <?php if( strlen($rowinv->paiddate) == 0) echo 'Add your payment date here.'; else  echo $rowinv->paiddate;?> </span>
+<span id="<?php echo 'childpdmnt'.$rowinv->id; ?>" style='display:none'> 
+<input type='text' value="<?php echo $rowinv->paiddate;?>" class="form-control"   id="pddata-<?php echo $rowinv->id;?>" >    <img src ="make_comment.png"  class="savepaymentdate"  id="<?php echo $rowinv->id;?>"   title="Save Payment date" /> 
+</span>
+</td>
+
+
 <td>
 
 <span title='Click here to update your comments' class="showcomments" id="<?php echo 'mastercmnt'.$rowinv->id; ?>" > <?php if( strlen(trim($rowinv->invoicecomments)) == 0) echo 'Add your comments here.'; else  echo $rowinv->invoicecomments;?> </span>
@@ -282,8 +367,6 @@ $sno = $sno+1;
 <input type='text' value="<?php echo $rowinv->invoicecomments;?>" class="form-control"   id="cdata-<?php echo $rowinv->id;?>" >    <img src ="make_comment.png"  class="savecomments"  id="<?php echo $rowinv->id;?>"   title="Save Comments" /> 
 </span>
 </td>
- 	
-
 
 	<td>
 	 <a href="<?php echo 'generateconsumptionpdf.php?id='.$rowinv->id;?>"> <img src="geneatepdf.png" width="20" height="20"   title="Generater Pdf"/> </a> &nbsp;
@@ -292,11 +375,7 @@ $sno = $sno+1;
    &nbsp; &nbsp; <image src="remove.png" width="20" height="20" title="Delete" onclick="checkdelte(<?php echo $rowinv->id;?>)"/>
  <image src="invoice_lock.png" width="20" height="20" title="locke your invoice" onclick="lockinvoice(<?php echo $rowinv->id;?>)"/>  
 <?php } ?>
-
-		
-
-
-
+ 
 	 </td>
 	
 	

@@ -27,6 +27,8 @@ session_start();
       dateFormat: "yy-m-d"
 
     });
+	
+	 
 
 $( ".savecomments" ).click(function(){
 	 
@@ -69,7 +71,7 @@ $( ".savepayments" ).click(function(){
 	 
 	
 	var sid = jQuery(this).attr("id");
-  	var paidamount = jQuery('#pdata-'+sid).val();
+  	var paidamount = jQuery('#pddata-'+sid).val();
 	 
 	var	data = {
 		invoice_id:sid,
@@ -87,6 +89,43 @@ $( ".savepayments" ).click(function(){
 	
  });
 
+ 
+ 
+ 
+$( ".savepaymentdate" ).click(function(){
+	 
+	
+	var sid = jQuery(this).attr("id");
+  	var paiddate = jQuery('#pddata-'+sid).val();
+	 
+	var	data = {
+		invoice_id:sid,
+		paiddate:paiddate,
+		action:'invoicepaymentdate'
+	};
+	//alert(data);
+	
+	 $.post("updateinvoicepayments.php", data, function(resp){
+        alert('Your payment date updated.');
+		jQuery('#masterpdmnt'+sid).text(paiddate);
+		jQuery('#masterpdmnt'+sid).show('slow');
+		jQuery("#childpdmnt"+sid).hide('slow');
+    });
+	
+ });
+
+ 
+  $( ".showpaymentdate" ).click(function(){
+		
+		var masterdivid = jQuery(this).attr("id");
+		var k = masterdivid.split('masterpdmnt')	;
+		//alert(k);
+		 
+		jQuery('#'+masterdivid).hide('slow');
+		jQuery("#childpdmnt"+k[1]).show('slow');
+		  
+ });
+ 
 
   $( ".showpayments" ).click(function(){
 		
@@ -237,13 +276,14 @@ while($row = mysql_fetch_object($result)){
 		  <tr align="center" class="bg_head_payments white font_18">
 		<td>S.No.</td>
 		   <td>Company Name </td>
-		    <td> GMT </td>
+		    <td>GMT</td>
 		    <td>Invoice No </td>
 		    <td>Invoice Date </td>
 		    <td>From Date</td>
 		    <td>To Date</td>
 			<td>Amount</td>
 			<td>Paid Amount </td>
+			<td>Paid Date </td>
 			<td> Comments </td>
 			<td width="10%">&nbsp; </td>
         </tr>
@@ -256,6 +296,26 @@ if (strlen($_GET['company_id'])>0 && isset($_GET['company_id'])){
 	$condition = $condition." AND company_id = $company_id";
 	$linkurl  = $linkurl."&company_id=$company_id"; 
 	}
+
+
+	if (strlen(trim($_GET['from_date']))>0 && isset($_GET['from_date'])){
+	 $from_date = $_GET['from_date'];
+	$condition = $condition." AND DATE(invoicecreateddate)>='$from_date' ";
+
+ 
+	$linkurl  = $linkurl."&reseller_id=$reseller_id"; 
+
+	}
+
+	if (strlen(trim($_GET['to_date']))>0 && isset($_GET['to_date'])){
+
+	 $to_date = $_GET['to_date'];
+	$condition = $condition." AND DATE(invoicecreateddate)<='$to_date' ";
+
+
+		$to_date = $_GET['to_date'];
+	}
+
 
 }
 
@@ -285,6 +345,14 @@ $sno = $sno+1;
 </span>
 </td>
  	
+	
+<td>
+
+<span title='Click here to update your payment date' class="showpaymentdate" id="<?php echo 'masterpdmnt'.$rowinv->id; ?>" > <?php if( strlen($rowinv->paiddate) == 0) echo 'Add your payment date here.'; else  echo $rowinv->paiddate;?> </span>
+<span id="<?php echo 'childpdmnt'.$rowinv->id; ?>" style='display:none'> 
+<input type='text' value="<?php echo $rowinv->paiddate;?>" class="form-control"   id="pddata-<?php echo $rowinv->id;?>" >    <img src ="make_comment.png"  class="savepaymentdate"  id="<?php echo $rowinv->id;?>"   title="Save Payment date" /> 
+</span>
+</td>
 
 <td>
 

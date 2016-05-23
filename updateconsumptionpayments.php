@@ -13,6 +13,16 @@ if(isset($_POST['action']) && $_POST['action'] == 'invoicepayments' ){
 	$query = "Update wsalesconsumptionmaster set paidamount = $paidamount WHERE id = $invoice_id ";
 	mysql_query($query);
 }	
- 	
+ 
+
+
+if(isset($_POST['action']) && $_POST['action'] == 'invoicepaymentdate' ){
+	
+	$invoice_id = $_POST['invoice_id'];
+	$paiddate  = $_POST['paiddate'];
+	$query = "Update wsalesconsumptionmaster set paiddate = '$paiddate'  WHERE id = $invoice_id ";
+	mysql_query($query);
+}	
+   
 
 ?>

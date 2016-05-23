@@ -170,8 +170,7 @@ From: <br>
 <select name="paymentmode">
 <option value="Credit">Credit</option>
 <option value="Prepaid">Prepaid</option>
-<option value="Traffic">Traffic</option>
-<option value="Exchange">Exchange</option>
+<option value="Bilateral">Bilateral</option>
 </select>
 
 <input type="hidden" name="dueDate" value="<?php echo $dueDate;?>" /> </td> </tr>
