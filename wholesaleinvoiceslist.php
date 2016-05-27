@@ -259,6 +259,19 @@ while($row = mysql_fetch_object($result)){
 </div>
 
 
+<div class="col-md-3">
+
+   <label>Sort By:</label>
+ 
+<select  name="sortfield">
+<option value="">Select field</option>
+<option value="company_id">Company Name </td>
+<option value="invoicecreateddate">Invoice Date </td>
+<option value="invoiceamount">Amount</td>
+<option value="paidamount">Paid Amount </td>
+<option value="paiddate">Paid Date </td>
+</select> 
+</div>
 
  
 </div>
@@ -281,6 +294,7 @@ while($row = mysql_fetch_object($result)){
 		    <td>Invoice Date </td>
 		    <td>From Date</td>
 		    <td>To Date</td>
+			<td>Total Minutes</td>
 			<td>Amount</td>
 			<td>Paid Amount </td>
 			<td>Paid Date </td>
@@ -309,18 +323,24 @@ if (strlen($_GET['company_id'])>0 && isset($_GET['company_id'])){
 
 	if (strlen(trim($_GET['to_date']))>0 && isset($_GET['to_date'])){
 
-	 $to_date = $_GET['to_date'];
-	$condition = $condition." AND DATE(invoicecreateddate)<='$to_date' ";
+		$to_date = $_GET['to_date'];
+		$condition = $condition." AND DATE(invoicecreateddate)<='$to_date' ";
 
 
 		$to_date = $_GET['to_date'];
+	}
+	
+	if (strlen(trim($_GET['sortfield']))>0 && isset($_GET['sortfield'])){
+
+		$sortfield = $_GET['sortfield'];
+		$sortByData =  " order by $sortfield ";
 	}
 
 
 }
 
 $sumtotalinv = 0;
- $sql = "SELECT * From wsalesinvoicesmaster $condition  ";
+ $sql = "SELECT * From wsalesinvoicesmaster $condition $sortByData  ";
  $result = mysql_query($sql);
 $sno = 0;
  while($rowinv = mysql_fetch_object($result)){
@@ -336,6 +356,7 @@ $sno = $sno+1;
 	<td> <?php echo $rowinv->invoicecreateddate;?></td>
 	<td> <?php echo $rowinv->invoicefromdate;?></td>
 	<td> <?php echo $rowinv->invoicetodate;?></td>
+	<td> <?php echo $rowinv->invoiceTotalminutes;?></td>
 	<td> <?php echo $rowinv->invoiceamount;?>$</td>
 	<td>
 
@@ -388,7 +409,7 @@ $balanceAmount =  $sumtotalinv - $sumpaidAmount;
 ?>
 
 <tr>
-<td>&nbsp; </td> <td>&nbsp; </td> <td>&nbsp; </td> <td>&nbsp; </td><td>&nbsp; </td> <td>&nbsp; </td> 
+<td>&nbsp; </td> <td>&nbsp; </td> <td>&nbsp; </td> <td>&nbsp; </td> <td>&nbsp;</td> <td>&nbsp; </td> <td>&nbsp; </td> 
 <td>&nbsp;<b>Total</b> :  </td>  <td> <?php echo $sumtotalinv; ?>$ </td> <td><?php echo $sumpaidAmount; ?>$ </td> 
 <td> Balance Amount : <?php echo $balanceAmount; ?>$ </td> <td>&nbsp; </td>  <td>&nbsp;</td>
 </tr>

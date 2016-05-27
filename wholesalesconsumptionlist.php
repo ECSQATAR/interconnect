@@ -280,6 +280,8 @@ while($row = mysql_fetch_object($result)){
 		    <td>Invoice Date </td>
 		    <td>From Date</td>
 		    <td>To Date</td>
+			<td>Total Minutes</td>
+
 			<td>Amount</td>
 			<td>Paid Amount </td>
 			<td>Paid Date </td>
@@ -338,6 +340,8 @@ $sno = $sno+1;
 	<td> <?php echo $rowinv->invoicecreateddate;?></td>
 	<td> <?php echo $rowinv->invoicefromdate;?></td>
 	<td> <?php echo $rowinv->invoicetodate;?></td>
+	<td> <?php echo $rowinv->invoiceTotalminutes;?></td>
+
 	<td> <?php echo $rowinv->invoiceamount;?>$</td>
 	<td>
 
@@ -389,7 +393,7 @@ $balanceAmount =  $sumtotalinv - $sumpaidAmount;
 ?>
 
 <tr>
-<td>&nbsp; </td><td>&nbsp; </td> <td>&nbsp; </td> <td>&nbsp; </td><td>&nbsp; </td> <td>&nbsp; </td> 
+<td>&nbsp; </td><td>&nbsp; </td> <td>&nbsp; </td><td>&nbsp; </td> <td>&nbsp; </td><td>&nbsp; </td> <td>&nbsp; </td> 
 <td>&nbsp;<b>Total</b> :  </td>  <td> <?php echo $sumtotalinv; ?>$ </td> <td><?php echo $sumpaidAmount; ?>$ </td> 
 <td> Balance Amount : <?php echo $balanceAmount; ?>$ </td> <td>&nbsp; </td>  <td>&nbsp;</td>
 </tr>
