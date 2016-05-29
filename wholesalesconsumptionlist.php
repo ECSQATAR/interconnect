@@ -168,6 +168,45 @@ if (confirm('Are you sure you want to Lock the invoice ?')) {
 
 <?php
 
+
+
+
+
+ $getTotalTime = 0;
+
+
+function sec2hms($secs) {
+    $secs = round($secs);
+    $secs = abs($secs);
+    $hours = floor($secs / 3600) . ':';
+    if ($hours == '0:') $hours = '';
+    $minutes = substr('00' . floor(($secs / 60) % 60), -2) . ':';
+    $seconds = substr('00' . $secs % 60, -2);
+return ltrim($hours . $minutes . $seconds, '0');
+}
+
+function addDurationAsSeconds( $timeStamp ) {
+        $timeSections = explode( ':', $timeStamp );
+        $seconds =  
+                   ( $timeSections[0] * 60 )        //Minutes to Seconds
+                 +  ( $timeSections[1]  );           //Seconds to Seconds
+ 
+        return $seconds;
+}
+function converToMMHH($timeStamp){
+
+	    $timeSections = explode(':',$timeStamp);
+		$hours =  $timeSections[0];
+		$minutes = $timeSections[1];
+		$seconds = $timeSections[2];
+	
+		$totaLMinutes = ($hours * 60) + $minutes;
+	  	$resultTimestamp = $totaLMinutes.':'.$seconds;
+		return $resultTimestamp;
+	
+}
+
+
 if(isset($_GET['action']) && $_GET['action']=='delete'){
 //print_r($_GET);
 	$id = $_GET['id'];
@@ -190,36 +229,11 @@ if(isset($_GET['action']) && $_GET['action']=='lock'){
 ?>
 
 
-
+<?php
+include_once("headermenu.php");
+?>
 <form role="form" method="GET" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-
-<div class="row">
-  <div class="col-md-3"> &nbsp; </div>  <a href="index.php"> Back to home Page </a> &nbsp; 
-|| <a href="prefixmasterlist.php"> Manage Prefix </a> || <a href="companieslist.php"> Manage Company</a> || <a href="addcompany.php"> Add Company </a>
-</div>
-
-<div class="row">
-<div class="col-md-3">
- Invoices -> 
-</div> 
- <a href="wholesaleinvoiceslist.php"> Manage Invoices. </a>  || &nbsp;&nbsp; <a href="importinvoicesdata.php"> Import invoices data </a>
-</div>
-
-
-
-<div class="row">
-<div class="col-md-3">
-Consumption Reports ->
-</div>
- <a href="wholesalesconsumptionlist.php"> Manage  Consumption Reports </a> || &nbsp;&nbsp; <a href="importconsumeddata.php"> Import Consumption data </a>
-</div>
-
-<div class="row">
-&nbsp; <br/>
-</div>
-
-
-
+ 
 <h1> Consumption Reports </h1>
 
 <div class="row">
@@ -228,7 +242,7 @@ Consumption Reports ->
 
    <label>Company Name</label>
  
-<select  name="company_id" required >
+<select  name="company_id"  >
 <option value="">Select Company</option>
 <?php
   $sql = "SELECT id,nameofcompany FROM company";
@@ -255,6 +269,23 @@ while($row = mysql_fetch_object($result)){
 <input type="text" id="to_date" name="to_date"  value="<?php echo $_GET['to_date'];?>" placeholder="Please select to  date" /> 
 
 <input type="submit" name="Go" value="submit" />
+</div>
+
+<div class="col-md-3">
+
+   <label>Sort By:</label>
+ 
+<select  name="sortfield">
+<option value="">Select field</option>
+<option value="company_id">Company Name </option>
+<option value="invoicecreateddate">Invoice Date </option>
+<option value="invoiceamount">Amount</option>
+<option value="paidamount">Paid Amount </option>
+<option value="paiddate">Paid Date </option>
+</select> 
+</div>
+
+ 
 </div>
 
 
@@ -317,14 +348,18 @@ if (strlen($_GET['company_id'])>0 && isset($_GET['company_id'])){
 		$to_date = $_GET['to_date'];
 	}
 
+	if (strlen(trim($_GET['sortfield']))>0 && isset($_GET['sortfield'])){
 
+		$sortfield = $_GET['sortfield'];
+		$sortByData =  " order by $sortfield ";
+	}
 
 
 }
 
 
 $sumtotalinv = 0;
- $sql = "SELECT * From  wsalesconsumptionmaster $condition ";
+echo  $sql = "SELECT * From  wsalesconsumptionmaster $condition $sortByData  ";
  $result = mysql_query($sql);
 $sno = 0;
  while($rowinv = mysql_fetch_object($result)){
@@ -387,14 +422,20 @@ $sno = $sno+1;
 <?php
 	$sumpaidAmount = $sumpaidAmount +  $rowinv->paidamount;
 	$sumtotalinv = $sumtotalinv +  $rowinv->invoiceamount;
+	$getTotalTime +=  addDurationAsSeconds($rowinv->invoiceTotalminutes);
+
 	}
+
+	$seconds  = gmdate($getTotalTime);
+	$totalbiledduration = converToMMHH(sec2hms($seconds));
+	//$totalbiledduration  =  sec2hms($seconds);
 
 $balanceAmount =  $sumtotalinv - $sumpaidAmount;
 ?>
 
 <tr>
-<td>&nbsp; </td><td>&nbsp; </td> <td>&nbsp; </td><td>&nbsp; </td> <td>&nbsp; </td><td>&nbsp; </td> <td>&nbsp; </td> 
-<td>&nbsp;<b>Total</b> :  </td>  <td> <?php echo $sumtotalinv; ?>$ </td> <td><?php echo $sumpaidAmount; ?>$ </td> 
+<td>&nbsp; </td><td>&nbsp; </td> <td>&nbsp; </td><td>&nbsp; </td> <td>&nbsp; </td> <td>&nbsp; </td> 
+<td>&nbsp;<b>Total</b> :  </td> <td><?php echo $totalbiledduration;?></td>  <td> <?php echo $sumtotalinv; ?>$ </td> <td><?php echo $sumpaidAmount; ?>$ </td> 
 <td> Balance Amount : <?php echo $balanceAmount; ?>$ </td> <td>&nbsp; </td>  <td>&nbsp;</td>
 </tr>
 

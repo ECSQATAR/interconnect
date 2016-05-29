@@ -71,7 +71,7 @@ $( ".savepayments" ).click(function(){
 	 
 	
 	var sid = jQuery(this).attr("id");
-  	var paidamount = jQuery('#pddata-'+sid).val();
+  	var paidamount = jQuery('#pdata-'+sid).val();
 	 
 	var	data = {
 		invoice_id:sid,
@@ -169,6 +169,43 @@ if (confirm('Are you sure you want to Lock the invoice ?')) {
 
 <?php
 
+
+
+ $getTotalTime = 0;
+
+
+function sec2hms($secs) {
+    $secs = round($secs);
+    $secs = abs($secs);
+    $hours = floor($secs / 3600) . ':';
+    if ($hours == '0:') $hours = '';
+    $minutes = substr('00' . floor(($secs / 60) % 60), -2) . ':';
+    $seconds = substr('00' . $secs % 60, -2);
+return ltrim($hours . $minutes . $seconds, '0');
+}
+
+function addDurationAsSeconds( $timeStamp ) {
+        $timeSections = explode( ':', $timeStamp );
+        $seconds =  
+                   ( $timeSections[0] * 60 )        //Minutes to Seconds
+                 +  ( $timeSections[1]  );           //Seconds to Seconds
+ 
+        return $seconds;
+}
+function converToMMHH($timeStamp){
+
+	    $timeSections = explode(':',$timeStamp);
+		$hours =  $timeSections[0];
+		$minutes = $timeSections[1];
+		$seconds = $timeSections[2];
+	
+		$totaLMinutes = ($hours * 60) + $minutes;
+	  	$resultTimestamp = $totaLMinutes.':'.$seconds;
+		return $resultTimestamp;
+	
+}
+
+
 if(isset($_GET['action']) && $_GET['action']=='delete'){
 //print_r($_GET);
 	$id = $_GET['id'];
@@ -192,32 +229,11 @@ if(isset($_GET['action']) && $_GET['action']=='lock'){
 
 
 
+<?php
+include_once("headermenu.php");
+?>
 <form role="form" method="GET" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-
-<div class="row">
-  <div class="col-md-3"> &nbsp; </div>  <a href="index.php"> Back to home Page </a> &nbsp; 
-|| <a href="prefixmasterlist.php"> Manage Prefix </a> || <a href="companieslist.php"> Manage Company</a> || <a href="addcompany.php"> Add Company </a>
-</div>
-
-<div class="row">
-<div class="col-md-3">
- Invoices -> 
-</div> 
- <a href="wholesaleinvoiceslist.php"> Manage Invoices. </a>  || &nbsp;&nbsp; <a href="importinvoicesdata.php"> Import invoices data </a>
-</div>
-
-
-
-<div class="row">
-<div class="col-md-3">
-Consumption Reports ->
-</div>
- <a href="wholesalesconsumptionlist.php"> Manage  Consumption Reports </a> || &nbsp;&nbsp; <a href="importconsumeddata.php"> Import Consumption data </a>
-</div>
-
-<div class="row">
-&nbsp; <br/>
-</div>
+ 
 
 
 <h1>Whole Sales Invoices List </h1>
@@ -265,11 +281,11 @@ while($row = mysql_fetch_object($result)){
  
 <select  name="sortfield">
 <option value="">Select field</option>
-<option value="company_id">Company Name </td>
-<option value="invoicecreateddate">Invoice Date </td>
-<option value="invoiceamount">Amount</td>
-<option value="paidamount">Paid Amount </td>
-<option value="paiddate">Paid Date </td>
+<option value="company_id">Company Name </option>
+<option value="invoicecreateddate">Invoice Date </option>
+<option value="invoiceamount">Amount</option>
+<option value="paidamount">Paid Amount </option>
+<option value="paiddate">Paid Date </option>
 </select> 
 </div>
 
@@ -340,7 +356,7 @@ if (strlen($_GET['company_id'])>0 && isset($_GET['company_id'])){
 }
 
 $sumtotalinv = 0;
- $sql = "SELECT * From wsalesinvoicesmaster $condition $sortByData  ";
+ echo $sql = "SELECT * From wsalesinvoicesmaster $condition $sortByData  ";
  $result = mysql_query($sql);
 $sno = 0;
  while($rowinv = mysql_fetch_object($result)){
@@ -349,7 +365,6 @@ $sno = $sno+1;
 	?>	
 	<tr class="border_bottom_payments">
 	<td> <?php echo $sno;?></td>
-
 	<td> <?php echo $rowinv->companyname;?></td>
 	<td> <?php echo 'GMT+0'; ?>			
 	<td> <?php echo $rowinv->invoicenumber;?></td>			
@@ -388,8 +403,8 @@ $sno = $sno+1;
 	<td>
 	 <a href="<?php echo 'generateinvoicepdf.php?id='.$rowinv->id;?>"> <img src="geneatepdf.png" width="20" height="20"   title="Generater Pdf"/> </a> &nbsp;
 <?php if($rowinv->lockedinvoice==0){?>
-   &nbsp; &nbsp; <image src="remove.png" width="20" height="20" title="Delete" onclick="checkdelte(<?php echo $rowinv->id;?>)"/>
- <image src="invoice_lock.png" width="20" height="20" title="locke your invoice" onclick="lockinvoice(<?php echo $rowinv->id;?>)"/>  
+   &nbsp; &nbsp; <img src="remove.png" width="20" height="20" title="Delete" onclick="checkdelte(<?php echo $rowinv->id;?>)"/>
+ <img src="invoice_lock.png" width="20" height="20" title="locke your invoice" onclick="lockinvoice(<?php echo $rowinv->id;?>)"/>  
 <?php } ?>
 
 		
@@ -403,14 +418,20 @@ $sno = $sno+1;
 <?php
 	$sumpaidAmount = $sumpaidAmount +  $rowinv->paidamount;
 	$sumtotalinv = $sumtotalinv +  $rowinv->invoiceamount;
+	$getTotalTime +=  addDurationAsSeconds($rowinv->invoiceTotalminutes);
+
 	}
+
+	$seconds  = gmdate($getTotalTime);
+	$totalbiledduration = converToMMHH(sec2hms($seconds));
+	//$totalbiledduration  =  sec2hms($seconds);
 
 $balanceAmount =  $sumtotalinv - $sumpaidAmount;
 ?>
 
 <tr>
-<td>&nbsp; </td> <td>&nbsp; </td> <td>&nbsp; </td> <td>&nbsp; </td> <td>&nbsp;</td> <td>&nbsp; </td> <td>&nbsp; </td> 
-<td>&nbsp;<b>Total</b> :  </td>  <td> <?php echo $sumtotalinv; ?>$ </td> <td><?php echo $sumpaidAmount; ?>$ </td> 
+<td>&nbsp; </td> <td>&nbsp; </td> <td>&nbsp; </td>  <td>&nbsp;</td> <td>&nbsp; </td> <td>&nbsp; </td> 
+<td>&nbsp;<b>Total</b> :  </td><td><?php echo $totalbiledduration;?></td>  <td> <?php echo $sumtotalinv; ?>$ </td> <td><?php echo $sumpaidAmount; ?>$ </td> 
 <td> Balance Amount : <?php echo $balanceAmount; ?>$ </td> <td>&nbsp; </td>  <td>&nbsp;</td>
 </tr>
 
