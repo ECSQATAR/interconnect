@@ -1,8 +1,6 @@
 <?php
 require_once('head.php');
 
-
-
 $condition = " Where 1 = 1   ";
 if (isset($_GET['Go'])){
 if (strlen($_GET['company_id'])>0 && isset($_GET['company_id'])){
@@ -42,63 +40,88 @@ if (strlen($_GET['company_id'])>0 && isset($_GET['company_id'])){
  
 
 session_start();
-echo $sql = "SELECT * From wsalesinvoicesmaster  $condition";
+  $sql = "SELECT * From wsalesconsumptionmaster $condition";
+$result = mysql_query($sql);
+$sno = 0;
+$consumptionList = array();
+while($rowinv = mysql_fetch_object($result)){
+	$consumptionList[$rowinv->invoicecreateddate]['invoicecreateddate'] = $rowinv->invoicecreateddate;
+	$consumptionList[$rowinv->invoicecreateddate]['invoicenumber'] = $rowinv->invoicenumber;
+	$consumptionList[$rowinv->invoicecreateddate]['description'] = substr($rowinv->invoicefromdate, 0, 10).'-'.substr($rowinv->invoicetodate, 0, 10);
+	$consumptionList[$rowinv->invoicecreateddate]['invoiceamount'] = $rowinv->invoiceamount;
+	$consumptionList[$rowinv->invoicecreateddate]['invoiceTotalminutes'] = $rowinv->invoiceTotalminutes;
+	$consumptionList[$rowinv->invoicecreateddate]['paiddate'] = $rowinv->paiddate;
+	$consumptionList[$rowinv->invoicecreateddate]['paidamount'] = $rowinv->paidamount;
+}
+
+  $sql = "SELECT * From wsalesinvoicesmaster   $condition";
 $result = mysql_query($sql);
 $sno = 0;
 $invoiceList=array();
 while($rowinv = mysql_fetch_object($result)){
-	$invoiceList[$rowinv->invoicecreateddate]['a']['invoicecreateddate'] = $rowinv->invoicecreateddate;
-	$invoiceList[$rowinv->invoicecreateddate]['a']['invoicenumber'] = $rowinv->invoicenumber;
-	$invoiceList[$rowinv->invoicecreateddate]['a']['description'] = $rowinv->invoicefromdate.'-'.$rowinv->invoicetodate;
-	$invoiceList[$rowinv->invoicecreateddate]['a']['invoiceamount'] = $rowinv->invoiceamount;
-	$invoiceList[$rowinv->invoicecreateddate]['a']['invoiceTotalminutes'] = $rowinv->invoiceTotalminutes;
-
-
-    //$invoiceList[$rowinv->invoicecreateddate]['paiddate'] = .$rowinv->paiddate;
-	//$invoiceList[$rowinv->invoicecreateddate]['paidamount'] = .$rowinv->paidamount;
-}
-
-echo $sql = "SELECT * From wsalesconsumptionmaster  $condition";
-$result = mysql_query($sql);
-$sno = 0;
-
-while($rowinv = mysql_fetch_object($result)){
-	$invoiceList[$rowinv->invoicecreateddate]['b']['invoicecreateddate'] = $rowinv->invoicecreateddate;
-	$invoiceList[$rowinv->invoicecreateddate]['b']['invoicenumber'] = $rowinv->invoicenumber;
-	$invoiceList[$rowinv->invoicecreateddate]['b']['description'] = $rowinv->invoicefromdate.'-'.$rowinv->invoicetodate;
-	$invoiceList[$rowinv->invoicecreateddate]['b']['invoiceamount'] = $rowinv->invoiceamount;
-	$invoiceList[$rowinv->invoicecreateddate]['a']['invoiceTotalminutes'] = $rowinv->invoiceTotalminutes;
-
-    //$invoiceList[$rowinv->invoicecreateddate]['paiddate'] = .$rowinv->paiddate;
-	//$invoiceList[$rowinv->invoicecreateddate]['paidamount'] = .$rowinv->paidamount;
+	$invoiceList[$rowinv->invoicecreateddate]['invoicecreateddate'] = $rowinv->invoicecreateddate;
+	$invoiceList[$rowinv->invoicecreateddate]['invoicenumber'] = $rowinv->invoicenumber;
+	$invoiceList[$rowinv->invoicecreateddate]['description'] = substr($rowinv->invoicefromdate, 0, 10).'-'.substr($rowinv->invoicetodate, 0, 10);
+	$invoiceList[$rowinv->invoicecreateddate]['invoiceamount'] = $rowinv->invoiceamount;
+	$invoiceList[$rowinv->invoicecreateddate]['invoiceTotalminutes'] = $rowinv->invoiceTotalminutes;
+    $invoiceList[$rowinv->invoicecreateddate]['paiddate'] = $rowinv->paiddate;
+	$invoiceList[$rowinv->invoicecreateddate]['paidamount'] = $rowinv->paidamount;
 }
 
 //echo "<pre>"; print_r($invoiceList); echo "</pre>";
 
  
 ?>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+  <link rel="stylesheet" href="/resources/demos/style.css">
 
 
 <?php
 include_once("headermenu.php");
 ?>
 <h1> SOA Summary </h1>
-
-<form role="form" method="GET" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+<script>
+    jQuery(document).ready(function () {
  
-<div class="container">
+
+     $( "#from_date").datepicker({
+      showOn: "button",
+      buttonImage: "images/calendar.gif",
+      buttonImageOnly: true,
+      buttonText: "Select assign date",
+      dateFormat: "yy-m-d"
+
+    });
+		
+    $( "#to_date" ).datepicker({
+      showOn: "button",
+      buttonImage: "images/calendar.gif",
+      buttonImageOnly: true,
+      buttonText: "Select assign date",
+      dateFormat: "yy-m-d"
+
+    });
+});	
+</script>
+<form role="form" method="GET" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+
+
 <div class="row">
 
 <div class="col-md-3">
 
    <label>Company Name</label>
  
-<select  name="company_id" required >
+<select  name="company_id">
 <option value="">Select Company</option>
 <?php
+$companyList = array();
   $sql = "SELECT id,nameofcompany FROM company";
  $result = mysql_query($sql);
 while($row = mysql_fetch_object($result)){
+	$companyList[$row->id] = $row->nameofcompany;
 ?>
 <option value="<?php echo $row->id;?>" <?php if(isset($_GET['company_id']) && $_GET['company_id'] == $row->id) echo 'selected=selected';?> > 
 <?php echo $row->nameofcompany;?></option>
@@ -115,47 +138,189 @@ while($row = mysql_fetch_object($result)){
 <input type="text" id="from_date"   name="from_date"  value="<?php echo $_GET['from_date'];?>" placeholder="Please select from  date" /> 
 </div>
 
-<div class="col-md-3">
+<div class="col-md-4">
 <label>To Date</label> 
 <input type="text" id="to_date" name="to_date"  value="<?php echo $_GET['to_date'];?>" placeholder="Please select to  date" /> 
 
+</div>
+
+<div class="col-md-2">
 <input type="submit" name="Go" value="submit" />
+</div>
+
 </div>
 
 </form>
 
+<?php 
+$ak = '';
+$bk = '';
 
-<table border=1 width="100%">
-<tr style="text-align:center">
-<td> &nbsp; </td> <td colspan="4"> ECS (Our company) </td> <td colspan="4"> SyncSound </td>
-</tr>
+if(sizeof($consumptionList)==0)
+$ak = 'display:none';
+ 
+
+if(sizeof($invoiceList)==0)
+$bk = 'display:none';
+ 
+
+?> 
+
+
+<div class="row"> &nbsp;</div>
+<div class="row">
+ <div class="table-responsive">       
+ 
+<table class="table">
+
 <tr>
-<td>Date</td>
-<td>Description/Notes </td>
-<td>Minutes Consumed</td>
-<td>Invoiced Amount</td>
-<td>Paid By COMPANY</td>
-<td>Description/Notes </td>
-<td>Minutes Consumed</td>
-<td>Invoiced Amount</td>
-<td>Paid By COMPANY</td>
+
+<td  style="<?php echo $ak;?>" >
+
+ 
+
+<table class="table">
+<tr>
+<td style="text-align:center" colspan="7" >
+ECS (Our company)  
+</td>
 </tr>
+ 
+<tr style="text-align:center">
+<td>Date &nbsp;</td>
+<td>Invoice Period </td>
+<td>Minutes</td>
+<td>Amount</td>
+<td>Paid Date</td>
+<td>Paid</td>
+<td>Balance</td>
+</tr>
+
+ 
 <?php
-foreach ($invoiceList as $key => $rowinv) {
+
+$mycompanytotalinvAmount = 0;
+$mycompanytotalPaidAmount = 0;
+
+foreach ($consumptionList as $key => $rowinv) {
 ?>
 <tr>
 <td> <?php echo  $key;?></td>
-<td> <?php echo  $invoiceList[$key]['a']['description'];?></td>
-<td> <?php echo  $invoiceList[$key]['a']['invoiceTotalminutes'];?></td>	
-<td> <?php echo  $invoiceList[$key]['a']['invoiceamount'];?></td>	
-<td>&nbsp;</td>
-<td> <?php echo  $invoiceList[$key]['b']['description'];?></td>
-<td> <?php echo  $invoiceList[$key]['a']['invoiceTotalminutes'];?></td>	
-<td> <?php echo  $invoiceList[$key]['b']['invoiceamount'];?></td>	
+<td style="text-align:center"> <?php echo  $consumptionList[$key]['description']; ;?></td>
+<td> <?php echo  $consumptionList[$key]['invoiceTotalminutes'];?></td>	
+<td style="text-align:right"> <?php echo  $consumptionList[$key]['invoiceamount'];?></td>	
+<td> <?php if( $consumptionList[$key]['paidamount']>0) echo  $consumptionList[$key]['paiddate'];?></td>	
+<td style="text-align:right"> <?php if( $consumptionList[$key]['paidamount']>0) echo  $consumptionList[$key]['paidamount'];?></td>	
+<?php
+	$mycompanytotalinvAmount = $mycompanytotalinvAmount +  $consumptionList[$key]['invoiceamount'];
+	$mycompanytotalPaidAmount = $mycompanytotalPaidAmount +  $consumptionList[$key]['paidamount'];
+	$mycompanyBalanceAmount =  $mycompanytotalinvAmount  -  $mycompanytotalPaidAmount;
+?>
+<td  style="text-align:right"><?php echo $mycompanyBalanceAmount;?></td>
 </tr>
 <?php
 }
 ?>
+
+<tr>
+<td> Totals : </td>  <td> &nbsp; </td> <td> &nbsp; </td> <td  style="text-align:right"> <?php echo $mycompanytotalinvAmount ;?></td> 
+<td> &nbsp; </td> <td  style="text-align:right"> <?php echo $mycompanytotalPaidAmount;?></td>
+</tr>
+
+<tr>
+<td style="text-align:center" colspan="7">
+Balance :  <?php echo $mycompanytotalinvAmount ;?> 
+</td>
+</tr>
+
+</table>
+
+  
+</td>
+
+
+<td  style="<?php echo $bk;?>">
+
+
+
+ 
+
+<table class="table">
+
+<tr>
+<td style="text-align:center" colspan="7">
+<?php
+$company_id = $_GET['company_id'];
+ echo $companyList[$company_id];
+?> 
+</td>
+</tr>
+
+<tr style="text-align:center">
+<td>Date &nbsp;</td>
+<td>Invoice Period </td>
+<td>Minutes</td>
+<td>Amount</td>
+<td>Paid Date</td>
+<td>Paid</td>
+<td>Balance</td>
+</tr>
+
+<?php
+
+ 
+$othercompanytotalinvAmount = 0;
+$othercompanytotalPaidAmount  = 0;
+$rowbalance = 0;
+
+foreach ($invoiceList as $key => $rowinv) {
+?>
+<tr>
+<td> <?php echo  $key;?></td>
+<td style="text-align:center"> <?php echo  $invoiceList[$key]['description'];?></td>
+<td> <?php echo  $invoiceList[$key]['invoiceTotalminutes'];?></td>	
+<td style="text-align:right"> <?php echo  $invoiceList[$key]['invoiceamount'];?></td>	
+<td> <?php if( $invoiceList[$key]['paidamount']>0) echo  $invoiceList[$key]['paiddate'];?></td>	
+<td style="text-align:right"> <?php if( $invoiceList[$key]['paidamount']>0) echo  $invoiceList[$key]['paidamount'];?></td>	
+<?php
+ 
+$othercompanytotalinvAmount = $othercompanytotalinvAmount +  $invoiceList[$key]['invoiceamount'];
+$othercompanytotalPaidAmount = $othercompanytotalPaidAmount +  $invoiceList[$key]['paidamount'];
+$rowbalance =   $othercompanytotalinvAmount -  $othercompanytotalPaidAmount;
+?>
+<td  style="text-align:right"><?php echo $rowbalance;?></td>
+</tr>
+
+<?php
+}
+
+
+$othercompanyBalanceAmount =  $othercompanytotalinvAmount  -  $othercompanytotalPaidAmount;
+
+?>
+<tr>
+<td> Totals :&nbsp; </td>  <td> &nbsp; </td> <td> &nbsp; </td> <td style="text-align:right"> <?php echo $othercompanytotalinvAmount ;?> </td>
+ <td> &nbsp; </td> <td style="text-align:right"> <?php echo $othercompanytotalPaidAmount;?> </td>
+</tr>
+ 
+ <tr >
+<td  style="text-align:center" colspan="7">
+ Balance :  <?php echo $othercompanyBalanceAmount ;?>&nbsp;
+ </td>
+ </tr>
+ 
+</table>
+
+ </td>
+
+</tr>
+
+
+  
+
+ 
+
 </table>
 </div>
 </div>
+ 

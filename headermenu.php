@@ -21,6 +21,14 @@ Consumption Reports ->
 </div>
 
 
+<div class="row">
+<div class="col-md-3">
+Other Service Invoices  ->
+</div>
+ <a href="wsgoods_serviceinvoices_list.php"> Manage  OtherService Invoices </a> || &nbsp;&nbsp; <a href="generateserviceinvoice.php"> Generate Goods & Service Invoice </a> || &nbsp;&nbsp; <a href="serviceprefixmasterlist.php"> Manage otherService Prefix's </a>
+</div>
+
+
  
 <div class="row">
 &nbsp; <br/>

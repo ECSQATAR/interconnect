@@ -27,6 +27,8 @@ session_start();
       dateFormat: "yy-m-d"
 
     });
+	
+	 
 
 $( ".savecomments" ).click(function(){
 	 
@@ -41,7 +43,7 @@ $( ".savecomments" ).click(function(){
 	};
 	//alert(data);
 	
-	 $.post("updateconsumptioncomments.php", data, function(resp){
+	 $.post("updatecomments.php", data, function(resp){
         alert('Your comment updated.');
 		jQuery('#mastercmnt'+sid).text(notes_comments);
 		jQuery('#mastercmnt'+sid).show('slow');
@@ -78,7 +80,7 @@ $( ".savepayments" ).click(function(){
 	};
 	//alert(data);
 	
-	 $.post("updateconsumptionpayments.php", data, function(resp){
+	 $.post("updateinvoicepayments.php", data, function(resp){
         alert('Your payment updated.');
 		jQuery('#masterpmnt'+sid).text(paidamount);
 		jQuery('#masterpmnt'+sid).show('slow');
@@ -86,7 +88,6 @@ $( ".savepayments" ).click(function(){
     });
 	
  });
-
 
  
  
@@ -104,7 +105,7 @@ $( ".savepaymentdate" ).click(function(){
 	};
 	//alert(data);
 	
-	 $.post("updateconsumptionpayments.php", data, function(resp){
+	 $.post("updateinvoicepayments.php", data, function(resp){
         alert('Your payment date updated.');
 		jQuery('#masterpdmnt'+sid).text(paiddate);
 		jQuery('#masterpdmnt'+sid).show('slow');
@@ -144,7 +145,7 @@ function checkdelte(id){
 //alert(id);
  
 if (confirm('Are you sure you want to Remove ?')) {
-    window.location.href = "wholesalesconsumptionlist.php?action=delete&id="+id;
+    window.location.href = "wsgoods_serviceinvoices_list.php?action=delete&id="+id;
     // Save it!
 } 
 
@@ -155,7 +156,7 @@ function lockinvoice(id){
 //alert(id);
  
 if (confirm('Are you sure you want to Lock the invoice ?')) {
-    window.location.href = "wholesalesconsumptionlist.php?action=lock&id="+id;
+    window.location.href = "wsgoods_serviceinvoices_list.php?action=lock&id="+id;
     // Save it!
 } 
 
@@ -167,8 +168,6 @@ if (confirm('Are you sure you want to Lock the invoice ?')) {
 <div class="container">
 
 <?php
-
-
 
 
 
@@ -210,7 +209,7 @@ function converToMMHH($timeStamp){
 if(isset($_GET['action']) && $_GET['action']=='delete'){
 //print_r($_GET);
 	$id = $_GET['id'];
-	$sqldelete = "DELETE from wsalesconsumptionmaster where id=$id";
+	$sqldelete = "DELETE from ws_goodservice_invoice_master where id=$id";
 	mysql_query($sqldelete); 
 	//header("Location:prefixmasterlist.php");
 	//exit(0);
@@ -220,7 +219,7 @@ if(isset($_GET['action']) && $_GET['action']=='delete'){
 if(isset($_GET['action']) && $_GET['action']=='lock'){
 //print_r($_GET);
 	$id = $_GET['id'];
-	$sqldelete = "update wsalesconsumptionmaster set lockedinvoice=1  where id=$id";
+	$sqldelete = "update ws_goodservice_invoice_master set lockedinvoice=1  where id=$id";
 	mysql_query($sqldelete); 
 	//header("Location:prefixmasterlist.php");
 	//exit(0);
@@ -229,12 +228,16 @@ if(isset($_GET['action']) && $_GET['action']=='lock'){
 ?>
 
 
+
 <?php
 include_once("headermenu.php");
 ?>
 <form role="form" method="GET" action="<?php echo $_SERVER['PHP_SELF']; ?>">
  
-<h1> Consumption Reports </h1>
+
+
+<h1>Whole Sales goods service Invoices List </h1>
+
 
 <div class="row">
 
@@ -242,7 +245,7 @@ include_once("headermenu.php");
 
    <label>Company Name</label>
  
-<select  name="company_id"  >
+<select  name="company_id" required >
 <option value="">Select Company</option>
 <?php
   $sql = "SELECT id,nameofcompany FROM company";
@@ -271,6 +274,7 @@ while($row = mysql_fetch_object($result)){
 <input type="submit" name="Go" value="submit" />
 </div>
 
+
 <div class="col-md-3">
 
    <label>Sort By:</label>
@@ -289,10 +293,6 @@ while($row = mysql_fetch_object($result)){
 </div>
 
 
-</div>
-
-
-
 
 </form>
 
@@ -301,17 +301,15 @@ while($row = mysql_fetch_object($result)){
 </div>
 
 <div class="row">
- <table class="table">
-		  <tr>
-		   <td> S.No </td>
+ <table  class="table"  border="0" bgcolor="#dbeefc" cellpadding="5">
+		  <tr align="center" class="bg_head_payments white font_18">
+		<td>S.No.</td>
 		   <td>Company Name </td>
-		    <td> GMT </td>
+		    <td>GMT</td>
 		    <td>Invoice No </td>
 		    <td>Invoice Date </td>
 		    <td>From Date</td>
 		    <td>To Date</td>
-			<td>Total Minutes</td>
-
 			<td>Amount</td>
 			<td>Paid Amount </td>
 			<td>Paid Date </td>
@@ -340,13 +338,13 @@ if (strlen($_GET['company_id'])>0 && isset($_GET['company_id'])){
 
 	if (strlen(trim($_GET['to_date']))>0 && isset($_GET['to_date'])){
 
-	 $to_date = $_GET['to_date'];
-	$condition = $condition." AND DATE(invoicecreateddate)<='$to_date' ";
+		$to_date = $_GET['to_date'];
+		$condition = $condition." AND DATE(invoicecreateddate)<='$to_date' ";
 
 
 		$to_date = $_GET['to_date'];
 	}
-
+	
 	if (strlen(trim($_GET['sortfield']))>0 && isset($_GET['sortfield'])){
 
 		$sortfield = $_GET['sortfield'];
@@ -356,26 +354,22 @@ if (strlen($_GET['company_id'])>0 && isset($_GET['company_id'])){
 
 }
 
-
 $sumtotalinv = 0;
-  $sql = "SELECT * From  wsalesconsumptionmaster $condition $sortByData  ";
+ echo $sql = "SELECT * From ws_goodservice_invoice_master $condition $sortByData  ";
  $result = mysql_query($sql);
 $sno = 0;
  while($rowinv = mysql_fetch_object($result)){
-$sno = $sno + 1;
+$sno = $sno+1;
 
 	?>	
-	<tr>
-	 
-	 <td style="text-align:right"> <?php echo $sno; ?> </td>	
+	<tr class="border_bottom_payments">
+	<td> <?php echo $sno;?></td>
 	<td> <?php echo $rowinv->companyname;?></td>
 	<td> <?php echo 'GMT+0'; ?>			
 	<td> <?php echo $rowinv->invoicenumber;?></td>			
 	<td> <?php echo $rowinv->invoicecreateddate;?></td>
 	<td> <?php echo $rowinv->invoicefromdate;?></td>
 	<td> <?php echo $rowinv->invoicetodate;?></td>
-	<td> <?php echo $rowinv->invoiceTotalminutes;?></td>
-
 	<td> <?php echo $rowinv->invoiceamount;?>$</td>
 	<td>
 
@@ -385,18 +379,14 @@ $sno = $sno + 1;
 </span>
 </td>
  	
-
- 	
-
-
+	
 <td>
 
 <span title='Click here to update your payment date' class="showpaymentdate" id="<?php echo 'masterpdmnt'.$rowinv->id; ?>" > <?php if( strlen($rowinv->paiddate) == 0) echo 'Add your payment date here.'; else  echo $rowinv->paiddate;?> </span>
 <span id="<?php echo 'childpdmnt'.$rowinv->id; ?>" style='display:none'> 
 <input type='text' value="<?php echo $rowinv->paiddate;?>" class="form-control"   id="pddata-<?php echo $rowinv->id;?>" >    <img src ="make_comment.png"  class="savepaymentdate"  id="<?php echo $rowinv->id;?>"   title="Save Payment date" /> 
 </span>
-</td>
-
+</td> 
 
 <td>
 
@@ -405,15 +395,20 @@ $sno = $sno + 1;
 <input type='text' value="<?php echo $rowinv->invoicecomments;?>" class="form-control"   id="cdata-<?php echo $rowinv->id;?>" >    <img src ="make_comment.png"  class="savecomments"  id="<?php echo $rowinv->id;?>"   title="Save Comments" /> 
 </span>
 </td>
+ 	
+
 
 	<td>
-	 <a href="<?php echo 'generateconsumptionpdf.php?id='.$rowinv->id;?>"> <img src="geneatepdf.png" width="20" height="20"   title="Generater Pdf"/> </a> &nbsp;
-
+	 <a href="<?php echo 'generategoodsinvoicepdf.php?id='.$rowinv->id;?>"> <img src="geneatepdf.png" width="20" height="20"   title="Generater Pdf"/> </a> &nbsp;
 <?php if($rowinv->lockedinvoice==0){?>
    &nbsp; &nbsp; <img src="remove.png" width="20" height="20" title="Delete" onclick="checkdelte(<?php echo $rowinv->id;?>)"/>
  <img src="invoice_lock.png" width="20" height="20" title="locke your invoice" onclick="lockinvoice(<?php echo $rowinv->id;?>)"/>  
 <?php } ?>
- 
+
+		
+
+
+
 	 </td>
 	
 	
@@ -421,24 +416,23 @@ $sno = $sno + 1;
 <?php
 	$sumpaidAmount = $sumpaidAmount +  $rowinv->paidamount;
 	$sumtotalinv = $sumtotalinv +  $rowinv->invoiceamount;
-	$getTotalTime +=  addDurationAsSeconds($rowinv->invoiceTotalminutes);
+	 
 
 	}
 
-	$seconds  = gmdate($getTotalTime);
-	$totalbiledduration = converToMMHH(sec2hms($seconds));
+	
 	//$totalbiledduration  =  sec2hms($seconds);
 
 $balanceAmount =  $sumtotalinv - $sumpaidAmount;
 ?>
 
 <tr>
-<td>&nbsp; </td><td>&nbsp; </td> <td>&nbsp; </td><td>&nbsp; </td> <td>&nbsp; </td> <td>&nbsp; </td> 
-<td>&nbsp;<b>Total</b> :  </td> <td><?php echo $totalbiledduration;?></td>  <td> <?php echo $sumtotalinv; ?>$ </td> <td><?php echo $sumpaidAmount; ?>$ </td> 
+<td>&nbsp; </td> <td>&nbsp; </td> <td>&nbsp; </td>  <td>&nbsp;</td> <td>&nbsp; </td> <td>&nbsp; </td> 
+<td>&nbsp;<b>Total</b> :  </td>  <td> <?php echo $sumtotalinv; ?>$ </td> <td><?php echo $sumpaidAmount; ?>$ </td> 
 <td> Balance Amount : <?php echo $balanceAmount; ?>$ </td> <td>&nbsp; </td>  <td>&nbsp;</td>
 </tr>
 
  </table>
-
-
 </div>
+</div>
+
