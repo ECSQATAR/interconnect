@@ -1,4 +1,6 @@
-
+<?php
+include_once("logincheck.php");
+?>
 <div class="row">
   <div class="col-md-3"> &nbsp; </div>  <a href="index.php"> Back to home Page </a> &nbsp; 
 || <a href="prefixmasterlist.php"> Manage Prefix </a> || <a href="companieslist.php"> Manage Company</a> || <a href="addcompany.php"> Add Company </a> || <a href="soasummary.php"> SOA Summary </a>

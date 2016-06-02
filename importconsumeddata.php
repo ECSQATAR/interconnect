@@ -33,7 +33,7 @@ require_once('head.php');
 <?php
 //require_once('xmlrpc.inc');
 
-  
+  include_once("headermenu.php");
  
 
 //require_once('header_logged_in.php');

@@ -2,6 +2,7 @@
 include_once("head.php"); 
 //include_once("logincheck.php");
 include_once("dbconfig.php");
+include_once("headermenu.php");
 
 if(!isset($_GET['items_per_page']))
 $_GET['items_per_page'] = 25;

@@ -32,7 +32,7 @@ require_once('head.php');
 </script> 
 <?php
 //require_once('xmlrpc.inc');
-
+include_once("headermenu.php");
   
  
 

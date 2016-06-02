@@ -13,4 +13,9 @@ include_once("head.php");
 </p>
 
 
+<p >
+<h3 style="text-align:right">  <a href="login.php"> Click Here to login admin  </a> <h3>
+</p>
+
+
 <body>
