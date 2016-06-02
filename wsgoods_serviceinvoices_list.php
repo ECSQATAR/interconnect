@@ -43,7 +43,7 @@ $( ".savecomments" ).click(function(){
 	};
 	//alert(data);
 	
-	 $.post("updatecomments.php", data, function(resp){
+	 $.post("updategoodscomments.php", data, function(resp){
         alert('Your comment updated.');
 		jQuery('#mastercmnt'+sid).text(notes_comments);
 		jQuery('#mastercmnt'+sid).show('slow');
@@ -80,7 +80,7 @@ $( ".savepayments" ).click(function(){
 	};
 	//alert(data);
 	
-	 $.post("updateinvoicepayments.php", data, function(resp){
+	 $.post("updategoodspayments.php", data, function(resp){
         alert('Your payment updated.');
 		jQuery('#masterpmnt'+sid).text(paidamount);
 		jQuery('#masterpmnt'+sid).show('slow');
@@ -105,7 +105,7 @@ $( ".savepaymentdate" ).click(function(){
 	};
 	//alert(data);
 	
-	 $.post("updateinvoicepayments.php", data, function(resp){
+	 $.post("updategoodspayments.php", data, function(resp){
         alert('Your payment date updated.');
 		jQuery('#masterpdmnt'+sid).text(paiddate);
 		jQuery('#masterpdmnt'+sid).show('slow');
@@ -355,7 +355,7 @@ if (strlen($_GET['company_id'])>0 && isset($_GET['company_id'])){
 }
 
 $sumtotalinv = 0;
- echo $sql = "SELECT * From ws_goodservice_invoice_master $condition $sortByData  ";
+   $sql = "SELECT * From ws_goodservice_invoice_master $condition $sortByData  ";
  $result = mysql_query($sql);
 $sno = 0;
  while($rowinv = mysql_fetch_object($result)){

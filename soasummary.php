@@ -54,7 +54,7 @@ while($rowinv = mysql_fetch_object($result)){
 	$consumptionList[$rowinv->invoicecreateddate]['paidamount'] = $rowinv->paidamount;
 }
 
-  $sql = "SELECT * From wsalesinvoicesmaster   $condition";
+$sql = "SELECT * From wsalesinvoicesmaster   $condition";
 $result = mysql_query($sql);
 $sno = 0;
 $invoiceList=array();
@@ -66,6 +66,21 @@ while($rowinv = mysql_fetch_object($result)){
 	$invoiceList[$rowinv->invoicecreateddate]['invoiceTotalminutes'] = $rowinv->invoiceTotalminutes;
     $invoiceList[$rowinv->invoicecreateddate]['paiddate'] = $rowinv->paiddate;
 	$invoiceList[$rowinv->invoicecreateddate]['paidamount'] = $rowinv->paidamount;
+}
+
+
+$sql = "SELECT * From ws_goodservice_invoice_master   $condition";
+$result = mysql_query($sql);
+$sno = 0;
+$goodsinvoiceList=array();
+while($rowinv = mysql_fetch_object($result)){
+	$goodsinvoiceList[$rowinv->invoicecreateddate]['invoicecreateddate'] = $rowinv->invoicecreateddate;
+	$goodsinvoiceList[$rowinv->invoicecreateddate]['invoicenumber'] = $rowinv->invoicenumber;
+	$goodsinvoiceList[$rowinv->invoicecreateddate]['description'] = substr($rowinv->invoicefromdate, 0, 10).'-'.substr($rowinv->invoicetodate, 0, 10);
+	$goodsinvoiceList[$rowinv->invoicecreateddate]['invoiceamount'] = $rowinv->invoiceamount;
+	$goodsinvoiceList[$rowinv->invoicecreateddate]['invoiceTotalminutes'] = $rowinv->invoiceTotalminutes;
+    $goodsinvoiceList[$rowinv->invoicecreateddate]['paiddate'] = $rowinv->paiddate;
+	$goodsinvoiceList[$rowinv->invoicecreateddate]['paidamount'] = $rowinv->paidamount;
 }
 
 //echo "<pre>"; print_r($invoiceList); echo "</pre>";
@@ -160,7 +175,7 @@ if(sizeof($consumptionList)==0)
 $ak = 'display:none';
  
 
-if(sizeof($invoiceList)==0)
+if(sizeof($invoiceList)==0 && sizeof($goodsinvoiceList)==0 )
 $bk = 'display:none';
  
 
@@ -181,13 +196,14 @@ $bk = 'display:none';
 
 <table class="table">
 <tr>
-<td style="text-align:center" colspan="7" >
+<td style="text-align:center" colspan="8" >
 ECS (Our company)  
 </td>
 </tr>
  
 <tr style="text-align:center">
 <td>Date &nbsp;</td>
+<td>Invoice # </td>
 <td>Invoice Period </td>
 <td>Minutes</td>
 <td>Amount</td>
@@ -206,6 +222,7 @@ foreach ($consumptionList as $key => $rowinv) {
 ?>
 <tr>
 <td> <?php echo  $key;?></td>
+<td style="text-align:center"> <?php echo  $consumptionList[$key]['invoicenumber'];?></td>
 <td style="text-align:center"> <?php echo  $consumptionList[$key]['description']; ;?></td>
 <td> <?php echo  $consumptionList[$key]['invoiceTotalminutes'];?></td>	
 <td style="text-align:right"> <?php echo  $consumptionList[$key]['invoiceamount'];?></td>	
@@ -223,12 +240,12 @@ foreach ($consumptionList as $key => $rowinv) {
 ?>
 
 <tr>
-<td> Totals : </td>  <td> &nbsp; </td> <td> &nbsp; </td> <td  style="text-align:right"> <?php echo $mycompanytotalinvAmount ;?></td> 
+<td> Totals : </td>  <td> &nbsp; </td> <td> &nbsp; </td>  <td> &nbsp; </td> <td  style="text-align:right"> <?php echo $mycompanytotalinvAmount ;?></td> 
 <td> &nbsp; </td> <td  style="text-align:right"> <?php echo $mycompanytotalPaidAmount;?></td>
 </tr>
 
 <tr>
-<td style="text-align:center" colspan="7">
+<td style="text-align:center" colspan="8">
 Balance :  <?php echo $mycompanytotalinvAmount ;?> 
 </td>
 </tr>
@@ -248,7 +265,7 @@ Balance :  <?php echo $mycompanytotalinvAmount ;?>
 <table class="table">
 
 <tr>
-<td style="text-align:center" colspan="7">
+<td style="text-align:center" colspan="8">
 <?php
 $company_id = $_GET['company_id'];
  echo $companyList[$company_id];
@@ -258,6 +275,7 @@ $company_id = $_GET['company_id'];
 
 <tr style="text-align:center">
 <td>Date &nbsp;</td>
+<td>Invoice # </td>
 <td>Invoice Period </td>
 <td>Minutes</td>
 <td>Amount</td>
@@ -277,6 +295,7 @@ foreach ($invoiceList as $key => $rowinv) {
 ?>
 <tr>
 <td> <?php echo  $key;?></td>
+<td style="text-align:center"> <?php echo  $invoiceList[$key]['invoicenumber'];?></td>
 <td style="text-align:center"> <?php echo  $invoiceList[$key]['description'];?></td>
 <td> <?php echo  $invoiceList[$key]['invoiceTotalminutes'];?></td>	
 <td style="text-align:right"> <?php echo  $invoiceList[$key]['invoiceamount'];?></td>	
@@ -295,16 +314,57 @@ $rowbalance =   $othercompanytotalinvAmount -  $othercompanytotalPaidAmount;
 }
 
 
+?>
+
+<tr>
+<td colspan="8"style="text-align:center"><b>Goods Services Invoices</b></td>
+</tr>
+
+<tr style="text-align:center">
+<td>Date &nbsp;</td>
+<td>Invoice # </td>
+<td>Invoice Period </td>
+<td>Minutes</td>
+<td>Amount</td>
+<td>Paid Date</td>
+<td>Paid</td>
+<td>Balance</td>
+</tr>
+<?php
+foreach ($goodsinvoiceList as $key => $rowinv) {
+?>
+<tr>
+<td> <?php echo  $key;?></td>
+<td style="text-align:center"> <?php echo  $goodsinvoiceList[$key]['invoicenumber'];?></td>
+<td style="text-align:center"> <?php echo  $goodsinvoiceList[$key]['description'];?></td>
+<td> <?php echo  $goodsinvoiceList[$key]['invoiceTotalminutes'];?></td>	
+<td style="text-align:right"> <?php echo  $goodsinvoiceList[$key]['invoiceamount'];?></td>	
+<td> <?php if( $goodsinvoiceList[$key]['paidamount']>0) echo  $goodsinvoiceList[$key]['paiddate'];?></td>	
+<td style="text-align:right"> <?php if( $goodsinvoiceList[$key]['paidamount']>0) echo  $goodsinvoiceList[$key]['paidamount'];?></td>	
+<?php
+ 
+$othercompanytotalinvAmount = $othercompanytotalinvAmount +  $goodsinvoiceList[$key]['invoiceamount'];
+$othercompanytotalPaidAmount = $othercompanytotalPaidAmount +  $goodsinvoiceList[$key]['paidamount'];
+$rowbalance =   $othercompanytotalinvAmount -  $othercompanytotalPaidAmount;
+?>
+<td  style="text-align:right"><?php echo $rowbalance;?></td>
+</tr>
+
+<?php
+}
+
+
 $othercompanyBalanceAmount =  $othercompanytotalinvAmount  -  $othercompanytotalPaidAmount;
 
 ?>
+
 <tr>
-<td> Totals :&nbsp; </td>  <td> &nbsp; </td> <td> &nbsp; </td> <td style="text-align:right"> <?php echo $othercompanytotalinvAmount ;?> </td>
+<td> Totals :&nbsp; </td>  <td> &nbsp; </td> <td> &nbsp; </td> <td> &nbsp; </td> <td style="text-align:right"> <?php echo $othercompanytotalinvAmount ;?> </td>
  <td> &nbsp; </td> <td style="text-align:right"> <?php echo $othercompanytotalPaidAmount;?> </td>
 </tr>
  
- <tr >
-<td  style="text-align:center" colspan="7">
+ <tr>
+<td  style="text-align:center" colspan="8">
  Balance :  <?php echo $othercompanyBalanceAmount ;?>&nbsp;
  </td>
  </tr>
@@ -323,4 +383,6 @@ $othercompanyBalanceAmount =  $othercompanytotalinvAmount  -  $othercompanytotal
 </table>
 </div>
 </div>
+ 
+
  

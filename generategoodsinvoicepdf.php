@@ -157,7 +157,7 @@ ceo@ecs-net.net<br>
 </tr>
 
 <tr>
-<td colspan="3" >'.$rowinv->companyname.' </td>
+<td colspan="3">'.$rowinv->companyname.' </td>
 <td>Inv#.</td>
 <td style="text-align:right">'.$rowinv->invoicenumber.' </td>
 <td>&nbsp;</td>
@@ -183,7 +183,7 @@ ceo@ecs-net.net<br>
 </tr>
 
 </table>
-<p> <br> </p>
+ 
 
 <p style="text-align:center;">
 This invoice is for the period of '. date('d/m/Y',strtotime($rowinv->invoicefromdate)).' to '.date('d/m/Y',strtotime($rowinv->invoicetodate)).'. 
@@ -194,7 +194,7 @@ This invoice is for the period of '. date('d/m/Y',strtotime($rowinv->invoicefrom
 
   <tr style="background-color:#0695AD;color:#FFFFFF;text-align:center;">
 		    
-		    <td style="border-bottom:solid 5px #ff0000;height:20px;">Prefix</td>
+		    <td style="border-bottom:solid 5px #ff0000;height:20px;width:20%;">Item Code</td>
 		    <td style="border-bottom:solid 5px #ff0000;" width="35%">Description</td>
 		    <td style="border-bottom:solid 5px #ff0000;">Quantity</td>
 			<td style="border-bottom:solid 5px #ff0000;">Price</td>
@@ -225,10 +225,10 @@ while($rowChild = mysql_fetch_object($resultChild)){
  $htmlsubtxt = $rdt.'
     <td style="text-align:center">'.$rowChild->prefix.'</td>			
 	<td>'.$rowChild->Description.'</td>
-	<td style="text-align:right">'.$rowChild->quantity.'.</td>
+	<td style="text-align:right">'.$rowChild->quantity.'</td>
 	<td style="text-align:right">'.$rowChild->price_per_1_min.'</td>
-	<td style="text-align:right">'.$rowChild->Charged_Amount.'  </td>  
-	<td style="background-color:#FFFFFF;border-right:1px solid #FFFFFF;text-align:left;"> 	$</td>  
+	<td style="text-align:right">'.$rowChild->Charged_Amount.'</td>  
+	<td style="background-color:#FFFFFF;border-right:1px solid #FFFFFF;text-align:left;"> $</td>  
 	</tr>';
 	 $htmlsub =  $htmlsub.$htmlsubtxt;  
 
@@ -260,15 +260,15 @@ $html = $html. '
  </tr>
  
  </table>
- <p> <br> </p>
+
  
  <table>
  <tr>
 	<td width="35%">&nbsp;</td>
-	<td>Total Minutes:</td>	 
-	<td><span style="text-align:right"> '.$rowinv->invoiceTotalminutes.'  </span> </td>
+	<td>&nbsp;</td>	 
+	<td> &nbsp; </td>
 	<td style="text-align:right">  Total : </td>
-	<td><span style="text-align:right">'.$rowinv->invoiceamount.'</span> </td>
+	<td><span style="text-align:right">'.round($rowinv->invoiceamount,2).'</span> </td>
 	<td> <span>$ </span>  </td>
  </tr>
  
@@ -286,17 +286,18 @@ $html = $html. '
 	<td>&nbsp;</td>	 
 	<td>&nbsp;</td>	 
 	<td style="text-align:right"> Grand Total : </td>
-	<td style="text-align:right">'.$rowinv->invoicesubtotal.'</td>
+	<td style="text-align:right">'.round($rowinv->invoicesubtotal,2).'</td>
 	<td> <span>$ </span>  </td>
  </tr>
  
  </table>
- <p> <br> </p>
- 
- <p style="text-align:center;">Notes</p>
+
+  
+
+ <p style="text-align:center;border-bottom:2px solid #00CCCC;">Notes</p>
    
  
- <table Style="background-color:#FFFFFF;border-top:1px solid; border-bottom:2px solid">
+ <table Style="background-color:#FFFFFF;">
  
  
  <tr>
@@ -306,20 +307,25 @@ $html = $html. '
  <tr>
  <td> '.$rowinv->invoicedisputeemail.' </td>
  </tr>
- <Tr> <td> All invoices are billed at Dubai (UAE) local time GMT+4. </td> </tr>
- <Tr> <td> Payments can be done through, Mashreq SWIFT code (BIC code): BOMLAEAD </td></tr>
-<Tr> <td> Bank Name: Mashreq Bank PSC, Mashreq Bank ID: 33-Routing Code: 203320101 </td></tr>
-<Tr> <td> Account Title/ Number: SAQIB ASIF ALI ALI/ 010797932038 </td></tr>
-<Tr> <td>Account IBAN: AE410330000010797932038 </td></tr>
-<Tr> <td> In case of local deposit: Account Title/ Number: SAQIB ASIF ALI ALI/ 010797932038</td></tr>
+ <Tr><td>All invoices are billed at Dubai (UAE) local time GMT+4. </td> </tr>
+ <tr><td>Payments can be done through Bank </td> </tr>
+ </table>
+ 
 
-<tr>
- <td>&nbsp;</td>
- </tr>
 
+<table  style="width:60%" border="1">
+<tr> <td> Bank Name  </td> <td style="background-color:#CCFFFF"> Mashreq Bank PSC  </td> </tr>
+<tr> <td> SWIFT code (BIC code)</td> <td style="background-color:#CCFFFF"> BOMLAEAD </td> </tr>
+<tr> <td> Mashreq Bank ID  </td> <td style="background-color:#CCFFFF"> 33 </td> </tr>
+<tr> <td> Routing Code   </td>  <td style="background-color:#CCFFFF"> 203320101 </td> </tr>
+<tr> <td> Account Title </td>  <td style="background-color:#CCFFFF">  SAQIB ASIF ALI ALI </td></tr>
+<tr> <td> Account Number </td> <td style="background-color:#CCFFFF"> 010797932038 </td> </tr>
+<tr> <td> Account IBAN   </td> <td style="background-color:#CCFFFF"> AE410330000010797932038 </td> </tr>
 </table>
 
-<p style="text-align:center">ECS-NET FZE: Ajman Free Zone, United Arab Emirates, Tel #: +971506466878, Email: ceo@ecs-net.net </p>
+
+ 
+<p style="text-align:center;border-top:2px solid #00CCCC;"><h5>ECS-NET FZE: Ajman Free Zone, United Arab Emirates, Tel #: +971506466878, Email: ceo@ecs-net.net </h5> </p>
  
 
  

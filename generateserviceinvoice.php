@@ -265,7 +265,7 @@ Add your Goods here..
 
  </tr>
 <?php
-for ($k=1;$k<6;$k++){
+for ($k=1;$k<9;$k++){
 ?>
  
 	<tr>
@@ -439,7 +439,7 @@ if (isset($_POST['conform'])){
 		 $Description = $descriptionData[$k];
 		 $price_per_1_min =  $price_per_1_minData[$k];
 		 $quantity  = $quantityData[$k]; 
-		 $Charged_Amount =  $Charged_AmountData[$k];
+		 $Charged_Amount =  round($Charged_AmountData[$k],2);
 		 $BilledDuration_min =  0;
 		 $customerName = '';
 		 $numberofCalls = 0;
@@ -450,11 +450,11 @@ if (isset($_POST['conform'])){
 		$account_id = $company_id;
 
 		
-	
-		$sqlchd = "INSERT INTO  ws_goodservice_invoice_child (invmasterid,customerName,company_id,`account_id`, `prefix`,  `Description`, `price_per_1_min`,  `quantity`,  `BilledDuration_min`, `Charged_Amount`,fromDate,toDate) 
+		if(  $quantity >0){
+			$sqlchd = "INSERT INTO  ws_goodservice_invoice_child (invmasterid,customerName,company_id,`account_id`, `prefix`,  `Description`, `price_per_1_min`,  `quantity`,  `BilledDuration_min`, `Charged_Amount`,fromDate,toDate) 
 		  VALUES ($invmasterid,'$customerName',$company_id,$account_id, '$prefix', '$Description', '$price_per_1_min','$quantity', '$BilledDuration_min', '$Charged_Amount','$fromDate','$todate')";
-		mysql_query($sqlchd);
-	 
+			mysql_query($sqlchd);
+		}
 	 }
 
 	//$mydelsql = "TRUNCATE TABLE tempwsaleinvoicedata";
