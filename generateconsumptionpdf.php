@@ -76,6 +76,7 @@ $recinv = mysql_query($sqlinv);
 $rowinv = mysql_fetch_object($recinv);
 $invmasterId = $rowinv->id;
 
+
 $invoiceName = $rowinv->invoicenumber;
 //define ('PDF_HEADER_LOGO', 'logoVoip.png');
 define ('PDF_HEADER_LOGO', 'ECS-Logo.png');
@@ -142,10 +143,10 @@ $pdf->SetPrintFooter(false);
 
  // add a page
 $pdf->AddPage();
-
-$sqlold = "SELECT * FROM company where id=1";
+$company_id = $rowinv->company_id;
+$sqlold = "SELECT * FROM company where id=$company_id";
 $oldrec = mysql_query($sqlold);
-$rowold = mysql_fetch_object($oldrec);
+$rownewcompany = mysql_fetch_object($oldrec);
 
  $Condition='';
  
@@ -188,6 +189,8 @@ From: <br>
 </tr>
 
 <tr>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>Inv#.</td>
 <td style="text-align:right">'.$rowinv->invoicenumber.' </td>
