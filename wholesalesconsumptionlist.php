@@ -369,7 +369,7 @@ $sno = $sno + 1;
 	 
 	 <td style="text-align:right"> <?php echo $sno; ?> </td>	
 	<td> <?php echo $rowinv->companyname;?></td>
-	<td> <?php echo 'GMT+0'; ?>			
+	<td> <?php echo $rowinv->gmt?>			
 	<td> <?php echo $rowinv->invoicenumber;?></td>			
 	<td> <?php echo $rowinv->invoicecreateddate;?></td>
 	<td> <?php echo $rowinv->invoicefromdate;?></td>
@@ -378,11 +378,16 @@ $sno = $sno + 1;
 
 	<td> <?php echo $rowinv->invoiceamount;?>$</td>
 	<td>
-
+<?php 
+	if($_SESSION['adminlogin'] == 1){
+?>
 <span title='Click here to update your payments' class="showpayments" id="<?php echo 'masterpmnt'.$rowinv->id; ?>" > <?php if( $rowinv->paidamount == 0) echo 'Add your payments here.'; else  echo $rowinv->paidamount;?> </span>
 <span id="<?php echo 'childpmnt'.$rowinv->id; ?>" style='display:none'> 
 <input type='text' value="<?php echo $rowinv->paidamount;?>" class="form-control"   id="pdata-<?php echo $rowinv->id;?>" >    <img src ="make_comment.png"  class="savepayments"  id="<?php echo $rowinv->id;?>"   title="Save Payments" /> 
 </span>
+<?php
+}
+?>
 </td>
  	
 
@@ -391,25 +396,38 @@ $sno = $sno + 1;
 
 <td>
 
+<?php 
+	if($_SESSION['adminlogin'] == 1){
+?>
 <span title='Click here to update your payment date' class="showpaymentdate" id="<?php echo 'masterpdmnt'.$rowinv->id; ?>" > <?php if( strlen($rowinv->paiddate) == 0) echo 'Add your payment date here.'; else  echo $rowinv->paiddate;?> </span>
 <span id="<?php echo 'childpdmnt'.$rowinv->id; ?>" style='display:none'> 
 <input type='text' value="<?php echo $rowinv->paiddate;?>" class="form-control"   id="pddata-<?php echo $rowinv->id;?>" >    <img src ="make_comment.png"  class="savepaymentdate"  id="<?php echo $rowinv->id;?>"   title="Save Payment date" /> 
 </span>
+
+<?php
+}
+?>
+
 </td>
 
 
 <td>
-
+<?php 
+	if($_SESSION['adminlogin'] == 1){
+?>
 <span title='Click here to update your comments' class="showcomments" id="<?php echo 'mastercmnt'.$rowinv->id; ?>" > <?php if( strlen(trim($rowinv->invoicecomments)) == 0) echo 'Add your comments here.'; else  echo $rowinv->invoicecomments;?> </span>
 <span id="<?php echo 'childcmnt'.$rowinv->id; ?>" style='display:none'> 
 <input type='text' value="<?php echo $rowinv->invoicecomments;?>" class="form-control"   id="cdata-<?php echo $rowinv->id;?>" >    <img src ="make_comment.png"  class="savecomments"  id="<?php echo $rowinv->id;?>"   title="Save Comments" /> 
 </span>
+<?php
+}
+?>
 </td>
 
 	<td>
 	 <a href="<?php echo 'generateconsumptionpdf.php?id='.$rowinv->id;?>"> <img src="geneatepdf.png" width="20" height="20"   title="Generater Pdf"/> </a> &nbsp;
 
-<?php if($rowinv->lockedinvoice==0){?>
+<?php if($rowinv->lockedinvoice==0 && $_SESSION['adminlogin'] == 1){?>
    &nbsp; &nbsp; <img src="remove.png" width="20" height="20" title="Delete" onclick="checkdelte(<?php echo $rowinv->id;?>)"/>
  <img src="invoice_lock.png" width="20" height="20" title="locke your invoice" onclick="lockinvoice(<?php echo $rowinv->id;?>)"/>  
 <?php } ?>

@@ -27,7 +27,7 @@ if(isset($_POST['submit'])){
  		header('Location: wholesaleinvoiceslist.php'); exit(0);
 	}
 	
-	if( $_POST['loginpassword'] == 'operator'){
+	if( $_POST['loginpassword'] == 'staff'){
 		$_SESSION['loginstatus'] = 1;
 		$_SESSION['adminlogin'] = 0;
  		header('Location: wholesaleinvoiceslist.php'); exit(0);

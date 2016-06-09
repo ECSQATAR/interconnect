@@ -1,6 +1,6 @@
 <?php
 require_once('head.php');
-
+$linkurl  = '?Go=submit';
 $condition = " Where 1 = 1   ";
 if (isset($_GET['Go'])){
 if (strlen($_GET['company_id'])>0 && isset($_GET['company_id'])){
@@ -15,7 +15,7 @@ if (strlen($_GET['company_id'])>0 && isset($_GET['company_id'])){
 	$condition = $condition." AND DATE(invoicecreateddate)>='$from_date' ";
 
  
-	$linkurl  = $linkurl."&reseller_id=$reseller_id"; 
+	$linkurl  = $linkurl."&from_date=$from_date "; 
 
 	}
 
@@ -23,6 +23,8 @@ if (strlen($_GET['company_id'])>0 && isset($_GET['company_id'])){
 
 		$to_date = $_GET['to_date'];
 		$condition = $condition." AND DATE(invoicecreateddate)<='$to_date' ";
+
+		$linkurl  = $linkurl."&to_date=$to_date "; 
 
 
 		$to_date = $_GET['to_date'];
@@ -174,6 +176,7 @@ $commonInvoiceList = array_merge($invoiceList, $invoicePaidList);
 <?php
 include_once("headermenu.php");
 ?>
+<div class="container">
 <h1> SOA Summary </h1>
 <script>
     jQuery(document).ready(function () {
@@ -239,6 +242,9 @@ while($row = mysql_fetch_object($result)){
 
 <div class="col-md-2">
 <input type="submit" name="Go" value="submit" />
+
+ <a href="<?php echo 'soasummarypdf.php'.$linkurl;?>"> <img src="geneatepdf.png" width="20" height="20"   title="Generater Pdf"/> </a> &nbsp;
+ 
 </div>
 
 </div>
@@ -350,7 +356,7 @@ if(isset($rowinv['paiddate'])){
 <table  border="1" class="table">
 
 <tr>
-<td style="text-align:center" colspan="8">
+<td style="text-align:center" colspan="6">
 <?php
 $company_id = $_GET['company_id'];
  echo $companyList[$company_id];
@@ -421,5 +427,6 @@ if(isset($rowinv['paiddate'])){
  
  </table>
  
+</div>
 </div>
 </div>

@@ -356,7 +356,7 @@ if (strlen($_GET['company_id'])>0 && isset($_GET['company_id'])){
 }
 
 $sumtotalinv = 0;
- echo $sql = "SELECT * From wsalesinvoicesmaster $condition $sortByData  ";
+ $sql = "SELECT * From wsalesinvoicesmaster $condition $sortByData  ";
  $result = mysql_query($sql);
 $sno = 0;
  while($rowinv = mysql_fetch_object($result)){

@@ -181,9 +181,17 @@ while ($row = mysql_fetch_object($rs_result)) {
 <td><?php echo $row->mobile;?></td> 
 <td><?php echo $row->email;?></td> 
 <td><?php echo $row->skype;?></td> 
-<td> <a href="<?php echo 'editcompany.php?action=edit&id='.$row->id;?>"> Edit </a> </td>
+<?php 
+	if($_SESSION['adminlogin'] == 1){
+?>
+
+<td> 
+<a href="<?php echo 'editcompany.php?action=edit&id='.$row->id;?>"> Edit </a> </td>
  
  <td style="text-align:center">  &nbsp; &nbsp; <image src="remove.png" width="20" height="20" title="Delete" onclick="checkdelte(<?php echo $row->id;?>)"/> </td>
+<?php
+}
+?>
 
 
 
