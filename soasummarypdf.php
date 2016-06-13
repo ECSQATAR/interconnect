@@ -56,13 +56,14 @@ $dateConsumpList = array();
 while($rowinv = mysql_fetch_object($result)){
 	$consumptionList[$v]['invoicecreateddate'] = $rowinv->invoicecreateddate;
 	$consumptionList[$v]['invoicenumber'] = $rowinv->invoicenumber;
-	$consumptionList[$v]['description'] = substr($rowinv->invoicefromdate, 0, 10).'-'.substr($rowinv->invoicetodate, 0, 10);
+	$consumptionList[$v]['description'] = 'Invoice Period '.date('d M Y',strtotime($rowinv->invoicefromdate)).' - '. date('d M Y',strtotime($rowinv->invoicetodate));
 	$consumptionList[$v]['invoiceamount'] = $rowinv->invoiceamount;
 	$consumptionList[$v]['invoiceTotalminutes'] = $rowinv->invoiceTotalminutes;
 	$dateConsumpList[$rowinv->invoicecreateddate] =  $rowinv->invoicecreateddate;
 	if($rowinv->paidamount>0){
 		$consumptionPaidList[$v]['paiddate'] = $rowinv->paiddate;
 		$consumptionPaidList[$v]['paidamount'] = $rowinv->paidamount;
+		$consumptionPaidList[$v]['invoicecomments'] = $rowinv->invoicecomments;
 		$dateConsumpList[$rowinv->paiddate] =  $rowinv->paiddate;
 	}
 	$v = $v + 1;
@@ -100,13 +101,14 @@ $p=0;
 while($rowinv = mysql_fetch_object($result)){
 	$invoiceList[$p]['invoicecreateddate'] = $rowinv->invoicecreateddate;
 	$invoiceList[$p]['invoicenumber'] = $rowinv->invoicenumber;
-	$invoiceList[$p]['description'] = substr($rowinv->invoicefromdate, 0, 10).'-'.substr($rowinv->invoicetodate, 0, 10);
+	$invoiceList[$p]['description'] =  'Invoice Period '.date('d M Y',strtotime($rowinv->invoicefromdate)).' - '. date('d M Y',strtotime($rowinv->invoicetodate));	
 	$invoiceList[$p]['invoiceamount'] = $rowinv->invoiceamount;
 	$invoiceList[$p]['invoiceTotalminutes'] = $rowinv->invoiceTotalminutes;
 	$dateList[$rowinv->invoicecreateddate] =  $rowinv->invoicecreateddate;
  if($rowinv->paidamount>0){
 		$invoicePaidList[$p]['paiddate'] = $rowinv->paiddate;
-		$invoicePaidList[$p]['paidamount'] = $rowinv->paidamount;
+		$invoicePaidList[$p]['paidamount'] = round($rowinv->paidamount,2);
+		$invoicePaidList[$p]['invoicecomments'] = $rowinv->invoicecomments;
 		$dateList[$rowinv->paiddate] =  $rowinv->paiddate;
  }	
 	$p = $p + 1;	
@@ -122,13 +124,14 @@ $sno = 0;
 while($rowinv = mysql_fetch_object($result)){
 	$invoiceList[$p]['invoicecreateddate'] = $rowinv->invoicecreateddate;
 	$invoiceList[$p]['invoicenumber'] = $rowinv->invoicenumber;
-	$invoiceList[$p]['description'] = substr($rowinv->invoicefromdate, 0, 10).'-'.substr($rowinv->invoicetodate, 0, 10);
+	$invoiceList[$p]['description'] = 'Invoice Period '.date('d M Y',strtotime($rowinv->invoicefromdate)).' - '. date('d M Y',strtotime($rowinv->invoicetodate));
 	$invoiceList[$p]['invoiceamount'] = $rowinv->invoiceamount;
 	$invoiceList[$p]['invoiceTotalminutes'] = $rowinv->invoiceTotalminutes;
 	$dateList[$rowinv->invoicecreateddate] =  $rowinv->invoicecreateddate;
    	if($rowinv->paidamount>0){
 		$invoicePaidList[$p]['paiddate'] = $rowinv->paiddate;
 		$invoicePaidList[$p]['paidamount'] = $rowinv->paidamount;
+		$invoicePaidList[$p]['invoicecomments'] = $rowinv->invoicecomments;
 		$dateList[$rowinv->paiddate] =  $rowinv->paiddate;
     }	
  
@@ -314,11 +317,11 @@ ECS (Our company)
  
 <tr style="text-align:center;color: #000022;background-color:#aaaaaa;">
 <td width="15%" style="text-align:center">Date &nbsp;</td>
-<td  width="25%" style="text-align:center">Description </td>
+<td  width="35%" style="text-align:center">Description </td>
 <td  width="15%" style="text-align:center">Invoice No </td>
-<td  width="15%" style="text-align:center">Amount</td>
+<td  width="10%" style="text-align:center">Amount</td>
 <td width="15%"  style="text-align:center">Paid amount </td>
-<td width="15%" style="text-align:center">Balance</td>
+<td width="10%" style="text-align:center">Balance</td>
 </tr>';
 
  
@@ -331,29 +334,29 @@ foreach ($newConsumptionObjectData[$datekey] as  $rowinv) {
 if(isset($rowinv['invoiceamount'])){
  
 $html = $html . '<tr>
-<td  style="text-align:center"> '.date("d-m-Y",strtotime($datekey)).'</td>
-<td style="text-align:left"> '. $rowinv["description"].'</td>
+<td  style="text-align:center"> '.date("d-M-Y",strtotime($datekey)).'</td>
+<td style="text-align:center"> '. $rowinv["description"].'</td>
 <td  style="text-align:center" >'.$rowinv["invoicenumber"].'</td>
-<td style="text-align:right"> '.$rowinv["invoiceamount"].'</td>	
+<td style="text-align:center"> '.$rowinv["invoiceamount"].'</td>	
 <td  style="text-align:center"> &nbsp;</td>';
 
 $rowbalance = $rowbalance +  $rowinv['invoiceamount'];
-$html = $html . '<td  style="text-align:right">'.$rowbalance.'</td>
+$html = $html . '<td  style="text-align:center">'.$rowbalance.'</td>
 </tr>';
 
 }
 if(isset($rowinv['paiddate'])){
 
 $html = $html .'<tr>
-<td width="15%"> '.date("d-m-Y",strtotime($datekey)).'</td>
-<td width="25%"  style="text-align:left"> Amount paid </td>	
+<td width="15%"> '.date("d-M-Y",strtotime($datekey)).'</td>
+<td width="35%"  style="text-align:center">  Payment - '.$rowinv["invoicecomments"].'  </td>	
 <td width="15%"> &nbsp;</td>
-<td width="15%"> &nbsp;</td>
-<td width="15%" style="text-align:right">'.$rowinv["paidamount"].'</td>';
+<td width="10%"> &nbsp;</td>
+<td width="15%" style="text-align:center">'.$rowinv["paidamount"].'</td>';
 
 
  $rowbalance = $rowbalance -  $rowinv['paidamount']; 
-$html = $html .'<td  style="text-align:right">'.$rowbalance.'</td>
+$html = $html .'<td   width="10%" style="text-align:center">'.$rowbalance.'</td>
 </tr>';
  }
  }
@@ -381,11 +384,11 @@ $company_id = $_GET['company_id'];
 $html = $html .$othercompanyName.'</td></tr>
 <tr style="text-align:center;;color:#000022;background-color:#aaaaaa;">
 <td width="15%"   style="text-align:center">Date &nbsp;</td>
-<td width="25%"  style="text-align:center">Description </td>
+<td width="35%"  style="text-align:center">Description </td>
 <td  width="15%" style="text-align:center">Invoice No </td>
-<td  width="15%" style="text-align:center">Amount</td>
+<td  width="10%" style="text-align:center">Amount</td>
 <td  width="15%" style="text-align:center">Paid amount </td>
-<td  width="15%"  style="text-align:center">Balance</td>
+<td  width="10%"  style="text-align:center">Balance</td>
 </tr>';
 
  
@@ -399,16 +402,16 @@ foreach ($newinvoiceObjectData[$datekey] as  $rowinv) {
 if(isset($rowinv['invoiceamount'])){
 
 $html = $html .'<tr>
-<td style="text-align:center">'.date("d-m-Y",strtotime($datekey)).'</td>
-<td style="text-align:left">'.$rowinv["description"].'</td>
+<td style="text-align:center">'.date("d-M-Y",strtotime($datekey)).'</td>
+<td style="text-align:center">'.$rowinv["description"].'</td>
 <td style="text-align:center">'.$rowinv["invoicenumber"].'</td>
-<td style="text-align:right"> '.$rowinv["invoiceamount"].'</td>	
-<td style="text-align:right" > &nbsp;</td>';
+<td style="text-align:center"> '.$rowinv["invoiceamount"].'</td>	
+<td style="text-align:center" > &nbsp;</td>';
  
 $rowbalance = $rowbalance +  $rowinv['invoiceamount'];
 
 $html = $html .' 
-<td  style="text-align:right">'.$rowbalance.'</td>
+<td  style="text-align:center">'.$rowbalance.'</td>
 </tr>';
 
 }
@@ -416,14 +419,14 @@ $html = $html .'
 if(isset($rowinv['paiddate'])){
  
  $html = $html .'<tr>
-<td width="15%" style="text-align:center">'. date("d-m-Y",strtotime($datekey)).'</td>
-<td width="25%" style="text-align:left"> Amount paid </td>	
+<td width="15%" style="text-align:center">'. date("d-M-Y",strtotime($datekey)).'</td>
+<td width="35%" style="text-align:center"> Payment - '.$rowinv["invoicecomments"].' </td>	
 <td width="15%"> &nbsp;</td>
-<td width="15%"> &nbsp;</td>
-<td width="15%"  style="text-align:right">'.$rowinv["paidamount"].'</td>	';
+<td width="10%"> &nbsp;</td>
+<td width="15%"  style="text-align:center">'.$rowinv["paidamount"].'</td>	';
 
   $rowbalance = $rowbalance -  $rowinv['paidamount']; 
-$html = $html .'<td  style="text-align:right">'.$rowbalance.'</td>
+$html = $html .'<td   width="10%" style="text-align:center">'.$rowbalance.'</td>
 </tr>';
 
  }

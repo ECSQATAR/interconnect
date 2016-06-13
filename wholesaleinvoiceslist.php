@@ -115,6 +115,41 @@ $( ".savepaymentdate" ).click(function(){
  });
 
  
+ 
+ $( ".savevendorinvoices" ).click(function(){
+	 
+	
+	var sid = jQuery(this).attr("id");
+  	var vendorinvoice = jQuery('#icdata-'+sid).val();
+	 
+	var	data = {
+		invoice_id:sid,
+		vendorinvoice:vendorinvoice,
+		action:'savevendorinvoice'
+	};
+	//alert(data);
+	
+	 $.post("updatecomments.php", data, function(resp){
+        alert('Your vendor invoice updated.');
+		jQuery('#masterinvoice'+sid).text(vendorinvoice);
+		jQuery('#masterinvoice'+sid).show('slow');
+		jQuery("#childinvoice"+sid).hide('slow');
+    });
+	
+ });
+
+
+  $( ".showvendorinvoices" ).click(function(){
+		
+		var masterdivid = jQuery(this).attr("id");
+		var k = masterdivid.split('masterinvoice')	;
+		//alert(k);
+		 
+		jQuery('#'+masterdivid).hide('slow');
+		jQuery("#childinvoice"+k[1]).show('slow');
+		  
+ });
+ 
   $( ".showpaymentdate" ).click(function(){
 		
 		var masterdivid = jQuery(this).attr("id");
@@ -315,6 +350,7 @@ while($row = mysql_fetch_object($result)){
 			<td>Paid Amount </td>
 			<td>Paid Date </td>
 			<td> Comments </td>
+			<td>Vendor Invoice</td>
 			<td width="10%">&nbsp; </td>
         </tr>
 <?php
@@ -406,13 +442,39 @@ $sno = $sno+1;
 </span>
 <?php } ?>
 </td>
- 	
+ 
+<td>
+<?php 
+	if($_SESSION['adminlogin'] == 1){
+?>
+
+<?php 
+if( strlen(trim($rowinv->vendorinvoice)) == 0){
+?>
+<span title='update your vendor invoice here' class="showvendorinvoices" id="<?php echo 'masterinvoice'.$rowinv->id; ?>"> 
+add your vendor invoices here. </span>
+
+<span id="<?php echo 'childinvoice'.$rowinv->id; ?>" style='display:none'> 
+<input type='text' value="<?php echo $rowinv->vendorinvoice;?>" class="form-control"   id="icdata-<?php echo $rowinv->id;?>" >    <img src ="make_comment.png"  class="savevendorinvoices"  id="<?php echo $rowinv->id;?>"   title="Save Comments" /> 
+</span>
+
+<?php
+}	
+else  
+{
+?>
+<a target="_blank" href="<?php echo $rowinv->vendorinvoice;?>"> <img src="import.png" width="20" height="20" title="vendor invoice" /> </a> 
+<?php } ?>
+<?php
+}
+?>
+</td> 
 
 
 	<td>
 	 <a href="<?php echo 'generateinvoicepdf.php?id='.$rowinv->id;?>"> <img src="geneatepdf.png" width="20" height="20"   title="Generater Pdf"/> </a> &nbsp;
 	 
-<?php if($rowinv->lockedinvoice==0  && $_SESSION['adminlogin'] == 1 ){?>
+<?php if($rowinv->lockedinvoice==0  && $_SESSION['adminlogin'] == 1 ){ ?>
    &nbsp; &nbsp; <img src="remove.png" width="20" height="20" title="Delete" onclick="checkdelte(<?php echo $rowinv->id;?>)"/>
  <img src="invoice_lock.png" width="20" height="20" title="locke your invoice" onclick="lockinvoice(<?php echo $rowinv->id;?>)"/>  
 <?php } ?>

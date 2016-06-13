@@ -30,6 +30,13 @@ Other Service Invoices  ->
  <a href="wsgoods_serviceinvoices_list.php"> Manage  OtherService Invoices </a> || &nbsp;&nbsp; <a href="generateserviceinvoice.php"> Generate Goods & Service Invoice </a> || &nbsp;&nbsp; <a href="serviceprefixmasterlist.php"> Manage otherService Prefix's </a>
 </div>
 
+<div class="row">
+<div class="col-md-3">
+ASR ACD Reports  ->
+</div>
+ <a href="wsgoods_serviceinvoices_list.php"> Manage  ASR ACD Reports </a> || &nbsp;&nbsp; <a href="import-asr-acd-data.php"> Import asr acd data </a>
+</div>
+
 
  
 <div class="row">
