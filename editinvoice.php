@@ -171,6 +171,7 @@ $invoicenumber = $invNo;
 
 $totalchargedamount = 0;
 $totalbiledduration=0;
+$companiesList = array();
 ?>
  
 <div class="container">  
@@ -189,134 +190,72 @@ ceo@ecs-net.net<br>
 </td>
  
 <td width="50%" style="font-size:200%;color:#ff0000;text-align:center;"> INVOICE </td>
-<td width="25%"> <img alt="CompanyLogo" src="logouploads/ECS-Logo.png" width="250" heigth="200"/> </td>
+<td width="25%"> <img alt="CompanyLogo" src="logouploads/ECS-Logo1.png" width="250" heigth="200"/> </td>
 </tr>
-
-<tr>
-<td>To.</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
-</tr>
-
-<tr>
-<td colspan="2"><input type="text" name="companyname"  class="form-control" value="<?php echo $resultinvoiceMaster->companyname;?>" />  </td>
- 
-<td>Inv.# <input type="text" name="invoicenumber" value="<?php echo $resultinvoiceMaster->invoicenumber;?>" /> </td>
-</tr>
-
-
-<tr>
-<td> &nbsp; </td> <td> &nbsp; </td>  <td> Create Date <input type="text" name="createdDate" value="<?php echo date("d/m/Y",strtotime($resultinvoiceMaster->invoicecreateddate));?>" /> </td> 
-</tr>
-
-<tr> <td colspan='2'>Comments:<?php echo $resultinvoiceMaster->invoicecomments;?>   </td>  <td> Due Date  <input type="text" name="dueDate" value="<?php echo date("d/m/Y",strtotime($resultinvoiceMaster->invoiceduedate));?>" /> </td> </tr>
-
-
-
 </table>
 
-<p> &nbsp; </p>
- 
- 
-
-
-<table border="1" cellpadding="2" cellspacing="2" class="table">
-
-  <tr style="background-color:#000000;color:#FFFFFF;">
-		    
-		    <td>Prefix</td>
-		    <td>Description </td>
-		    <td>Quantity</td>
-		    <td>Price</td>
-		    <td>Amount</td>
-		<td border="0" cellpadding="2" cellspacing="2" style="border-right:1px solid #FFFFFF;background-color:#FFFFFF;">&nbsp;</td>
-
- </tr>
-
+<table class="table">
+<tr>
+<td>To :
+<select  class="form-control" name="company_id" required >
+<option value="">Select Company</option>
 <?php
-	$totalrecords=0;
-while($row = mysql_fetch_object($resultinvoice)){
-	//echo "<pre>";print_r($row);
-	 
- ?>
-	<tr>
-	<td><input type="hidden" name="prefix[]" value="<?php echo $row->prefix;?>" /> <?php echo $row->prefix;?></td>			
-	<td><input type="hidden" name="description[]" value="<?php echo  $prefixmasterList[$row->prefix];?>" /> <?php echo $prefixmasterList[$row->prefix];?>  </td>
-	<td><input type="text" name="Duration_min[]" class="Duration_min" id="Duration_min_<?php echo $row->id; ?>" value="<?php echo $row->Duration_min;?>" />  </td>
-	<td>
-		<input type="text" name="price_per_1_min[]" id="price_per_1_min_<?php echo $row->id; ?>"  value="<?php echo $row->price_per_1_min;?>" />
-		<input type="hidden" name="numberofCalls[]" value="<?php echo $row->numberofCalls;?>" />
-	</td>
-	<td style="text-align:right"><input type="text" name="Charged_Amount[]"  id="Charged_Amount_<?php echo $row->id; ?>"  value="<?php echo round($row->Charged_Amount,2);?>" /> </td>  
-	<td style="border-right:1px solid #FFFFFF;color:red;text-align:left;"> USD</td>  
-	</tr>
 
-	
-
-	<?php
-		$totalrecords = $totalrecords + 1;
-		$getTotalTime +=  addDurationAsSeconds($row->Duration_min);
-	 	$totalchargedamount = $totalchargedamount + $row->Charged_Amount;
-		$fromDate = date("d-m-Y",strtotime($row->fromdate));
-	    $toDate = date("d-m-Y",strtotime($row->todate));
-	}
-	
- 	$seconds  = gmdate($getTotalTime);
-	$totalbiledduration = converToMMHH(sec2hms($seconds));
-	//$totalbiledduration  =  sec2hms($seconds);
-	$outstanding =0;
-
+  $sql = "SELECT id,nameofcompany FROM company";
+ $result = mysql_query($sql);
+while($row = mysql_fetch_object($result)){
+	$companiesList[$row->id] = $row->nameofcompany;
 ?>
+<option value="<?php echo $row->id;?>" <?php if(isset($company_id) && $company_id == $row->id) echo 'selected=selected';?> > 
+<?php echo $row->nameofcompany;?></option>
+<?php  
+} 
+
+?> 
+</select> 
 
 
- <tr style="border-right:1px solid #FFFFFF;text-align:right;">
- <td colspan="3" style="text-align:right">Total Minutes :
-<input type="text" name="totalbiledduration" value="<?php echo $totalbiledduration;?>" /> 
 </td>
- <td colspan="2" style="text-align:right">Total : 
- <input type="text" name="totalchargedamount" value="<?php echo round($totalchargedamount,2);?>" /> 
-   
- </td>
- <td style="border:0px 0px 0px 0px  solid #FFFFFF;color:red;text-align:left;"> USD</td>  
 </tr>
 
-<tr style="border-right:1px solid #FFFFFF;text-align:right;">
- <td colspan="5" style="text-align:right"> Outstanding : 
-<input type="text" name="outstanding" value="<?php echo round($outstanding,2);?>" /> 
-   
- </td>
- <td style="border:0px 0px 0px 0px  solid #FFFFFF;color:red;text-align:left;"> USD</td>  
+ 
+<tr>
+<td>Invoice Number.# <input  class="form-control" type="text" name="invoicenumber" value="<?php echo $resultinvoiceMaster->invoicenumber;?>" /> </td>
 </tr>
 
-<tr style="border-right:1px solid #FFFFFF;text-align:right;">
- <td colspan="5" style="text-align:right"> Subtotal :
-<input type="text" name="totalchargedamount" value="<?php echo round($totalchargedamount,2);?>" /> 
-</td>
- <td style="border:0px 0px 0px 0px  solid #FFFFFF;color:red;text-align:left;"> USD</td>  
+<tr>
+<td> Create Date <input type="text" name="createdDate" value="<?php echo date("d/m/Y",strtotime($resultinvoiceMaster->invoicecreateddate));?>" /> </td>
 </tr>
- </table>
-<!--
- <input type="text" name="totalrecords" value="<?php echo $totalrecords;?>" />
-<input type="button" value="recalculculate" id="recalculculate"/>
--->
+<tr>
+<td> Due Date  <input type="text" name="dueDate" value="<?php echo date("d/m/Y",strtotime($resultinvoiceMaster->invoiceduedate));?>" /> </td> 
+</tr>
+
+<tr> <td>Invoice comments: <input type="text" class="form-control" name="invoicecomments" value="<?php echo $resultinvoiceMaster->invoicecomments;?>"/>   </td>  </tr>
+
+<tr> <td>Paid Amount : <input type="text"  name="paidamount" value="<?php echo  $resultinvoiceMaster->paidamount;?>" />   </td>  </tr>
+<tr> <td>Paid Date : <input type="text" name="paiddate" value="<?php echo date("d/m/Y",strtotime($resultinvoiceMaster->paiddate));?>" /> </td>  </tr>
+<tr>
+<td>Payment reciept url: <input type="text" class="form-control" name="paymentreciept" value="<?php echo $resultinvoiceMaster->paymentreciept;?>"/></td>   
+</tr>
  
+<tr>
+<td>
+ This invoice is for the period of <input type="text" name="fromDate" value="<?php echo $resultinvoiceMaster->invoicefromdate;?>" />  to <input type="text" name="toDate" value="<?php echo  $resultinvoiceMaster->invoicetodate;?>" />. </td>
+ </tr>
  
- <hr>
+<tr>
+<td>GMT: <input type="text" class="form-control" name="gmt" value="<?php echo $resultinvoiceMaster->gmt;?>"/></td>   
+</tr>
+
+ <tr>
+<td><input type="text" class="form-control" name="invoicebilleddesc" value="<?php echo $resultinvoiceMaster->invoicebilleddesc;?>" /> </td>
+</tr>
+</table>
+ 
 
  
  
-<p style="color:#ff0000;">Note: No dispute will be entertained after 72 hours of the invoice date. </p>
- 
- <div style="border-top: solid; border-bottom:solid;">
-<p>This invoice is for the period of <input type="text" name="fromDate" value="<?php echo $resultinvoiceMaster->invoicefromdate;?>" />  to <input type="text" name="toDate" value="<?php echo  $resultinvoiceMaster->invoicetodate;?>" />. </p>
-<p><input type="text" class="form-control" name="invoicebilleddesc" value="<?php echo $resultinvoiceMaster->invoicebilleddesc;?>" /> </p>
-<p><input type="text" class="form-control" name="invoicedisputeemail" value="In case of any dispute please send email to accounts@ecs-net.net cc to ceo@ecs-net.net." /> </p>
-<p> !!!!!!!!!!!!!Thank you for your business!!!!!!!!!!!!!! </p>
-</div>
-
-<br>
-
-<center> <input type="submit" name="conform"  class="btn btn-info" value="conform invoice" /> </center>
+<center> <input type="submit" name="conform"  class="btn btn-info" value="Update invoice" /> </center>
 
 <br>
 <br>
@@ -334,9 +273,7 @@ while($row = mysql_fetch_object($resultinvoice)){
 if (isset($_POST['conform'])){
 
 	$invoicenumber = $_POST['invoicenumber'];
-	$totalbiledduration = $_POST['totalbiledduration'];
-	
-
+ 
 	$dueDate = $_POST['dueDate'];
 	$dueDateObject = explode('/',$dueDate);
 	$invoiceduedate =  date('Y-m-d',mktime(0,0,0,$dueDateObject[1],$dueDateObject[0],$dueDateObject[2]));
@@ -353,77 +290,49 @@ if (isset($_POST['conform'])){
 	//$invoicetodate  = date('Y-m-d',strtotime($toDate));
 	$invoicefromdate  = $fromDate;
 	$invoicetodate  = $toDate;
+	$gmt = $_POST['gmt'];
 
-
-	$totalchargedamount = $_POST['totalchargedamount'];
+	 
 	$invoicebilleddesc = $_POST['invoicebilleddesc'];
-    	$invoiceoutstanding = $_POST['outstanding'];
+    	 
 
-	$companyname = $_POST['companyname'];
- 
+	$company_id =  $_POST['company_id'];
+	$companyname = $companiesList[$company_id];
 
-	$invoiceoutstanding = 0;
- 
-	$invoicedisputeemail = $_POST['invoicedisputeemail'];
-		
-	$ftotamount = round($totalchargedamount,0);
-	$pdffilename = trim($rownewcompany->nameofcompany.'-'.date("d-M-y").'-'.$ftotamount.'.pdf');
+	$invoicecomments = $_POST['invoicecomments'];
+	$paidamount = $_POST['paidamount'];
+	$paiddate  =  $_POST['paiddate'];
+	$paiddateObject = explode('/',$paiddate);
+	$paiddate =  date('Y-m-d',mktime(0,0,0,$paiddateObject[1],$paiddateObject[0],$paiddateObject[2]));
 	
+	
+	
+	$paymentreciept = $_POST['paymentreciept'];
+ 
+		
+	 
 	echo $sqlinv = "Update wsalesinvoicesmaster set 
 			`companyname` = '$companyname',
 			`invoicenumber` ='$invoicenumber',
 			`invoicecreateddate` = '$invoicecreateddate',
 			`invoiceduedate` = '$invoiceduedate',
-			`invoiceTotalminutes` ='$totalbiledduration',
-			invoiceamount = $totalchargedamount,
-			`invoiceoutstanding`= $invoiceoutstanding,
-			invoicesubtotal=$totalchargedamount,
-		`invoicefromdate` = '$invoicefromdate',
-		`invoicetodate` = '$invoicetodate',
-		invoicebilleddesc = '$invoicebilleddesc'
+			invoicecomments = '$invoicecomments',
+			paidamount = $paidamount,
+			paiddate = '$paiddate',
+			paymentreciept ='$paymentreciept',
+			`invoicefromdate` = '$invoicefromdate',
+			`invoicetodate` = '$invoicetodate',
+		invoicebilleddesc = '$invoicebilleddesc',
+		gmt  ='$gmt'
+		
 		where id = $lastInserId ";
      mysql_query($sqlinv);
-	$invmasterid =	$lastInserId;
-	$prefixData = $_POST['prefix'];
-	$descriptionData = $_POST['description'];
-	$Duration_minData = $_POST['Duration_min'];
-	$price_per_1_minData =$_POST['price_per_1_min'];
-	$Charged_AmountData = $_POST['Charged_Amount'];
-	$numberofCallsData =  $_POST['numberofCalls'];
- 
-	$sqlchlddel = "Delete from  wsalesinvoiceschild where invmasterid = $lastInserId  ";
-	mysql_query($sqlchlddel);
 	 
- 
-	 for($k=0;$k<count($prefixData);$k++){
 	 
-		 $prefix  =  $prefixData[$k];
-		 $Description = $descriptionData[$k];
-		 $price_per_1_min =  $price_per_1_minData[$k];
-		 $Duration_min =  $Duration_minData[$k];
-		 $Charged_Amount =  $Charged_AmountData[$k];
-		 $BilledDuration_min =  $Duration_minData[$k];
-		 $customerName = '';
-		 $numberofCalls = $numberofCallsData[$k]; 
-		 $fromDate  = date('Y-m-d',strtotime($fromDate));
-		 $toDate  = date('Y-m-d',strtotime($toDate));
-		 //print_r($data->sheets[0]['cells'][$i]);
-		
-		$account_id = $company_id;
 
-		
-	
-		$sqlchd = "INSERT INTO  wsalesinvoiceschild (invmasterid,customerName,company_id,`account_id`, `prefix`,  `Description`, `price_per_1_min`,  `numberofCalls`, `Duration_min`, `BilledDuration_min`, `Charged_Amount`,fromDate,toDate) 
-		  VALUES ($invmasterid,'$customerName',$company_id,$account_id, '$prefix', '$Description', '$price_per_1_min','$numberofCalls', '$Duration_min', '$BilledDuration_min', '$Charged_Amount','$fromDate','$todate')";
-		mysql_query($sqlchd);
-	 
-	 }
-
-	//$mydelsql = "TRUNCATE TABLE tempwsaleinvoicedata";
-	//mysql_query($mydelsql);
 	
 sleep(5);
-header('Location: wholesaleinvoiceslist.php');
+ header('Location: wholesaleinvoiceslist.php');
 exit(0); 
 }
 ?>
