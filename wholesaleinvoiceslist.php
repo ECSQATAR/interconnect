@@ -271,7 +271,7 @@ include_once("headermenu.php");
  
 
 
-<h1>Whole Sales Invoices List </h1>
+<h1>Clients Invoices List </h1>
 
 
 <div class="row">

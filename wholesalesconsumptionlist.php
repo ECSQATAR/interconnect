@@ -269,7 +269,7 @@ include_once("headermenu.php");
 ?>
 <form role="form" method="GET" action="<?php echo $_SERVER['PHP_SELF']; ?>">
  
-<h1> Consumption Reports </h1>
+<h1> Vendor Reports </h1>
 
 <div class="row">
 
@@ -494,7 +494,6 @@ else
 
 
 	<td>
-	 <a href="<?php echo 'generateconsumptionpdf.php?id='.$rowinv->id;?>"> <img src="import.png" width="20" height="20"   title="Import  vendor invoice"/> </a> &nbsp;
 
  <a href="<?php echo 'generateconsumptionpdf.php?id='.$rowinv->id;?>"> <img src="geneatepdf.png" width="20" height="20"   title="Generater Pdf"/> </a> &nbsp;
 

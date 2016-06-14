@@ -8,18 +8,18 @@ include_once("logincheck.php");
 
 <div class="row">
 <div class="col-md-3">
- Invoices -> 
+ Client Invoices -> 
 </div> 
- <a href="wholesaleinvoiceslist.php"> Manage Invoices. </a>  || &nbsp;&nbsp; <a href="importinvoicesdata.php"> Import invoices data </a>
+ <a href="wholesaleinvoiceslist.php"> Manage Client Invoices. </a>  || &nbsp;&nbsp; <a href="importinvoicesdata.php"> Import client invoices data </a>
 </div>
 
 
 
 <div class="row">
 <div class="col-md-3">
-Consumption Reports ->
+Vendor Reports ->
 </div>
- <a href="wholesalesconsumptionlist.php"> Manage  Consumption Reports </a> || &nbsp;&nbsp; <a href="importconsumeddata.php"> Import Consumption data </a>
+ <a href="wholesalesconsumptionlist.php"> Manage  Vendor Reports </a> || &nbsp;&nbsp; <a href="importconsumeddata.php"> Import Vendor invoices data </a>
 </div>
 
 
