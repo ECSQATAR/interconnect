@@ -439,7 +439,7 @@ $sno = $sno+1;
 	<td> <?php echo $rowinv->companyname;?></td>
 	<td> <?php echo $rowinv->gmt; ?>			
 	<td> <?php echo $rowinv->invoicenumber;?></td>			
-	<td> <?php echo $rowinv->invoicecreateddate;?></td>
+	<td> <?php echo date("d/m/Y",strtotime($rowinv->invoicecreateddate));?></td>
 	<td> <?php echo $rowinv->invoicefromdate;?></td>
 	<td> <?php echo $rowinv->invoicetodate;?></td>
 	<td> <?php echo $rowinv->invoiceTotalminutes;?></td>
@@ -452,7 +452,7 @@ $sno = $sno+1;
 	</td>
 	<td> <?php
 			if($rowinv->paidamount != 0){
-				echo $rowinv->paiddate;
+				echo date("d/m/Y",strtotime($rowinv->paiddate));
 			}
 			
 	 ?></td>
