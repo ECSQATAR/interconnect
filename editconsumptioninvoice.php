@@ -121,7 +121,7 @@ if(isset($_GET['lastInserId']))
  
 
 
- $sqlmaster = "SELECT * from wsalesinvoicesmaster WHERE id = $lastInserId  ";
+ $sqlmaster = "SELECT * from wsalesconsumptionmaster WHERE id = $lastInserId  ";
  $tempresultinvoiceMaster = mysql_query($sqlmaster);
  $resultinvoiceMaster = mysql_fetch_object($tempresultinvoiceMaster);
  
@@ -136,7 +136,7 @@ $companyname = $rowold->nameofcompany;
 
  
 $cdate = date("Y-m-d");
-$sqlcurntInvcount = "select count(id) as cnt From wsalesinvoicesmaster WHERE company_id=$company_id AND date(invoicecreateddate) = '$cdate' ";
+$sqlcurntInvcount = "select count(id) as cnt From wsalesconsumptionmaster WHERE company_id=$company_id AND date(invoicecreateddate) = '$cdate' ";
 $recCountData = mysql_query($sqlcurntInvcount);
 $rowrecCount = mysql_fetch_object($recCountData);
  $oldRecordsCount = $rowrecCount->cnt;
@@ -237,7 +237,9 @@ while($row = mysql_fetch_object($result)){
 <tr>
 <td>Payment reciept url: <input type="text" class="form-control" name="paymentreciept" value="<?php echo $resultinvoiceMaster->paymentreciept;?>"/></td>   
 </tr>
- 
+ <tr>
+<td>Vendor Invoice url: <input type="text" class="form-control" name="vendorinvoice" value="<?php echo $resultinvoiceMaster->vendorinvoice;?>"/></td>   
+</tr>
 <tr>
 <td>
  This invoice is for the period of <input type="text" name="fromDate" value="<?php echo $resultinvoiceMaster->invoicefromdate;?>" />  to <input type="text" name="toDate" value="<?php echo  $resultinvoiceMaster->invoicetodate;?>" />. </td>
@@ -304,25 +306,26 @@ if (isset($_POST['conform'])){
 	$paiddate  =  $_POST['paiddate'];
 	$paiddateObject = explode('/',$paiddate);
 	$paiddate =  date('Y-m-d',mktime(0,0,0,$paiddateObject[1],$paiddateObject[0],$paiddateObject[2]));
-	
+	$vendorinvoice = $_POST['vendorinvoice'];
 	
 	
 	$paymentreciept = $_POST['paymentreciept'];
  
 		
 	 
-	echo $sqlinv = "Update wsalesinvoicesmaster set 
+	echo $sqlinv = "Update wsalesconsumptionmaster set 
 			company_id =$company_id,
-			`companyname` = '$companyname',
-			`invoicenumber` ='$invoicenumber',
-			`invoicecreateddate` = '$invoicecreateddate',
-			`invoiceduedate` = '$invoiceduedate',
+			companyname = '$companyname',
+			invoicenumber ='$invoicenumber',
+			invoicecreateddate = '$invoicecreateddate',
+			invoiceduedate = '$invoiceduedate',
 			invoicecomments = '$invoicecomments',
 			paidamount = $paidamount,
 			paiddate = '$paiddate',
 			paymentreciept ='$paymentreciept',
-			`invoicefromdate` = '$invoicefromdate',
-			`invoicetodate` = '$invoicetodate',
+			vendorinvoice ='$vendorinvoice',			
+			invoicefromdate = '$invoicefromdate',
+			invoicetodate = '$invoicetodate',
 		invoicebilleddesc = '$invoicebilleddesc',
 		gmt  ='$gmt'
 		
@@ -333,7 +336,7 @@ if (isset($_POST['conform'])){
 
 	
 sleep(5);
- header('Location: wholesaleinvoiceslist.php');
+ header('Location: wholesalesconsumptionlist.php');
 exit(0); 
 }
 ?>

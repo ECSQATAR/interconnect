@@ -121,7 +121,7 @@ if(isset($_GET['lastInserId']))
  
 
 
- $sqlmaster = "SELECT * from wsalesinvoicesmaster WHERE id = $lastInserId  ";
+ echo $sqlmaster = "SELECT * from ws_goodservice_invoice_master  WHERE id = $lastInserId  ";
  $tempresultinvoiceMaster = mysql_query($sqlmaster);
  $resultinvoiceMaster = mysql_fetch_object($tempresultinvoiceMaster);
  
@@ -136,7 +136,7 @@ $companyname = $rowold->nameofcompany;
 
  
 $cdate = date("Y-m-d");
-$sqlcurntInvcount = "select count(id) as cnt From wsalesinvoicesmaster WHERE company_id=$company_id AND date(invoicecreateddate) = '$cdate' ";
+$sqlcurntInvcount = "select count(id) as cnt From  ws_goodservice_invoice_master WHERE company_id=$company_id AND date(invoicecreateddate) = '$cdate' ";
 $recCountData = mysql_query($sqlcurntInvcount);
 $rowrecCount = mysql_fetch_object($recCountData);
  $oldRecordsCount = $rowrecCount->cnt;
@@ -189,7 +189,7 @@ Tel #: +971506466878<br>
 ceo@ecs-net.net<br>
 </td>
  
-<td width="50%" style="font-size:200%;color:#ff0000;text-align:center;"> INVOICE </td>
+<td width="50%" style="font-size:200%;color:#ff0000;text-align:center;"> Goods Service INVOICE </td>
 <td width="25%"> <img alt="CompanyLogo" src="logouploads/ECS-Logo1.png" width="250" heigth="200"/> </td>
 </tr>
 </table>
@@ -240,7 +240,7 @@ while($row = mysql_fetch_object($result)){
  
 <tr>
 <td>
- This invoice is for the period of <input type="text" name="fromDate" value="<?php echo $resultinvoiceMaster->invoicefromdate;?>" />  to <input type="text" name="toDate" value="<?php echo  $resultinvoiceMaster->invoicetodate;?>" />. </td>
+ This invoice is for the period of <input type="text" name="fromDate" value="<?php echo date("d/m/Y",strtotime($resultinvoiceMaster->invoicefromdate));  ?>" />  to <input type="text" name="toDate" value="<?php echo date("d/m/Y",strtotime($resultinvoiceMaster->invoicetodate)); ?>" />. </td>
  </tr>
  
 <tr>
@@ -251,9 +251,6 @@ while($row = mysql_fetch_object($result)){
 <td><input type="text" class="form-control" name="invoicebilleddesc" value="<?php echo $resultinvoiceMaster->invoicebilleddesc;?>" /> </td>
 </tr>
 </table>
- 
-
- 
  
 <center> <input type="submit" name="conform"  class="btn btn-info" value="Update invoice" /> </center>
 
@@ -285,11 +282,17 @@ if (isset($_POST['conform'])){
 	
 	
 	$fromDate = $_POST['fromDate'];
+	$fromDateObject = explode('/',$fromDate);
+	$invoicefromdate =  date('Y-m-d',mktime(0,0,0,$fromDateObject[1],$fromDateObject[0],$fromDateObject[2]));
+	
 	$toDate = $_POST['toDate'];
-	//$invoicefromdate  = date('Y-m-d',strtotime($fromDate));
-	//$invoicetodate  = date('Y-m-d',strtotime($toDate));
-	$invoicefromdate  = $fromDate;
-	$invoicetodate  = $toDate;
+	$toDateObject = explode('/',$toDate);
+	$invoicetodate =  date('Y-m-d',mktime(0,0,0,$toDateObject[1],$toDateObject[0],$toDateObject[2]));
+	
+	
+	
+	 
+ 
 	$gmt = $_POST['gmt'];
 
 	 
@@ -311,7 +314,7 @@ if (isset($_POST['conform'])){
  
 		
 	 
-	echo $sqlinv = "Update wsalesinvoicesmaster set 
+	echo $sqlinv = "Update ws_goodservice_invoice_master set 
 			company_id =$company_id,
 			`companyname` = '$companyname',
 			`invoicenumber` ='$invoicenumber',
@@ -333,7 +336,7 @@ if (isset($_POST['conform'])){
 
 	
 sleep(5);
- header('Location: wholesaleinvoiceslist.php');
+ header('Location: wsgoods_serviceinvoices_list.php');
 exit(0); 
 }
 ?>

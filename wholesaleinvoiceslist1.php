@@ -385,9 +385,8 @@ while($row = mysql_fetch_object($result)){
 			<td>Amount</td>
 			<td>Paid Amount </td>
 			<td>Paid Date </td>
-			<td> Comments </td>
-			<td>Payment Receipt </td>
-			<td width="10%">&nbsp; </td>
+			<td>Invoice Comments </td>
+			<td width="20%">&nbsp; </td>
         </tr>
 <?php
 
@@ -445,25 +444,33 @@ $sno = $sno+1;
 	<td> <?php echo $rowinv->invoicetodate;?></td>
 	<td> <?php echo $rowinv->invoiceTotalminutes;?></td>
 	<td> <?php echo $rowinv->invoiceamount;?>$</td>
-	<td> <?php echo $rowinv->paidamount;?>$</td>
-	<td> <?php echo $rowinv->paiddate;?></td>
-	<td> <?php echo $rowinv->invoicecomments;?></td>
-	 
+	<td> <?php
+			if($rowinv->paidamount != 0){
+				echo $rowinv->paidamount.'$';
+			}
+	?>
+	</td>
+	<td> <?php
+			if($rowinv->paidamount != 0){
+				echo $rowinv->paiddate;
+			}
+			
+	 ?></td>
+	<td> <?php echo $rowinv->invoicecomments;?> </td>
+	 <td>
 	 
  
-<td>
+ 
 <?php 
 	 
 if( strlen(trim($rowinv->paymentreciept)) != 0){
 ?>
-<a target="_blank" href="<?php echo $rowinv->paymentreciept;?>"> <img src="import.png" width="20" height="20" title="payment reciept" /> </a> 
+<a target="_blank" href="<?php echo $rowinv->paymentreciept;?>"> <img src="paymentreciept.png" width="40" height="40" title="payment reciept" /> </a> 
+<a target="_blank" href="<?php echo $rowinv->paymentreciept;?>"> <img src="paymentreciept.png" width="40" height="40" title="payment reciept" /> </a> 
 <?php 
 } 
 ?>
-</td> 
 
-
-<td>
 <a href="<?php echo 'editinvoice.php?lastInserId='.$rowinv->id;?>"> <img src="invedit3.png" width="20" height="20"   title="edit Invoice"/> </a> &nbsp;
 
 	 <a href="<?php echo 'generateinvoicepdf.php?id='.$rowinv->id;?>"> <img src="geneatepdf.png" width="20" height="20"   title="Generater Pdf"/> </a> &nbsp;

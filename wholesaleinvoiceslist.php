@@ -116,6 +116,42 @@ $( ".savepaymentdate" ).click(function(){
 
  
  
+ $( ".savepaymentreciept" ).click(function(){
+	 
+	
+	var sid = jQuery(this).attr("id");
+  	var vendorinvoice = jQuery('#prdata-'+sid).val();
+	 
+	var	data = {
+		invoice_id:sid,
+		paymentreciept:paymentreciept,
+		action:'savepaymentreciept'
+	};
+	//alert(data);
+	
+	 $.post("updatecomments.php", data, function(resp){
+        alert('Your vendor invoice updated.');
+		jQuery('#masterinvoice'+sid).text(vendorinvoice);
+		jQuery('#masterinvoice'+sid).show('slow');
+		jQuery("#childinvoice"+sid).hide('slow');
+    });
+	
+ });
+
+
+  $( ".showpaymentreciept" ).click(function(){
+		
+		var masterdivid = jQuery(this).attr("id");
+		var k = masterdivid.split('masterinvoice')	;
+		//alert(k);
+		 
+		jQuery('#'+masterdivid).hide('slow');
+		jQuery("#childinvoice"+k[1]).show('slow');
+		  
+ });
+ 
+ 
+ 
  $( ".savevendorinvoices" ).click(function(){
 	 
 	
@@ -349,9 +385,8 @@ while($row = mysql_fetch_object($result)){
 			<td>Amount</td>
 			<td>Paid Amount </td>
 			<td>Paid Date </td>
-			<td> Comments </td>
-			<td>Vendor Invoice</td>
-			<td width="10%">&nbsp; </td>
+			<td>Invoice Comments </td>
+			<td width="20%">&nbsp; </td>
         </tr>
 <?php
 
@@ -409,81 +444,41 @@ $sno = $sno+1;
 	<td> <?php echo $rowinv->invoicetodate;?></td>
 	<td> <?php echo $rowinv->invoiceTotalminutes;?></td>
 	<td> <?php echo $rowinv->invoiceamount;?>$</td>
-	<td>
-	<?php 
-	if($_SESSION['adminlogin'] == 1){
+	<td> <?php
+			if($rowinv->paidamount != 0){
+				echo $rowinv->paidamount.'$';
+			}
 	?>
-<span title='Click here to update your payments' class="showpayments" id="<?php echo 'masterpmnt'.$rowinv->id; ?>" > <?php if( $rowinv->paidamount == 0) echo 'Add your payments here.'; else  echo $rowinv->paidamount;?> </span>
-<span id="<?php echo 'childpmnt'.$rowinv->id; ?>" style='display:none'> 
-<input type='text' value="<?php echo $rowinv->paidamount;?>" class="form-control"   id="pdata-<?php echo $rowinv->id;?>" >    <img src ="make_comment.png"  class="savepayments"  id="<?php echo $rowinv->id;?>"   title="Save Payments" /> 
-</span>
-	<?php } ?>
-</td>
- 	
-	
-<td>
-<?php 
-	if($_SESSION['adminlogin'] == 1){
-?>
-<span title='Click here to update your payment date' class="showpaymentdate" id="<?php echo 'masterpdmnt'.$rowinv->id; ?>" > <?php if( strlen($rowinv->paiddate) == 0) echo 'Add your payment date here.'; else  echo $rowinv->paiddate;?> </span>
-<span id="<?php echo 'childpdmnt'.$rowinv->id; ?>" style='display:none'> 
-<input type='text' value="<?php echo $rowinv->paiddate;?>" class="form-control"   id="pddata-<?php echo $rowinv->id;?>" >    <img src ="make_comment.png"  class="savepaymentdate"  id="<?php echo $rowinv->id;?>"   title="Save Payment date" /> 
-</span>
-<?php } ?>
-</td>
-
-<td>
-<?php 
-	if($_SESSION['adminlogin'] == 1){
-?>
-<span title='Click here to update your comments' class="showcomments" id="<?php echo 'mastercmnt'.$rowinv->id; ?>" > <?php if( strlen(trim($rowinv->invoicecomments)) == 0) echo 'Add your comments here.'; else  echo $rowinv->invoicecomments;?> </span>
-<span id="<?php echo 'childcmnt'.$rowinv->id; ?>" style='display:none'> 
-<input type='text' value="<?php echo $rowinv->invoicecomments;?>" class="form-control"   id="cdata-<?php echo $rowinv->id;?>" >    <img src ="make_comment.png"  class="savecomments"  id="<?php echo $rowinv->id;?>"   title="Save Comments" /> 
-</span>
-<?php } ?>
-</td>
+	</td>
+	<td> <?php
+			if($rowinv->paidamount != 0){
+				echo $rowinv->paiddate;
+			}
+			
+	 ?></td>
+	<td> <?php echo $rowinv->invoicecomments;?> </td>
+	 <td>
+	 
  
-<td>
+ 
 <?php 
-	if($_SESSION['adminlogin'] == 1){
+	 
+if( strlen(trim($rowinv->paymentreciept)) != 0){
 ?>
-
+<a target="_blank" href="<?php echo $rowinv->paymentreciept;?>"> <img src="paymentreciept.png" width="40" height="40" title="payment reciept" /> </a> 
 <?php 
-if( strlen(trim($rowinv->vendorinvoice)) == 0){
+} 
 ?>
-<span title='update your vendor invoice here' class="showvendorinvoices" id="<?php echo 'masterinvoice'.$rowinv->id; ?>"> 
-add your vendor invoices here. </span>
 
-<span id="<?php echo 'childinvoice'.$rowinv->id; ?>" style='display:none'> 
-<input type='text' value="<?php echo $rowinv->vendorinvoice;?>" class="form-control"   id="icdata-<?php echo $rowinv->id;?>" >    <img src ="make_comment.png"  class="savevendorinvoices"  id="<?php echo $rowinv->id;?>"   title="Save Comments" /> 
-</span>
+<a href="<?php echo 'editinvoice.php?lastInserId='.$rowinv->id;?>"> <img src="invedit3.png" width="20" height="20"   title="edit Invoice"/> </a> &nbsp;
 
-<?php
-}	
-else  
-{
-?>
-<a target="_blank" href="<?php echo $rowinv->vendorinvoice;?>"> <img src="import.png" width="20" height="20" title="vendor invoice" /> </a> 
-<?php } ?>
-<?php
-}
-?>
-</td> 
-
-
-	<td>
 	 <a href="<?php echo 'generateinvoicepdf.php?id='.$rowinv->id;?>"> <img src="geneatepdf.png" width="20" height="20"   title="Generater Pdf"/> </a> &nbsp;
 	 
 <?php if($rowinv->lockedinvoice==0  && $_SESSION['adminlogin'] == 1 ){ ?>
    &nbsp; &nbsp; <img src="remove.png" width="20" height="20" title="Delete" onclick="checkdelte(<?php echo $rowinv->id;?>)"/>
  <img src="invoice_lock.png" width="20" height="20" title="locke your invoice" onclick="lockinvoice(<?php echo $rowinv->id;?>)"/>  
 <?php } ?>
-
-		
-
-
-
-	 </td>
+ </td>
 	
 	
 	</tr>
