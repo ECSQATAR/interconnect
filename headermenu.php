@@ -34,7 +34,7 @@ Other Service Invoices  ->
 <div class="col-md-3">
 ASR ACD Reports  ->
 </div>
- <a href="wsgoods_serviceinvoices_list.php"> Manage  ASR ACD Reports </a> || &nbsp;&nbsp; <a href="import-asr-acd-data.php"> Import asr acd data </a>
+ <a href="showasracdreport.php"> Manage  ASR ACD Reports </a> || &nbsp;&nbsp; <a href="uploadasracdreports.php"> Import asr acd data </a>
 </div>
 
 

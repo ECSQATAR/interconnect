@@ -54,9 +54,9 @@ if(isset($_GET['action']) && $_GET['action'] == 'deleteorigination'){
 
 ?>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-  <link rel="stylesheet" href="/resources/demos/style.css">
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="/resources/demos/style.css">
 
 <div class="container">
 <h2>Confirm asr acd  report data </h2>
@@ -65,7 +65,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'deleteorigination'){
 <div class="row">
 <table  class="table"  border="0" bgcolor="#dbeefc" cellpadding="5">
 		  <tr align="center" class="bg_head_payments white font_18">
-		   <td width="160">Caller </td>
+		    <td width="160">Caller </td>
 		    <td width="160">Number of calls </td>
 		    <td width="160">Billable Calls </td>
 		    <td width="160">Billed Duration min </td>
@@ -106,16 +106,7 @@ while($row = mysql_fetch_object($result)){
 	
 	</tr>
 <?php
-	//$getTotalTime +=  addDurationAsSeconds($row->Duration_min);
-	//$totalchargedamount = $totalchargedamount + $row->Charged_Amount;
 	}
-	
-	  //$seconds  = gmdate( $getTotalTime );
-	//$totalbiledduration = sec2hms($seconds);
-	//$totalbiledduration = converToMMHH(sec2hms($seconds));
-
-
-
 ?>	
  
  </table>
@@ -167,16 +158,7 @@ while($row = mysql_fetch_object($result)){
 	
 	</tr>
 <?php
-	//$getTotalTime +=  addDurationAsSeconds($row->Duration_min);
-	//$totalchargedamount = $totalchargedamount + $row->Charged_Amount;
 	}
-	
-	//  $seconds  = gmdate( $getTotalTime );
-	//$totalbiledduration = sec2hms($seconds);
-	//$totalbiledduration = converToMMHH(sec2hms($seconds));
-
-
-
 ?>	
  
 
@@ -184,5 +166,5 @@ while($row = mysql_fetch_object($result)){
  </div>
 
  
- <a href="#">Generate asr acd report </a>
+<center> <a href="generateasracdreport.php">Generate asr acd report </a> </center>
  <br/>
