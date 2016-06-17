@@ -59,60 +59,67 @@ function getAccountCDRs($limit, $offset) {
 //"start_date" => new xmlrpcval("09:00:29.000 GMT Wed Apr 21 2016","string"),                 
 //"end_date"	=> new xmlrpcval("22:50:50.000 GMT Thu Apr 28 2016","string"),
 																				
-	$msg = new xmlrpcmsg('getAccountCDRs', $params);
+	$msg = new xmlrpcmsg('exportVendorsCDRs_Mera', $params);
 	$cli = new xmlrpc_client('https://38.130.112.22/xmlapi/xmlapi');
 	$cli->setSSLVerifyPeer(false);
 	$cli->setSSLVerifyHost(false);
-	//$cli->setCredentials('VC','jaihind999', CURLAUTH_DIGEST);
-	$cli->setCredentials('Irf','greatlife911', CURLAUTH_DIGEST);
+	$cli->setCredentials('VC','jaihind999', CURLAUTH_DIGEST);
+	//$cli->setCredentials('Irf','greatlife911', CURLAUTH_DIGEST);
 	   
 
 	$r = $cli->send($msg, 20);       /* 20 seconds timeout */
-
+ //echo "<pre>"; print_r($r);echo "</pre>"; 
 	if ($r->faultCode()) {
 		$error = $r->faultString();
 		return array();
 	}
 	
 	$res = $r->value()->structMem('cdrs');
+	//echo "<pre>";print_r($res); echo "</pre>";
 	$res = $res->scalarVal();
 	$cdrs= array();
 	$i=0;
-
+//$p=0;
+	$cdrDataString = array();
 	foreach( $res as $obj ) {
-		
-		$prefix = $obj->structMem('prefix');
-		$prefix = $prefix->scalarVal();
-		
-		$cli = $obj->structMem('cli');
-		$cli = $cli->scalarVal();
-
-		$billed_duration = $obj->structMem('billed_duration');
-		$billed_duration = $billed_duration->scalarVal();
-
-		$cld = $obj->structMem('cld');
-		$cld = $cld->scalarVal();
-
-		$country = $obj->structMem('country');
-		$country = $country->scalarVal();
-
-		$connect_time = $obj->structMem('connect_time');
-		$connect_time = $connect_time->scalarVal();
-
-		$cost = $obj->structMem('cost');
-		$cost = $cost->scalarVal();
-		
-		$duration = sprintf("%02d:%02d",ceil($billed_duration/60)-1, fmod($billed_duration,60));
-		
-		$cdrs[$i]['prefix'] = $prefix ;
-		$cdrs[$i]['cli'] = $cli ;
-		$cdrs[$i]['duration'] = $duration;
-		$cdrs[$i]['cld'] = $cld;
-		$cdrs[$i]['country'] = $country;
-		$cdrs[$i]['connect_time'] = $connect_time;
-		$cdrs[$i]['cost'] = sprintf("%01.2f USD",$cost);
-		$i++;
+		//$p = $p+1;
+		 $cdrDataString[] = $obj->me['string'];
 	}
+	echo "<pre>";print_r($cdrDataString); echo "</pre>";
+	/*
+	$BaseDataList = array();
+	for($k=0;$k<sizeof($cdrDataString);$k++){
+			$EachRecord = $cdrDataString[$k];
+			$myOrgData = explode(",",$EachRecord);
+			$BaseDataList[$k]['HOST'] = str_replace("HOST","",$myOrgData[0]); 
+			$BaseDataList[$k]['CONFID'] = str_replace("CONFID","",$myOrgData[0]); 
+			$BaseDataList[$k]['CALLID '] = str_replace("CALLID ","",$myOrgData[0]); 
+			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
+			$BaseDataList[$k]['DST-IP'] = str_replace("DST-IP","",$myOrgData[0]); 
+			$BaseDataList[$k]['SRC-NAME'] = str_replace("SRC-IP","",$myOrgData[0]); 
+			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
+			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
+			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
+			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
+			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
+			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
+			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
+			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
+			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
+			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
+			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
+			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
+			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
+			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
+			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
+			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
+			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
+			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
+			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
+			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
+			
+	}
+	 */
 
 	//echo "<pre>"; print_r($cdrs); echo "</pre>";
 	return $cdrs;
@@ -131,7 +138,7 @@ $title = "Call History";
   
  <div class="container">
 
-<h1>Calls History </h1>
+<h1>Vendors CDRs List</h1>
 
 
 <form role="form" method="GET" action="<?php echo $_SERVER['PHP_SELF']; ?>">
