@@ -1,5 +1,5 @@
 <?php
-include 'xmlrpc/xmlrpc.inc';
+require_once('xmlrpc.inc');
 $msg = new xmlrpcmsg('listVendors', $params);
 	$cli = new xmlrpc_client('https://38.130.112.22/xmlapi/xmlapi');
 	$cli->setSSLVerifyPeer(false);
