@@ -86,43 +86,34 @@ function getAccountCDRs($limit, $offset) {
 		 $cdrDataString[] = $obj->me['string'];
 	}
 	echo "<pre>";print_r($cdrDataString); echo "</pre>";
-	/*
+
 	$BaseDataList = array();
 	for($k=0;$k<sizeof($cdrDataString);$k++){
 			$EachRecord = $cdrDataString[$k];
 			$myOrgData = explode(",",$EachRecord);
-			$BaseDataList[$k]['HOST'] = str_replace("HOST","",$myOrgData[0]); 
-			$BaseDataList[$k]['CONFID'] = str_replace("CONFID","",$myOrgData[0]); 
-			$BaseDataList[$k]['CALLID '] = str_replace("CALLID ","",$myOrgData[0]); 
-			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
-			$BaseDataList[$k]['DST-IP'] = str_replace("DST-IP","",$myOrgData[0]); 
-			$BaseDataList[$k]['SRC-NAME'] = str_replace("SRC-IP","",$myOrgData[0]); 
-			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
-			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
-			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
-			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
-			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
-			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
-			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
-			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
-			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
-			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
-			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
-			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
-			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
-			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
-			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
-			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
-			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
-			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
-			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
-			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP","",$myOrgData[0]); 
-			
+			$BaseDataList[$k]['HOST'] = str_replace("HOST=","",$myOrgData[0]); 
+			$BaseDataList[$k]['CONFID'] = str_replace("CONFID=","",$myOrgData[1]); 
+			$BaseDataList[$k]['CALLID '] = str_replace("CALLID= ","",$myOrgData[2]); 
+			$BaseDataList[$k]['SRC-IP'] = str_replace("SRC-IP=","",$myOrgData[3]); 
+			$BaseDataList[$k]['DST-IP'] = str_replace("DST-IP=","",$myOrgData[4]); 
+			$BaseDataList[$k]['SRC-NAME'] = str_replace("SRC-IP=","",$myOrgData[5]); 
+			$BaseDataList[$k]['DST-NAME'] = str_replace("DST-NAME=","",$myOrgData[6]); 
+			$BaseDataList[$k]['SRC-NUMBER-IN'] = str_replace("SRC-NUMBER-IN=","",$myOrgData[7]); 
+			$BaseDataList[$k]['SRC-NUMBER-BILL'] = str_replace("SRC-NUMBER-BILL=","",$myOrgData[8]); 
+			$BaseDataList[$k]['SRC-NUMBER-OUT'] = str_replace("SRC-NUMBER-OUT=","",$myOrgData[9]); 
+			$BaseDataList[$k]['DST-NUMBER-IN'] = str_replace("DST-NUMBER-IN=","",$myOrgData[10]); 
+			$BaseDataList[$k]['DST-NUMBER-BILL'] = str_replace("DST-NUMBER-BILL=","",$myOrgData[11]); 
+			$BaseDataList[$k]['DST-NUMBER-OUT'] = str_replace("DST-NUMBER-OUT=","",$myOrgData[12]); 
+			$BaseDataList[$k]['SETUP-TIME'] = str_replace("SETUP-TIME=","",$myOrgData[13]); 
+			$BaseDataList[$k]['CONNECT-TIME'] = str_replace("CONNECT-TIME=","",$myOrgData[14]); 
+			$BaseDataList[$k]['DISCONNECT-TIME'] = str_replace("DISCONNECT-TIME=","",$myOrgData[15]); 
+			$BaseDataList[$k]['ELAPSED-TIME'] = str_replace("ELAPSED-TIME=","",$myOrgData[16]); 
+			$BaseDataList[$k]['DISCONNECT-CODE-Q931'] = str_replace("DISCONNECT-CODE-Q931=","",$myOrgData[17]); 
 	}
-	 */
+	 
 
 	//echo "<pre>"; print_r($cdrs); echo "</pre>";
-	return $cdrs;
+	return $BaseDataList;
 
 }
 
@@ -193,13 +184,25 @@ while($row = mysql_fetch_object($result)){
 <div class="row">
  <table  class="table"  border="0" bgcolor="#dbeefc" cellpadding="5">
 		  <tr align="center" class="bg_head_payments white font_18">
-		   <td width="160">Prefix </td>
-		    <td width="160">CLD </td>
-		    <td width="160">CLI </td>
-		    <td width="100">Duration</td>
-            <td width="200">Date </td>
-            <td width="100">Amount</td>
-        </tr>
+<td width="160">HOST  </td>
+<td width="160">CONFID </td>
+<td width="160">CALLID </td>
+<td width="100">SRC-IP</td>
+<td width="200">DST-IP  </td>
+<td width="100">SRC-NAME</td>
+<td width="100">DST-NAME</td>
+<td width="100">SRC-NUMBER-IN</td>
+<td width="100">SRC-NUMBER-BILL</td>
+<td width="100">SRC-NUMBER-OUT</td>
+<td width="100">DST-NUMBER-IN</td>
+<td width="100">DST-NUMBER-BILL</td>
+<td width="100">DST-NUMBER-OUT</td>
+<td width="100">SETUP-TIME</td>
+<td width="100">CONNECT-TIME</td>
+<td width="100">DISCONNECT-TIME</td>
+<td width="100">ELAPSED-TIME</td>
+<td width="100">DISCONNECT-CODE-Q931</td>
+</tr>
 <?php
 if($cdr_count>0) {
 
@@ -207,12 +210,24 @@ if($cdr_count>0) {
 	?>	
 	<tr class="border_bottom_payments">
  
-	<td> <?php echo $cdr['prefix'];?></td>			
-	<td> <?php echo $cdr['cld'];?></td>			
-	<td> <?php echo $cdr['cli'];?></td>
-	<td> <?php echo $cdr['duration'];?></td>
-	<td> <?php echo $cdr['connect_time'];?></td>
-	<td> <?php echo $cdr['cost'];?></td>
+	<td> <?php echo $cdr['HOST'];?></td>			
+	<td> <?php echo $cdr['CONFID'];?></td>			
+	<td> <?php echo $cdr['CALLID'];?></td>
+	<td> <?php echo $cdr['SRC-IP'];?></td>
+	<td> <?php echo $cdr['DST-IP'];?></td>
+	<td> <?php echo $cdr['SRC-NAME'];?></td>
+	<td> <?php echo $cdr['DST-NAME'];?></td>
+	<td> <?php echo $cdr['SRC-NUMBER-IN'];?></td>
+	<td> <?php echo $cdr['SRC-NUMBER-BILL'];?></td>
+	<td> <?php echo $cdr['SRC-NUMBER-OUT'];?></td>
+	<td> <?php echo $cdr['DST-NUMBER-IN'];?></td>
+	<td> <?php echo $cdr['DST-NUMBER-BILL'];?></td>
+	<td> <?php echo $cdr['DST-NUMBER-OUT'];?></td>
+	<td> <?php echo $cdr['SETUP-TIME'];?></td>
+	<td> <?php echo $cdr['CONNECT-TIME'];?></td>
+	<td> <?php echo $cdr['DISCONNECT-TIME'];?></td>
+	<td> <?php echo $cdr['ELAPSED-TIME'];?></td>
+	<td> <?php echo $cdr['DISCONNECT-CODE-Q931'];?></td>
 </tr>
 <?php
 	}

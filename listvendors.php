@@ -44,9 +44,7 @@ $vendorList[$k]['i_contact'] = $objectResult[$k]['me']['struct']['i_vendor']['me
 $vendorList[$k]['name']	  = $objectResult[$k]['me']['struct']['name']['me']['string'];
 $vendorList[$k]['web_login'] = $objectResult[$k]['me']['struct']['web_login']['me']['string'];
 $vendorList[$k]['balance'] = round($objectResult[$k]['me']['struct']['balance']['me']['double'],2);
-
  
-
 	}
 //echo "<pre>";print_r($vendorList);echo "</pre>";
 ?>
@@ -61,7 +59,28 @@ $vendorList[$k]['balance'] = round($objectResult[$k]['me']['struct']['balance'][
 </tr>
 
 <?php
+ $mydelsql = "TRUNCATE TABLE temp_asracd_origination";
+ mysql_query($mydelsql);
+ 
+ 
+
+ 
+ 
 for($m=0;$m<sizeof($vendorList);$m++){
+	
+ $name = $vendorList[$m]['name'];
+ $i_vendor = $vendorList[$m]['i_vendor'];
+ $i_contact = $vendorList[$m]['i_contact'];
+ $web_login = $vendorList[$m]['web_login'];
+ $balance = $vendorList[$m]['balance'];
+ 
+ 
+ 
+	
+echo $sqlt="INSERT INTO  mastervendors (
+name,i_vendor,`i_contact`,`web_login`, `balance`)values('$name',$i_vendor,$i_contact,'$web_login',$balance)";
+ mysql_query($sqlt);
+ 
 ?>
 <tr>
 <td><?php echo $vendorList[$m]['name'];?></td>
