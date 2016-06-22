@@ -25,9 +25,17 @@ Vendor Reports ->
 
 <div class="row">
 <div class="col-md-3">
-Other Service Invoices  ->
+Client Other Service  Invoices  ->
 </div>
- <a href="wsgoods_serviceinvoices_list.php"> Manage  OtherService Invoices </a> || &nbsp;&nbsp; <a href="generateserviceinvoice.php"> Generate Goods & Service Invoice </a> || &nbsp;&nbsp; <a href="serviceprefixmasterlist.php"> Manage otherService Prefix's </a>
+ <a href="wsgoods_clientinvoices_list.php">Manage  Client Other Service Invoices </a> || &nbsp;&nbsp; <a href="generategoodsclientinvoice.php"> Generate Client Goods & Service Invoice </a> || &nbsp;&nbsp; <a href="serviceprefixmasterlist.php"> OtherService Prefix's </a>
+</div>
+
+
+<div class="row">
+<div class="col-md-3">
+Vendor Other Service  Invoices  ->
+</div>
+ <a href="wsgoods_vendorinvoices_list.php"> Manage  Vendor Other Service Invoices </a> || &nbsp;&nbsp; <a href="generateservicevendorinvoice.php"> Generate Vendor Goods & Service Invoice </a> 
 </div>
 
 <div class="row">
