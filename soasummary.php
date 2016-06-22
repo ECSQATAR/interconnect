@@ -286,7 +286,14 @@ $bk = 'display:none';
 <table border="1" class="table">
 <tr>
 <td style="text-align:center" colspan="6" >
-ECS (Our company)  
+<?php
+$company_id = $_GET['company_id'];
+if($company_id>0)
+echo $companyList[$company_id];
+else
+echo "ECS (Our company)";
+?> 
+
 </td>
 </tr>
  
