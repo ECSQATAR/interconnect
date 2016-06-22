@@ -310,9 +310,19 @@ ceo@ecs-net.net<br>
 
 <table border="1" width="100%">
 <tr>
-<td style="text-align:center" colspan="6" >
-ECS (Our company)  
-</td>
+<td style="text-align:center" colspan="6" >';
+
+$company_id = $_GET["company_id"];
+if($company_id>0)
+echo
+
+$html = $html.$companyList[$company_id];
+else
+$html = $html.'ECS (Our company)';
+
+ 
+ 
+$html = $html.'</td>
 </tr>
  
 <tr style="text-align:center;color: #000022;background-color:#aaaaaa;">

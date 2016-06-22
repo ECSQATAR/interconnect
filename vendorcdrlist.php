@@ -63,8 +63,8 @@ function getAccountCDRs($limit, $offset) {
 	$cli = new xmlrpc_client('https://38.130.112.22/xmlapi/xmlapi');
 	$cli->setSSLVerifyPeer(false);
 	$cli->setSSLVerifyHost(false);
-	$cli->setCredentials('VC','jaihind999', CURLAUTH_DIGEST);
-	//$cli->setCredentials('Irf','greatlife911', CURLAUTH_DIGEST);
+	//$cli->setCredentials('VC','jaihind999', CURLAUTH_DIGEST);
+	$cli->setCredentials('irf','greatlife911', CURLAUTH_DIGEST);
 	   
 
 	$r = $cli->send($msg, 20);       /* 20 seconds timeout */

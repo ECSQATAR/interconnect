@@ -33,6 +33,8 @@ if(isset($_GET['action']) && $_GET['action'] == 'deleteorigination'){
 <div class="row">
 <table  class="table"  border="0" bgcolor="#dbeefc" cellpadding="5">
 		  <tr align="center" class="bg_head_payments white font_18">
+		    <td> From Date </td>
+		    <td> To Date </td>
 		    <td width="160">Caller </td>
 		    <td width="160">Number of calls </td>
 		    <td width="160">Billable Calls </td>
@@ -52,7 +54,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'deleteorigination'){
 		$Condition = " AND account_id like '$wholeseller_id' ";
 	}
 
- echo	$sql = "SELECT * from  asracd_origination WHERE 1=1  ";
+ 	$sql = "SELECT * from  asracd_origination WHERE 1=1  ";
  	 
   $getTotalTime = 0; 
  $totalchargedamount=0;
@@ -62,6 +64,8 @@ while($row = mysql_fetch_object($result)){
 	//print_r($row);
 	 ?>	
 	<tr class="border_bottom_payments">
+	<td> <?php echo $row->fromdate;?></td>		
+	<td> <?php echo $row->todate;?></td>			
   	<td> <?php echo $row->caller?></td>		
 	<td> <?php echo $row->numberofcalls;?></td>			
 	<td> <?php echo $row->billablecalls;?></td>
@@ -85,6 +89,8 @@ while($row = mysql_fetch_object($result)){
 <div class="row">
 <table  class="table"  border="0" bgcolor="#dbeefc" cellpadding="5">
 		  <tr align="center" class="bg_head_payments white font_18">
+		  <td> From Date </TD>
+			<TD> Todate </td>
 		   <td width="160">Vendor/Connection </td>
 		    <td width="160">Number of calls </td>
 		    <td width="160">Billable Calls </td>
@@ -114,7 +120,9 @@ while($row = mysql_fetch_object($result)){
 	//print_r($row);
 	 ?>	
 	<tr class="border_bottom_payments">
-  	<td> <?php echo $row->vendor_connection;?></td>		
+	<td> <?php echo $row->fromdate;?></td>		
+	<td> <?php echo $row->todate;?></td>			
+   	<td> <?php echo $row->vendor_connection;?></td>		
 	<td> <?php echo $row->numberofcalls;?></td>			
 	<td> <?php echo $row->billablecalls;?></td>
 	<td> <?php echo $row->billedduration;?></td>

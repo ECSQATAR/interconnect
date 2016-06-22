@@ -19,7 +19,7 @@ include_once("logincheck.php");
 <div class="col-md-3">
 Vendor Reports ->
 </div>
- <a href="wholesalesconsumptionlist.php"> Manage  Vendor Reports </a> || &nbsp;&nbsp; <a href="importconsumeddata.php"> Import Vendor invoices data </a>
+ <a href="wholesalesconsumptionlist.php"> Manage  Vendor Invoices </a> || &nbsp;&nbsp; <a href="importconsumeddata.php"> Import Vendor invoices data </a>
 </div>
 
 
