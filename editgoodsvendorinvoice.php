@@ -121,7 +121,7 @@ if(isset($_GET['lastInserId']))
  
 
 
- echo $sqlmaster = "SELECT * from ws_goodservice_invoice_master  WHERE id = $lastInserId  ";
+ echo $sqlmaster = "SELECT * from ws_goodservice_vendorinvoice_master  WHERE id = $lastInserId  ";
  $tempresultinvoiceMaster = mysql_query($sqlmaster);
  $resultinvoiceMaster = mysql_fetch_object($tempresultinvoiceMaster);
  
@@ -136,7 +136,7 @@ $companyname = $rowold->nameofcompany;
 
  
 $cdate = date("Y-m-d");
-$sqlcurntInvcount = "select count(id) as cnt From  ws_goodservice_invoice_master WHERE company_id=$company_id AND date(invoicecreateddate) = '$cdate' ";
+$sqlcurntInvcount = "select count(id) as cnt From  ws_goodservice_vendorinvoice_master WHERE company_id=$company_id AND date(invoicecreateddate) = '$cdate' ";
 $recCountData = mysql_query($sqlcurntInvcount);
 $rowrecCount = mysql_fetch_object($recCountData);
  $oldRecordsCount = $rowrecCount->cnt;
@@ -155,7 +155,7 @@ $companyname = $rownewcompany->nameofcompany;
 
 
  $Condition='';
- $sql = "SELECT * from wsalesinvoiceschild WHERE invmasterid = $lastInserId  ";
+ $sql = "SELECT * from ws_goodservice_vendorinvoice_child WHERE invmasterid = $lastInserId  ";
  	 
  $getTotalTime = 0; 
  $totalchargedamount=0;
@@ -189,7 +189,7 @@ Tel #: +971506466878<br>
 ceo@ecs-net.net<br>
 </td>
  
-<td width="50%" style="font-size:200%;color:#ff0000;text-align:center;"> Goods Service INVOICE </td>
+<td width="50%" style="font-size:200%;color:#ff0000;text-align:center;"> Vendor Goods Service INVOICE </td>
 <td width="25%"> <img alt="CompanyLogo" src="logouploads/ECS-Logo1.png" width="250" heigth="200"/> </td>
 </tr>
 </table>
@@ -314,7 +314,7 @@ if (isset($_POST['conform'])){
  
 		
 	 
-	echo $sqlinv = "Update ws_goodservice_invoice_master set 
+	echo $sqlinv = "Update ws_goodservice_vendorinvoice_master set 
 			company_id =$company_id,
 			`companyname` = '$companyname',
 			`invoicenumber` ='$invoicenumber',
@@ -336,7 +336,7 @@ if (isset($_POST['conform'])){
 
 	
 sleep(5);
- header('Location: wsgoods_serviceinvoices_list.php');
+ header('Location: wsgoods_vendorinvoices_list.php');
 exit(0); 
 }
 ?>
