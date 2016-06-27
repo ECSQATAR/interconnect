@@ -1,9 +1,9 @@
 <?php
 require_once('xmlrpc.inc');
-mysql_connect('localhost', 'root','');
+mysql_connect('localhost', 'root','5510331');
 mysql_select_db('sippydatabase');
 
-$sql = "SELECT id,api_access,api_password FROM sippyreseller";
+$sql = "SELECT id,api_access,api_password FROM sippyreseller where id=44 ";
 $result = mysql_query($sql);
 $resellersdata = array();
 while($row = mysql_fetch_object($result)){
@@ -31,7 +31,7 @@ $accountusers = array();
   foreach($accountusers as $account){
 /************************/
 	
-$i_account = 852; // $account['id'];
+$i_account =  $account['id'];
 $api_access = $account['api_access'];
 $api_password = $account['api_password'];
 
@@ -45,9 +45,9 @@ $cli->setSSLVerifyPeer(false);
 $cli->setSSLVerifyHost(false);
 $cli->setCredentials($api_access,$api_password, CURLAUTH_DIGEST);
 //$cli->setCredentials('Irf','greatlife911', CURLAUTH_DIGEST);
-//$r = $cli->send($msg, 20);       
+$r = $cli->send($msg, 20);       
 sleep(5);
-//echo "<pre>"; print_r($r);echo "</pre>"; 
+echo "<pre>"; print_r($r);echo "</pre>"; 
 if ($r->faultCode()) {
 	$error = $r->faultString();
 	return array();
