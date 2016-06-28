@@ -67,6 +67,30 @@ while($rowinv = mysql_fetch_object($result)){
 	$v = $v + 1;
 }
 
+
+
+$sqlv = "SELECT * From ws_goodservice_vendorinvoice_master $condition order by invoicecreateddate";
+$resultv = mysql_query($sqlv);
+
+
+
+while($rowinv = mysql_fetch_object($resultv)){
+	$consumptionList[$v]['invoicecreateddate'] = $rowinv->invoicecreateddate;
+	$consumptionList[$v]['invoicenumber'] = $rowinv->invoicenumber;
+	$consumptionList[$v]['description'] =  'Invoice (Usage Period '.date('d M Y',strtotime($rowinv->invoicefromdate)).' - '. date('d M Y',strtotime($rowinv->invoicetodate)).')';
+	$consumptionList[$v]['invoiceamount'] = $rowinv->invoiceamount;
+	$consumptionList[$v]['invoiceTotalminutes'] = $rowinv->invoiceTotalminutes;
+	$dateConsumpList[$rowinv->invoicecreateddate] =  $rowinv->invoicecreateddate;
+if($rowinv->paidamount>0){
+	$consumptionPaidList[$v]['paiddate'] = $rowinv->paiddate;
+	$consumptionPaidList[$v]['paidamount'] = $rowinv->paidamount;
+	$consumptionPaidList[$v]['invoicecomments'] = $rowinv->invoicecomments;
+	$dateConsumpList[$rowinv->paiddate] =  $rowinv->paiddate;
+}
+$v = $v + 1;
+}
+
+
 $commonconsumptionList = array();
 $commonconsumptionList = array_merge($consumptionList, $consumptionPaidList);
 //print_r($commonInvoiceList); 
@@ -114,7 +138,7 @@ while($rowinv = mysql_fetch_object($result)){
 
 
 
-$sql = "SELECT * From ws_goodservice_invoice_master   $condition order by invoicecreateddate";
+$sql = "SELECT * From ws_goodservice_clientinvoice_master   $condition order by invoicecreateddate";
 $result = mysql_query($sql);
 $sno = 0;
  
