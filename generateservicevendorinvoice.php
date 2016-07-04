@@ -13,22 +13,41 @@ mysql_select_db($dbName);
  <script>
     jQuery(document).ready(function () {
 	jQuery("#recalculculate").click(function() {
-		$( ".Duration_min" ).each(function( index,value ) {
-	//console.log('div' + index + ':' + $(this).attr('id')); 
-		var mysDiv = $(this).attr('id');
-		var res = mysDiv.split('_'); 
-		var myId = res[2];
-		var Duration_min = jQuery('Duration_min_'+myId).val();
-		var price_per_1_min_ = jQuery('price_per_1_min_'+myId).val();
-		var Duration_min = jQuery('Duration_min_'+myId).val();
+	//	alert('hi');
+		var k=0;
+		var totalchargedamount = 0;
+		for(k=1;k<10;k++){
 		
-		});
-
+	 
+		var myId = k;
+		var qty = jQuery("#qty_"+myId).val();
+		if( qty>0){
+		// alert(qty);
+		
+		var price = jQuery("#price_"+myId).val();
+		// alert(price);
+		var chargedAmt = 0;
+		 
+			  chargedAmt = qty * price;
+		 
+		
+		//alert(chargedAmt);
+		  
+		jQuery("#chargedAmt_"+myId).val(chargedAmt);
+		totalchargedamount = totalchargedamount + chargedAmt;
+		
+		}}
+		jQuery("#totalchargedamount").val(totalchargedamount);
+		jQuery("#subtotalchargedamount").val(totalchargedamount);
+		
+		
+}) 	
 });
 
-	
-  });
 
+ 
+
+ 
  </script>
 <style>
 .Duration_min{
@@ -252,7 +271,7 @@ while($row = mysql_fetch_object($result)){
  
  
 Add your Goods here..
-<table border="1" cellpadding="2" cellspacing="2" class="table">
+<table border="1" cellpadding="2" cellspacing="2" class="table" >
 
   <tr style="background-color:#000000;color:#FFFFFF;">
 		    
@@ -303,12 +322,12 @@ while($row = mysql_fetch_object($result)){
 </select>
 
   </td>
-	<td><input type="text" name="quantity[]"  value="" />  </td>
+	<td><input type="text" name="quantity[]" id="qty_<?php echo $k;?>" value="" />  </td>
 	<td>
-		<input type="text" name="price_per_1_min[]"   value="" />
+		<input type="text" name="price_per_1_min[]"  id="price_<?php echo $k;?>"  value="" />
 		
 	</td>
-	<td style="text-align:right"><input type="text" name="Charged_Amount[]"  value="" /> </td>  
+	<td style="text-align:right"><input type="text" id="chargedAmt_<?php echo $k;?>"   name="Charged_Amount[]"  value="" /> </td>  
 	<td style="border-right:1px solid #FFFFFF;color:red;text-align:left;"> USD</td>  
 
 	</tr>
@@ -319,14 +338,14 @@ while($row = mysql_fetch_object($result)){
 		
 
  
-}
+	}
 ?>
 
 
  <tr style="border-right:1px solid #FFFFFF;text-align:right;">
  <td colspan="3" style="text-align:right"> &nbsp;</td>
  <td colspan="2" style="text-align:right">Total : 
- <input type="text" name="totalchargedamount" value="" /> 
+ <input type="text" name="totalchargedamount" id="totalchargedamount" value="" /> 
    
  </td>
  <td style="border:0px 0px 0px 0px  solid #FFFFFF;color:red;text-align:left;"> USD</td>  
@@ -341,8 +360,9 @@ while($row = mysql_fetch_object($result)){
 </tr>
 
 <tr style="border-right:1px solid #FFFFFF;text-align:right;">
- <td colspan="5" style="text-align:right"> Subtotal :
-<input type="text" name="totalchargedamount" value="" /> 
+<td> <input type="button" name="recalculculate" id="recalculculate"  value="recalculculate" /> </td>
+ <td colspan="4" style="text-align:right"> Subtotal :
+<input type="text" name="subtotalchargedamount" id="subtotalchargedamount"  value="" /> 
 </td>
  <td style="border:0px 0px 0px 0px  solid #FFFFFF;color:red;text-align:left;"> USD</td>  
 </tr>
