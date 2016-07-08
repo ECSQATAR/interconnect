@@ -312,10 +312,10 @@ $bk = 'display:none';
 <td style="text-align:center" colspan="6" >
 <?php
 $company_id = $_GET['company_id'];
-if($company_id>0)
-echo $companyList[$company_id];
-else
-echo "ECS (Our company)";
+if($company_id>0){
+	echo $companyList[$company_id];
+$othercompany = $companyList[$company_id];
+}
 ?> 
 
 </td>
@@ -372,10 +372,13 @@ if(isset($rowinv['paiddate'])){
  }
  }
 
-
+$vendorBalance = $rowbalance;
 ?>
 
- 
+<tr>
+<td colspan="5"> Total   </td> <td  style="text-align:center"><?php echo $rowbalance;?></td>
+</tr>
+
 </table>
  
  
@@ -394,7 +397,10 @@ if(isset($rowinv['paiddate'])){
 <td style="text-align:center" colspan="6">
 <?php
 $company_id = $_GET['company_id'];
- echo $companyList[$company_id];
+// echo $companyList[$company_id];
+
+echo "ECS-NET FZE"
+
 ?> 
 </td>
 </tr>
@@ -451,18 +457,31 @@ if(isset($rowinv['paiddate'])){
  }
  }
 
-
+$clientBalance = $rowbalance;
 ?>
 
- 
+<tr>
+<td colspan="5"> Total  </td> <td  style="text-align:center"><?php echo $rowbalance;?></td>
+</tr>
 </table>
- 
  </td>
  </tr>
- 
- </table>
- 
-</div>
-</div>
-</div>
 
+
+</table>
+
+<?php
+$showbellow = "display:none";
+if(sizeof($commonconsumptionList)!=0 && sizeof($commonInvoiceList) !=0 )
+    $showbellow = "display:block";
+?>
+<div style="<?php echo $showbellow; ?>">
+<p  style="text-align:right"> Total ECS-NET FZE Transctions : <?php echo round($clientBalance,2);?> </p>
+<p  style="text-align:right"> Total <?php echo $othercompany;?> Transctions : <?php echo  round($vendorBalance,2);?> </p>
+<p  style="text-align:right"> Total Payble/Recivable : <?php echo round($vendorBalance-$clientBalance,2);?> </p>
+</div>
+ 
+
+</div>
+</div>
+</div>
